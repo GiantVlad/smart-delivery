@@ -1,0 +1,13 @@
+node_modules
+public/.well-known/*
+storage/*.key
+vendor
+.idea
+.env
+.env.prod
+.env.testing
+*.log
+
+/.phpunit.result.cache
+.mysql
+ssl/*

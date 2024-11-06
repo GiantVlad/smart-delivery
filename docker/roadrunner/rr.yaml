@@ -1,0 +1,34 @@
+version: "3"
+http:
+  address: :8080
+  pool:
+    num_workers: 1
+    max_jobs: 500
+    supervisor:
+      exec_ttl: 30s
+  static:
+    dir: /app/public
+  middleware: [ "static" ]
+
+server:
+  command: "php /app/vendor/bin/roadrunner-worker"
+
+  env:
+    - APP_ENV: production
+    - APP_BASE_PATH: "/app"
+    - LARAVEL_OCTANE: "1"
+
+temporal:
+  address: temporal:7233
+  activities:
+    num_workers: 1
+    command: "php /app/worker.php"
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+logs:
+  mode: production
+  level: debug
+  output: stdout
+  encoding: json

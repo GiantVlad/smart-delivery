@@ -1,0 +1,126 @@
+services:
+  roadrunner:
+    build:
+      dockerfile: ./docker/roadrunner/Dockerfile
+      context: ./
+      #args:
+      #  RR_VERSION: ${RR_VERSION}
+      #  PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION}
+    ports:
+      - 80:8080
+    #environment:
+    #  RR_VERSION: ${RR_VERSION}
+    #working_dir: /app
+    networks:
+      - smart-l
+    volumes:
+      - ./src:/app
+      #- ./docker/roadrunner/rr.yaml:/etc/.rr.yaml:ro
+
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'secret76'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: 'appdb'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'secret76'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 0
+    volumes:
+      - '.mysql:/var/lib/mysql'
+    networks:
+      - smart-l
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-psecret76"]
+      retries: 3
+      timeout: 5s
+
+  opensearch:
+    container_name: temporal-opensearch
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms256m -Xmx256m
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - plugins.security.disabled=true
+    image: opensearchproject/opensearch:${OPENSEARCH_VERSION}
+    ulimits:
+#      memlock:
+#        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+#        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    networks:
+      - smart-l
+    expose:
+      - 9200
+    volumes:
+      - /usr/share/opensearch/data
+  postgresql:
+    container_name: temporal-postgresql
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    image: postgres:${POSTGRESQL_VERSION}
+    networks:
+      - smart-l
+    expose:
+      - 5432
+    volumes:
+      - /var/lib/postgresql/data
+  temporal:
+    container_name: temporal
+    depends_on:
+      - postgresql
+      - opensearch
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=/etc/temporal/config/dynamicconfig/development-sql.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=opensearch
+      - ES_VERSION=v7
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+    networks:
+      - smart-l
+    ports:
+      - 7233:7233
+    volumes:
+      - ./docker/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
+    networks:
+      - smart-l
+    stdin_open: true
+    tty: true
+  temporal-ui:
+    container_name: temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporalio/ui:${TEMPORAL_UI_VERSION}
+    networks:
+      - smart-l
+    ports:
+      - 8080:8080
+
+networks:
+  smart-l:
+    driver: bridge
+    name: smart-l
