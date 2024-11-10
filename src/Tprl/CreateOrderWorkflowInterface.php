@@ -11,21 +11,13 @@ declare(strict_types=1);
 
 namespace Tprl;
 
-// @@@SNIPSTART php-hello-workflow-interface
+use App\Models\Customer;
 use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
 
 #[WorkflowInterface]
-interface GreetingWorkflowInterface
+interface CreateOrderWorkflowInterface
 {
-    /**
-     * @param string $name
-     * @return string
-     */
-    #[WorkflowMethod(name: "SimpleActivity.greet")]
-    public function greet(
-        string $name
-    );
+    #[WorkflowMethod(name: "CreateOrderActivity.create")]
+    public function create(Customer $customer, string $unitType);
 }
-// @@@SNIPEND
-

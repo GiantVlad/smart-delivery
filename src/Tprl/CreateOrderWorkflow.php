@@ -14,30 +14,22 @@ namespace Tprl;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
-use Temporal\Exception\IllegalStateException;
 use Temporal\Workflow;
 
-
-// @@@SNIPSTART php-hello-workflow
-class GreetingWorkflow implements GreetingWorkflowInterface
+class CreateOrderWorkflow implements CreateOrderWorkflowInterface
 {
     private $greetingActivity;
 
     public function __construct()
     {
-        /**
-         * Activity stub implements activity interface and proxies calls to it to Temporal activity
-         * invocations. Because activities are reentrant, only a single stub can be used for multiple
-         * activity invocations.
-         */
         $this->greetingActivity = Workflow::newActivityStub(
-            GreetingActivityInterface::class,
+            CreateOrderActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
                     RetryOptions::new()
                         ->withInitialInterval(CarbonInterval::seconds(1))
-                        ->withMaximumAttempts(5)
+                        ->withMaximumAttempts(3)
                         ->withNonRetryableExceptions([\InvalidArgumentException::class])
                 )
         );
@@ -49,14 +41,8 @@ class GreetingWorkflow implements GreetingWorkflowInterface
         );
     }
 
-    public function greet(string $name): \Generator
+    public function create(Customer $customer, string $unitType): \Generator
     {
-        $completion = $this->completionActivity->composeCompletion($name);
-        $hello = $this->greetingActivity->composeGreeting('Hello', $name);
-        $bye = $this->greetingActivity->composeGreeting('Bye', $name);
-
-        return (yield $completion) . (yield $hello) . "\n" . (yield $bye);
+        yield $this->greetingActivity->createOrder($customer, $unitType);
     }
 }
-// @@@SNIPEND
-

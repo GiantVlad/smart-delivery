@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/greet/{name}', [ HomeController::class, 'greet']);
+Route::get('/order', [ OrderController::class, 'getOrderForm']);
 
-Route::get('/complete/{token}', [ HomeController::class, 'greetComplete']);
+Route::post('/order', [ OrderController::class, 'createOrder']);

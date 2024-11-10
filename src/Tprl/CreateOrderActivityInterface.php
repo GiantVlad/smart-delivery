@@ -11,17 +11,16 @@ declare(strict_types=1);
 
 namespace Tprl;
 
-// @@@SNIPSTART php-hello-activity-interface
+use App\Models\Customer;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
 
-#[ActivityInterface(prefix: 'SimpleActivity.')]
-interface GreetingActivityInterface
+#[ActivityInterface(prefix: 'CreateOrderActivity.')]
+interface CreateOrderActivityInterface
 {
-    #[ActivityMethod(name: "ComposeGreeting")]
-    public function composeGreeting(
-        string $greeting,
-        string $name
+    #[ActivityMethod(name: "CreateOrder")]
+    public function createOrder(
+        Customer $customer,
+        string $unitType,
     ): string;
 }
-// @@@SNIPEND

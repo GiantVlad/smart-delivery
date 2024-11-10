@@ -25,14 +25,14 @@ class ExecuteCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $workflow = $this->workflowClient->newWorkflowStub(
-            GreetingWorkflowInterface::class,
+            CreateOrderWorkflowInterface::class,
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
         );
 
-        $output->writeln("Starting <comment>GreetingWorkflow</comment>... ");
+        $output->writeln("Starting <comment>CreateOrderWorkflow</comment>... ");
 
         // Start a workflow execution. Usually this is done from another program.
-        // Uses task queue from the GreetingWorkflow @WorkflowMethod annotation.
+        // Uses task queue from the CreateOrderWorkflow @WorkflowMethod annotation.
         $run = $this->workflowClient->start($workflow, 'Antony');
 
         $output->writeln(
@@ -49,4 +49,3 @@ class ExecuteCommand extends Command
     }
 }
 // @@@SNIPEND
-
