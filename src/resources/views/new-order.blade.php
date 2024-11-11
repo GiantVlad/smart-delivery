@@ -29,7 +29,22 @@
 
                     <main class="mt-6">
                         <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-
+                            <form method="POST" name="order" action="/order">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="inputEmail" class="form-label">Email address</label>
+                                    <input type="email" name="email" class="form-control" id="inputEmail">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="unitType" class="form-label">Type of order</label>
+                                    <select id="unitType" name="unitType" class="form-select">
+                                        <option>Small</option>
+                                        <option>Medium</option>
+                                        <option>Large</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
                         </div>
                     </main>
 

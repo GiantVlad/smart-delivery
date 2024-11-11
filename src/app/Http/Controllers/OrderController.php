@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Http\Request;
 use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowClientInterface;
 use Carbon\CarbonInterval;
@@ -19,17 +20,19 @@ class OrderController extends Controller
         return view('new-order');
     }
 
-    public function createOrder(string $name)
+    public function createOrder(Request $request)
     {
+        $email = $request->get('email');
+        $unitType = $request->get('unitType');
+
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateOrderWorkflowInterface::class,
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
         );
 
-        $customer = Customer::first();
-        $unitType = 'small';
+        $customer = Customer::where('email', $email)->firstOrFail();
 
-        $this->workflowClient->start($workflow, $customer, $unitType);
+        $this->workflowClient->start($workflow, $customer->uuid, $unitType);
 
         return response()->json('Done');
     }

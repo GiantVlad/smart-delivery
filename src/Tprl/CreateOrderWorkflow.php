@@ -33,16 +33,10 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
                         ->withNonRetryableExceptions([\InvalidArgumentException::class])
                 )
         );
-
-        $this->completionActivity = Workflow::newActivityStub(
-            AsyncActivityCompletionInterface::class,
-            ActivityOptions::new()
-                ->withStartToCloseTimeout(CarbonInterval::seconds(2))
-        );
     }
 
-    public function create(Customer $customer, string $unitType): \Generator
+    public function create(string $customerUuid, string $unitType): \Generator
     {
-        yield $this->greetingActivity->createOrder($customer, $unitType);
+        yield $this->greetingActivity->createOrder($customerUuid, $unitType);
     }
 }

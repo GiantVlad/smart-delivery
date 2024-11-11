@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email');
             $table->uuid();
-            $table->unsignedInteger('created_at');
+            $table->timestamps();
         });
     }
 

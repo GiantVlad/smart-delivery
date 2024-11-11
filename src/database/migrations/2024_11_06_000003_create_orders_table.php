@@ -13,7 +13,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->string('unit_type');
             $table->uuid();
-            $table->unsignedInteger('created_at');
+            $table->timestamps();
         });
     }
 

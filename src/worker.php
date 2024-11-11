@@ -9,6 +9,7 @@
 
 declare(strict_types=1);
 
+use Laravel\Octane\ApplicationFactory;
 use Temporal\Interceptor\SimplePipelineProvider;
 // use Temporal\OpenTelemetry\Interceptor\OpenTelemetryActivityInboundInterceptor;
 // use Temporal\OpenTelemetry\Interceptor\OpenTelemetryWorkflowOutboundRequestInterceptor;
@@ -40,6 +41,10 @@ foreach ($declarations->getWorkflowTypes() as $workflowType) {
     $worker->registerWorkflowTypes($workflowType);
 }
 
+$basePath = require '/app/vendor/laravel/octane/bin/bootstrap.php';
+$appFactory = new ApplicationFactory($basePath);
+$app = $appFactory->createApplication();
+
 foreach ($declarations->getActivityTypes() as $activityType) {
     // Activities are stateless and thread safe. So a shared instance is used.
     $worker->registerActivity($activityType);
@@ -55,4 +60,3 @@ foreach ($declarations->getActivityTypes() as $activityType) {
 
 // start primary loop
 $factory->run();
-

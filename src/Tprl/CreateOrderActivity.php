@@ -13,17 +13,20 @@ namespace Tprl;
 
 use App\Models\Customer;
 use App\Models\Order;
+use Illuminate\Support\Str;
 use Temporal\Activity;
 use Temporal\Exception\IllegalStateException;
 
 // @@@SNIPSTART php-hello-activity
-class CreateOrderActivityActivity implements CreateOrderActivityInterface
+class CreateOrderActivity implements CreateOrderActivityInterface
 {
-    public function createOrder(Customer $customer, string $unitType): string
+    public function createOrder(string $customerUuid, string $unitType): string
     {
+        $customer = Customer::where('uuid', $customerUuid)->firstOrFail();
         $order = new Order();
         $order->customer_id = $customer->id;
         $order->unit_type = $unitType;
+        $order->uuid = Str::uuid()->toString();
         $order->save();
         return $order->uuid;
     }

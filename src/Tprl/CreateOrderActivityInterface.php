@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Tprl;
 
-use App\Models\Customer;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
 
@@ -20,7 +19,7 @@ interface CreateOrderActivityInterface
 {
     #[ActivityMethod(name: "CreateOrder")]
     public function createOrder(
-        Customer $customer,
+        string $customerUuid,
         string $unitType,
     ): string;
 }

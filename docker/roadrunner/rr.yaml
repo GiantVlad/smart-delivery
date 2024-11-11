@@ -32,3 +32,14 @@ logs:
   level: debug
   output: stdout
   encoding: json
+
+reload:
+  interval: 1s
+  patterns: [".php", ".yaml"]
+  services:
+    http:
+      recursive: true
+      dirs: [ "/app" ]
+    temporal:
+      recursive: true
+      dirs: [ "/app" ]

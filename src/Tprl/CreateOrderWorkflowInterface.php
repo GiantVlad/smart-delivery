@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Tprl;
 
-use App\Models\Customer;
 use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
 
@@ -19,5 +18,5 @@ use Temporal\Workflow\WorkflowMethod;
 interface CreateOrderWorkflowInterface
 {
     #[WorkflowMethod(name: "CreateOrderActivity.create")]
-    public function create(Customer $customer, string $unitType);
+    public function create(string $customerUuid, string $unitType);
 }
