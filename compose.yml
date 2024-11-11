@@ -120,6 +120,17 @@ services:
     ports:
       - 8080:8080
 
+  # use it only on dev env
+  mailhog:
+    image: mailhog/mailhog
+    restart: on-failure
+    environment:
+      MH_UI_WEB_PATH: mailhog
+    networks:
+      - smart-l
+    ports:
+      - 8075:8025
+
 networks:
   smart-l:
     driver: bridge

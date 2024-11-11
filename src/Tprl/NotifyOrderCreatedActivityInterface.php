@@ -8,11 +8,11 @@ use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
 
 #[ActivityInterface(prefix: 'CreateOrderActivity.')]
-interface CreateOrderActivityInterface
+interface NotifyOrderCreatedActivityInterface
 {
-    #[ActivityMethod(name: "CreateOrder")]
-    public function createOrder(
+    #[ActivityMethod(name: "NotifyOrderCreated")]
+    public function notifyOrderCreated(
         string $customerUuid,
-        string $unitType,
+        string $orderUuid,
     ): string;
 }
