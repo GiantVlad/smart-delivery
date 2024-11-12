@@ -11,4 +11,4 @@ vendor
 /.phpunit.result.cache
 .mysql
 ssl/*
-appdb
+src/appdb

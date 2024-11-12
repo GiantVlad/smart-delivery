@@ -24,7 +24,7 @@ if (empty($host)) {
     $host = 'temporal:7233';
 }
 
-$app = new Application('Temporal PHP-SDK Samples');
+$app = new Application('Temporal PHP Smart Delivery');
 
 foreach ($declarations->getCommands() as $command) {
     $app->add(Command::create($command, ServiceClient::create($host)));

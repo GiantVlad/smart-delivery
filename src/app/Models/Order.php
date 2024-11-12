@@ -11,7 +11,7 @@ class Order extends Authenticatable
     protected $fillable = [
         'unit_type',
         'uuid',
-        'last_name',
+        'status',
     ];
 
     protected $hidden = [];

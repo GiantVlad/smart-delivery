@@ -10,3 +10,5 @@ Route::get('/', function () {
 Route::get('/order', [ OrderController::class, 'getOrderForm']);
 
 Route::post('/order', [ OrderController::class, 'createOrder']);
+
+Route::any('/erp-web-hook', [ OrderController::class, 'confirmOrder']);

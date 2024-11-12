@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tprl;
 
+use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Notifications\OrderCreatedNotification;
@@ -11,7 +12,6 @@ use Illuminate\Support\Str;
 use Temporal\Activity;
 use Temporal\Exception\IllegalStateException;
 
-// @@@SNIPSTART php-hello-activity
 class CreateOrderActivity implements CreateOrderActivityInterface
 {
     public function createOrder(string $customerUuid, string $unitType): string
@@ -21,9 +21,9 @@ class CreateOrderActivity implements CreateOrderActivityInterface
         $order->customer_id = $customer->id;
         $order->unit_type = $unitType;
         $order->uuid = Str::uuid()->toString();
+        $order->status = OrderStatusEnum::NEW;
         $order->save();
 
         return $order->uuid;
     }
 }
-// @@@SNIPEND
