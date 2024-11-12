@@ -130,15 +130,8 @@ services:
       - smart-l
     ports:
       - 8075:8025
+   
   
-  go-server:
-    build:
-      context: ./docker/go_server
-      dockerfile: Dockerfile
-    ports:
-      - 8090:8090
-    networks:
-      - smart-l
 
 networks:
   smart-l:
