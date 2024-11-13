@@ -7,7 +7,7 @@ services:
       #  RR_VERSION: ${RR_VERSION}
       #  PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION}
     ports:
-      - 80:8080
+      - 8000:8000
     #environment:
     #  RR_VERSION: ${RR_VERSION}
     #working_dir: /app

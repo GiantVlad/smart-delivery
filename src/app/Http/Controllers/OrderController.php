@@ -21,10 +21,17 @@ class OrderController extends Controller
     //getOrderForm
     public function getOrderForm()
     {
-        return view('new-order');
+        $customerEmails = Customer::limit(10)->get('email')->pluck('email')->toArray();
+        return view('new-order', ['customerEmails' => $customerEmails]);
     }
 
-    public function createOrder(Request $request): JsonResponse
+    public function getOrders()
+    {
+        $orders = Order::with('customer')->limit(30)->orderBy('updated_at', 'desc')->get();
+        return view('orders', ['orders' => $orders]);
+    }
+
+    public function createOrder(Request $request)
     {
         $email = $request->get('email');
         $unitType = $request->get('unitType');
@@ -38,7 +45,7 @@ class OrderController extends Controller
 
         $this->workflowClient->start($workflow, $customer->uuid, $unitType);
 
-        return response()->json('Created', 201);
+        return redirect('/orders');
     }
 
     public function confirmOrder(Request $request): JsonResponse
@@ -47,7 +54,7 @@ class OrderController extends Controller
         Order::where('uuid', $orderUuid)->firstOrFail();
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            '2510b70f-94db-4132-8665-c4d7432cd858',
+            '5bd134de-8b6c-4cdb-a9d2-e4750a4847cb',
         );
 
         $workflow->updateStatus($orderUuid, OrderStatusEnum::ACCEPTED->value);

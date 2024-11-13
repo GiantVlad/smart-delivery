@@ -62,7 +62,7 @@ RUN set -eux; \
 
 COPY --from=roadrunner /usr/bin/rr /usr/local/bin/rr
 
-EXPOSE 8080/tcp
+EXPOSE 8000/tcp
 
 WORKDIR /app
 

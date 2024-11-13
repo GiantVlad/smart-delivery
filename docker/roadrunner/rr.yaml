@@ -1,6 +1,6 @@
 version: "3"
 http:
-  address: :8080
+  address: :8000
   pool:
     num_workers: 1
     max_jobs: 500

@@ -11,4 +11,6 @@ Route::get('/order', [ OrderController::class, 'getOrderForm']);
 
 Route::post('/order', [ OrderController::class, 'createOrder']);
 
+Route::get('/orders', [ OrderController::class, 'getOrders']);
+
 Route::any('/erp-webhook', [ OrderController::class, 'confirmOrder']);

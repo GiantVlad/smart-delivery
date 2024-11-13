@@ -59,7 +59,7 @@ func receiveHandler(w http.ResponseWriter, r *http.Request) {
 
 func sendWebhook(o Order) error {
     client := &http.Client{Timeout: 10 * time.Second}
-    targetURL := "http://roadrunner:8080/erp-webhook"
+    targetURL := "http://roadrunner:8000/erp-webhook"
     _, err := url.ParseRequestURI(targetURL)
     if err != nil {
         return err
