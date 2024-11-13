@@ -1,16 +1,15 @@
 <?php
 
+use App\Http\Controllers\OrderStatusController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderCreateController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/order', [ OrderCreateController::class, 'getOrderForm']);
 
-Route::get('/order', [ OrderController::class, 'getOrderForm']);
+Route::post('/order', [ OrderCreateController::class, 'createOrder']);
 
-Route::post('/order', [ OrderController::class, 'createOrder']);
+Route::get('/orders', [ OrderCreateController::class, 'getOrders']);
 
-Route::get('/orders', [ OrderController::class, 'getOrders']);
+Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder']);
 
-Route::any('/erp-webhook', [ OrderController::class, 'confirmOrder']);
+Route::post('/assign', [ OrderStatusController::class, 'assignCourier']);

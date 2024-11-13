@@ -8,4 +8,5 @@ enum OrderStatusEnum: string
     case UNDEFINED = 'undefined';
     case CREATED = 'created';
     case ACCEPTED = 'accepted';
+    case ASSIGNED = 'assigned';
 }

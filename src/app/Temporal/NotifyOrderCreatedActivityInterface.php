@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tprl;
+namespace App\Temporal;
 
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;

@@ -17,7 +17,7 @@ use Utils\Command;
 require __DIR__ . '/vendor/autoload.php';
 
 // finds all available workflows, activity types and commands in a given directory
-$declarations = DeclarationLocator::create(__DIR__ . '/Tprl/');
+$declarations = DeclarationLocator::create(__DIR__ . '/Temporal/');
 
 $host = getenv('TEMPORAL_ADDRESS') ?: getenv('TEMPORAL_CLI_ADDRESS');
 if (empty($host)) {

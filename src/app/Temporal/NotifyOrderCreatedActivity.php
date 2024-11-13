@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tprl;
+namespace App\Temporal;
 
 use App\Models\Customer;
 use App\Notifications\OrderCreatedNotification;
 use Temporal\Activity;
 use Temporal\Exception\IllegalStateException;
 
-// @@@SNIPSTART php-hello-activity
 class NotifyOrderCreatedActivity implements NotifyOrderCreatedActivityInterface
 {
     public function notifyOrderCreated(string $customerUuid, string $orderUuid): string
@@ -20,4 +19,3 @@ class NotifyOrderCreatedActivity implements NotifyOrderCreatedActivityInterface
         return $orderUuid;
     }
 }
-// @@@SNIPEND

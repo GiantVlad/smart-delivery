@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tprl;
+namespace App\Temporal;
 
 use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Notifications\OrderCreatedNotification;
 use Illuminate\Support\Str;
 use Temporal\Activity;
 use Temporal\Exception\IllegalStateException;

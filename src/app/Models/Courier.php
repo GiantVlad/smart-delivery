@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-class Order extends Model
+class Courier extends Model
 {
+    use HasFactory, Notifiable;
+
     protected $fillable = [
-        'unit_type',
         'uuid',
         'status',
     ];
@@ -17,10 +20,5 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
-    }
-
-    public function courier()
-    {
-        return $this->belongsTo(Courier::class);
     }
 }

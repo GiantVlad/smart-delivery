@@ -9,9 +9,8 @@
 
 declare(strict_types=1);
 
-namespace Tprl;
+namespace App\Temporal;
 
-use App\Models\Customer;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;

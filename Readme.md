@@ -18,3 +18,5 @@ docker compose exec roadrunner rr -c /etc/rr/.rr.yaml reset
 :8075/mailhog Mailhog
 :8080 Temporal UI
 :8090 go-server
+
+It requires Nginx proxy on the host machine for https

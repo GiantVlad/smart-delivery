@@ -9,20 +9,20 @@
 
 declare(strict_types=1);
 
+use App\Temporal\DeclarationLocator;
 use Laravel\Octane\ApplicationFactory;
 use Temporal\Interceptor\SimplePipelineProvider;
 // use Temporal\OpenTelemetry\Interceptor\OpenTelemetryActivityInboundInterceptor;
 // use Temporal\OpenTelemetry\Interceptor\OpenTelemetryWorkflowOutboundRequestInterceptor;
-use Tprl\DeclarationLocator;
 // use Temporal\SampleUtils\TracerFactory;
 use Temporal\WorkerFactory;
-// use Tprl\FileProcessing;
+// use Temporal\FileProcessing;
 
 ini_set('display_errors', 'stderr');
 include "vendor/autoload.php";
 
 // finds all available workflows, activity types and commands in a given directory
-$declarations = DeclarationLocator::create(__DIR__ . '/Tprl/');
+$declarations = DeclarationLocator::create(__DIR__ . '/app/Temporal/');
 
 // factory initiates and runs task queue specific activity and workflow workers
 $factory = WorkerFactory::create();
