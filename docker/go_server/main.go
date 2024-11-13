@@ -19,85 +19,75 @@ type Response struct {
 }
 
 type Order struct {
-	Uuid string `json:"uuid"`
+	Uuid string `json:"orderUuid"`
 }
 
 // Handler for receiving and logging incoming requests
 func receiveHandler(w http.ResponseWriter, r *http.Request) {
-        if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-        }
-        
-        // Read request body
-	body, err := io.ReadAll(r.Body)
+    if r.Method != http.MethodPost {
+    http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+        return
+    }
+
+    body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Could not read request body", http.StatusInternalServerError)
 		return
 	}
 	defer r.Body.Close()
 
-	// Log the request
-	fmt.Printf("Received request: %s\n", string(body))
+    var o Order
+	err = json.Unmarshal(body, &o)
+	if err != nil {
+		panic(err)
+	}
 
-	// Respond with a confirmation message
+    go func(ord Order) {
+        err := sendWebhook(ord)
+        if err != nil {
+            log.Println("Failed to send confirmation:", err)
+        } else {
+            log.Println("Confirmation has been sent successfully")
+        }
+    }(o)
+
+    fmt.Printf("Received request: %s\n", o.Uuid)
+
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Received your request."))
 }
 
+func sendWebhook(o Order) error {
+    client := &http.Client{Timeout: 10 * time.Second}
+    targetURL := "http://roadrunner:8080/erp-webhook"
+    _, err := url.ParseRequestURI(targetURL)
+    if err != nil {
+        return err
+    }
+    jsonData, err := json.Marshal(o)
+    // delay
+    time.Sleep(5 * time.Second)
+
+    resp, err := client.Post(targetURL, "application/json", bytes.NewBuffer(jsonData))
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+
+    _, err = io.Copy(io.Discard, resp.Body)
+    return err
+}
+
 // Handler to send a fake request to a specified URL
 func sendHandler(w http.ResponseWriter, r *http.Request) {
-	// Extract target URL from query parameters
-	targetURL := "http://roadrunner/erp-web-hook"
-
-	// Validate the target URL
-	_, err := url.ParseRequestURI(targetURL)
-	if err != nil {
-		http.Error(w, "Invalid URL format", http.StatusBadRequest)
-		return
-	}
-
-	// Create an HTTP client with a timeout
-	client := &http.Client{Timeout: 10 * time.Second}
-
-        order := Order{
-		Uuid: "12345",
-	}
-
-	// Convert the Person object to JSON
-	jsonData, err := json.Marshal(order)
-
-	// Send the request to the target URL
-	resp, err := client.Post(targetURL, "application/json", bytes.NewBuffer(jsonData))
-	if err != nil {
-		http.Error(w, "Failed to send request", http.StatusInternalServerError)
-		return
-	}
-	defer resp.Body.Close()
-
-	// Read the response body
-	respBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		http.Error(w, "Failed to read response body", http.StatusInternalServerError)
-		return
-	}
-
-	// Prepare and encode the response to JSON
-	response := Response{
-		Status:     resp.Status,
-		StatusCode: resp.StatusCode,
-		Body:       string(respBody),
-	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	return
 }
 
 func main() {
 	http.HandleFunc("/erp", receiveHandler)
-	http.HandleFunc("/web-hook", sendHandler)
+	// http.HandleFunc("/webhook", sendHandler)
 
 	port := "8090"
 	fmt.Printf("Server starting on port %s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
-

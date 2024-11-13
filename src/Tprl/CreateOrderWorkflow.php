@@ -20,6 +20,7 @@ use Temporal\Workflow;
 class CreateOrderWorkflow implements CreateOrderWorkflowInterface
 {
     private $createOrderActivity;
+    private $createOrderErpActivity;
     private $notifyActivity;
 
     public function __construct()
@@ -32,6 +33,18 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
                     RetryOptions::new()
                         ->withInitialInterval(CarbonInterval::seconds(1))
                         ->withMaximumAttempts(3)
+                        ->withNonRetryableExceptions([\InvalidArgumentException::class])
+                )
+        );
+
+        $this->createOrderErpActivity = Workflow::newActivityStub(
+            CreateOrderErpActivityInterface::class,
+            ActivityOptions::new()
+                ->withStartToCloseTimeout(CarbonInterval::seconds(10))
+                ->withRetryOptions(
+                    RetryOptions::new()
+                        ->withInitialInterval(CarbonInterval::seconds(3))
+                        ->withMaximumAttempts(5)
                         ->withNonRetryableExceptions([\InvalidArgumentException::class])
                 )
         );
@@ -53,6 +66,7 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
     {
         $orderUuid = $this->createOrderActivity->createOrder($customerUuid, $unitType);
 
+        yield $this->createOrderErpActivity->createOrderInErp(yield $orderUuid);
         yield $this->notifyActivity->notifyOrderCreated($customerUuid, yield $orderUuid);
     }
 }

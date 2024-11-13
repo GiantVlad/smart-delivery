@@ -47,7 +47,7 @@ class OrderController extends Controller
         Order::where('uuid', $orderUuid)->firstOrFail();
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            '<--WorkflowId-->',
+            '2510b70f-94db-4132-8665-c4d7432cd858',
         );
 
         $workflow->updateStatus($orderUuid, OrderStatusEnum::ACCEPTED->value);
