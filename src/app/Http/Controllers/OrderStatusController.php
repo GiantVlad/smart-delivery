@@ -10,10 +10,12 @@ use App\Models\Order;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
 use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowClientInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\ValidationException;
 
 class OrderStatusController extends Controller
 {
@@ -36,8 +38,14 @@ class OrderStatusController extends Controller
     {
         $orderUuid = $request->get('orderUuid');
         $courierUuid = $request->get('courierUuid');
-        Order::where('uuid', $orderUuid)->firstOrFail();
+        $order = Order::where('uuid', $orderUuid)->firstOrFail();
+
+        if (! in_array($order->status,  [OrderStatusEnum::ACCEPTED->value])) {
+            throw new \Exception("You can't assign order that has status $order->status", 412);
+        }
+
         Courier::where('uuid', $courierUuid)->firstOrFail();
+
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
             $this->getWfId(),
