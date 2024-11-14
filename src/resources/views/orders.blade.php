@@ -24,7 +24,7 @@
                     <td>{{ $order->unit_type }}</td>
                     <td>{{ $order->status }}</td>
                     <td>{{ $order->customer->uuid }}</td>
-                    <td>{{ $order->curier ? $order->curier->name : 'UNASSIGNED'}}</td>
+                    <td>{{ $order->courier ? $order->courier->name : 'UNASSIGNED'}}</td>
                     <td>{{ $order->updated_at }}</td>
                 </tr>
                 @endforeach

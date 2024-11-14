@@ -21,7 +21,7 @@ class StopStatusHandlerWorkflow extends Command
      *
      * @var string
      */
-    protected $description = 'Start status handler';
+    protected $description = 'Stop status handler current or by WF ID';
 
     /**
      * Execute the console command.
