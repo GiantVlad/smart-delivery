@@ -46,7 +46,7 @@ class StartStatusHandlerWorkflow extends Command
                 )
             );
         } catch (\Throwable $exception) {
-            $this->fatal("Can't start workflow status handler. Caught exception: {$exception->getMessage()}");
+            $this->fail("Can't start workflow status handler. Caught exception: {$exception->getMessage()}");
         }
     }
 }

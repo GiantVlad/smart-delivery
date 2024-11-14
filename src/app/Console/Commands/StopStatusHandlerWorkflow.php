@@ -33,8 +33,8 @@ class StopStatusHandlerWorkflow extends Command
                 $wfId = Cache::get(OrderStatusHandlerWorkflowInterface::WORKFLOW_STATUS_HANDLER_KEY);
             }
 
-            if ($wfId) {
-                $this->fatal("The WORKFLOW ID undefined.");
+            if (! $wfId) {
+                $this->fail("The WORKFLOW ID undefined.");
             }
             $this->info("Finishing <comment>OrderStatusHandlerWorkflow</comment>... ");
 
@@ -51,7 +51,7 @@ class StopStatusHandlerWorkflow extends Command
                 )
             );
         } catch (\Throwable $exception) {
-            $this->fatal("Can't stop workflow status handler. Caught exception: {$exception->getMessage()}");
+            $this->fail("Can't stop workflow status handler. Caught exception: {$exception->getMessage()}");
         }
     }
 }
