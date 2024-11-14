@@ -48,15 +48,16 @@ class OrderStatusHandlerWorkflow implements OrderStatusHandlerWorkflowInterface
             }
             $orderUuid = $this->input['orderUuid'];
             $status = $this->input['status'];
+            $courierUuid = $this->input['courierUuid'];
             $this->input = [];
 
-            yield $this->updateOrderActivity->updateOrderStatus($orderUuid, $status);
+            yield $this->updateOrderActivity->updateOrderStatus($orderUuid, $status, $courierUuid);
         }
     }
 
-    public function updateStatus(string $orderUuid, string $status): void
+    public function updateStatus(string $orderUuid, string $status, string $courierUuid = null): void
     {
-        $this->input = ['orderUuid' => $orderUuid, 'status' => $status];
+        $this->input = ['orderUuid' => $orderUuid, 'status' => $status, 'courierUuid' => $courierUuid];
     }
 
     public function exit(): void

@@ -8,11 +8,13 @@ use App\Enums\OrderStatusEnum;
 use App\Models\Courier;
 use App\Models\Order;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
+use http\Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowClientInterface;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Facades\Cache;
 
 class OrderStatusController extends Controller
 {
@@ -20,9 +22,10 @@ class OrderStatusController extends Controller
     {
         $orderUuid = $request->get('orderUuid');
         Order::where('uuid', $orderUuid)->firstOrFail();
+
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            '5bd134de-8b6c-4cdb-a9d2-e4750a4847cb',
+            $this->getWfId(),
         );
 
         $workflow->updateStatus($orderUuid, OrderStatusEnum::ACCEPTED->value);
@@ -38,11 +41,26 @@ class OrderStatusController extends Controller
         Courier::where('uuid', $courierUuid)->firstOrFail();
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            '5bd134de-8b6c-4cdb-a9d2-e4750a4847cb',
+            $this->getWfId(),
         );
 
-        $workflow->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
+        $workflow->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value, $courierUuid);
 
         return response()->json(OrderStatusEnum::ASSIGNED->value);
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getWfId(): string
+    {
+        if (Cache::has('workflow-status-handler:id')) {
+            $wfId = Cache::get('workflow-status-handler:id');
+        } else {
+            throw new \Exception('workflow ID is not defined in cache');
+        }
+
+        return $wfId;
     }
 }

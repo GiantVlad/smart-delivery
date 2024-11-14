@@ -19,6 +19,7 @@ interface OrderStatusHandlerWorkflowInterface
     public function updateStatus(
         string $orderUuid,
         string $status,
+        string $courierUuid = null,
     ): void;
 
     #[SignalMethod(name: "OrderStatusHandler.Exit")]
