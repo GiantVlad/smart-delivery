@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
 use App\Models\Courier;
-use App\Models\Customer;
 use App\Models\Order;
-use App\Temporal\CreateOrderWorkflowInterface;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

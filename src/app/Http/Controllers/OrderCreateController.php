@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Temporal\CreateOrderWorkflowInterface;
-use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Temporal\Client\WorkflowOptions;
@@ -24,10 +24,11 @@ class OrderCreateController extends Controller
 
     public function getOrders()
     {
-        $orders = Order::with('customer')
+        $orders = Order::with('customer', 'courier')
             ->limit(30)
             ->orderBy('updated_at', 'desc')
             ->get();
+
         return view('orders', ['orders' => $orders]);
     }
 

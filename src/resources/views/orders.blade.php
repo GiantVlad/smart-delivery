@@ -12,6 +12,7 @@
                     <th scope="col">Type</th>
                     <th scope="col">Status</th>
                     <th scope="col">Customer UUID</th>
+                    <th scope="col">Courier</th>
                     <th scope="col">Date</th>
                 </tr>
                 </thead>
@@ -23,6 +24,7 @@
                     <td>{{ $order->unit_type }}</td>
                     <td>{{ $order->status }}</td>
                     <td>{{ $order->customer->uuid }}</td>
+                    <td>{{ $order->curier ? $order->curier->name : 'UNASSIGNED'}}</td>
                     <td>{{ $order->updated_at }}</td>
                 </tr>
                 @endforeach
