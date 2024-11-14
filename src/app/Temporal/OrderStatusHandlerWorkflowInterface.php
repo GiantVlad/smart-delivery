@@ -12,6 +12,8 @@ use Temporal\Workflow\SignalMethod;
 #[WorkflowInterface]
 interface OrderStatusHandlerWorkflowInterface
 {
+    public const WORKFLOW_STATUS_HANDLER_KEY = 'workflow-status-handler-id';
+
     #[WorkflowMethod(name: "OrderStatusHandler.Run")]
     public function run(): Generator;
 

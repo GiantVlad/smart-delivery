@@ -29,22 +29,22 @@ class StartStatusHandlerWorkflow extends Command
     public function handle(WorkflowClientInterface $workflowClient): void
     {
         try {
-        $workflow = $workflowClient->newWorkflowStub(
-            OrderStatusHandlerWorkflowInterface::class
-        );
+            $workflow = $workflowClient->newWorkflowStub(
+                OrderStatusHandlerWorkflowInterface::class
+            );
 
-        $this->info("Starting <comment>OrderStatusHandlerWorkflow</comment>... ");
+            $this->info("Starting <comment>OrderStatusHandlerWorkflow</comment>... ");
 
-        $run = $workflowClient->start($workflow);
-        $wfId =$run->getExecution()->getID();
-        Cache::put('workflow-status-handler:id', $wfId);
+            $run = $workflowClient->start($workflow);
+            $wfId =$run->getExecution()->getID();
+            Cache::put(OrderStatusHandlerWorkflowInterface::WORKFLOW_STATUS_HANDLER_KEY, $wfId);
 
-        $this->info(
-            sprintf(
-                'Started: WorkflowID=<fg=magenta>%s</fg=magenta>',
-                $wfId,
-            )
-        );
+            $this->info(
+                sprintf(
+                    'Started: WorkflowID=<fg=magenta>%s</fg=magenta>',
+                    $wfId,
+                )
+            );
         } catch (\Throwable $exception) {
             $this->fatal("Can't start workflow status handler. Caught exception: {$exception->getMessage()}");
         }

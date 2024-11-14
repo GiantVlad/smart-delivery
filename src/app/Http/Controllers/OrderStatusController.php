@@ -8,7 +8,6 @@ use App\Enums\OrderStatusEnum;
 use App\Models\Courier;
 use App\Models\Order;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
-use http\Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Temporal\Client\WorkflowOptions;
@@ -55,12 +54,10 @@ class OrderStatusController extends Controller
      */
     public function getWfId(): string
     {
-        if (Cache::has('workflow-status-handler:id')) {
-            $wfId = Cache::get('workflow-status-handler:id');
-        } else {
-            throw new \Exception('workflow ID is not defined in cache');
+        if (Cache::has(OrderStatusHandlerWorkflowInterface::WORKFLOW_STATUS_HANDLER_KEY)) {
+            return Cache::get(OrderStatusHandlerWorkflowInterface::WORKFLOW_STATUS_HANDLER_KEY);
         }
 
-        return $wfId;
+        throw new \Exception('workflow ID is not defined in cache');
     }
 }
