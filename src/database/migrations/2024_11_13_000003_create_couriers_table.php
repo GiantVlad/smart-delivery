@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('couriers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->uuid();
             $table->string('status')->default(CourierStatusEnum::NW->value);
             $table->timestamps();

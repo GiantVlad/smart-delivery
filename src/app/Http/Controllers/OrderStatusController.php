@@ -22,7 +22,7 @@ class OrderStatusController extends Controller
         Order::where('uuid', $orderUuid)->firstOrFail();
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            '2510b70f-94db-4132-8665-c4d7432cd858',
+            '5bd134de-8b6c-4cdb-a9d2-e4750a4847cb',
         );
 
         $workflow->updateStatus($orderUuid, OrderStatusEnum::ACCEPTED->value);
@@ -38,7 +38,7 @@ class OrderStatusController extends Controller
         Courier::where('uuid', $courierUuid)->firstOrFail();
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            '2510b70f-94db-4132-8665-c4d7432cd858',
+            '5bd134de-8b6c-4cdb-a9d2-e4750a4847cb',
         );
 
         $workflow->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);

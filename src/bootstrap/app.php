@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'stripe/*',
             '*/erp-webhook',
+             '*/assign',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
