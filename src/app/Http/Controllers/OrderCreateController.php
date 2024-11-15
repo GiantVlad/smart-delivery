@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Dto\CreateOrderDto;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Point;
 use App\Temporal\CreateOrderWorkflowInterface;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Temporal\Client\WorkflowOptions;
 use Carbon\CarbonInterval;
@@ -19,12 +20,14 @@ class OrderCreateController extends Controller
     {
         $customerEmails = Customer::limit(10)->get('email')->pluck('email')->toArray();
 
-        return view('new-order', ['customerEmails' => $customerEmails]);
+        $points = Point::all(['id', 'address']);
+
+        return view('new-order', ['customerEmails' => $customerEmails, 'points' => $points]);
     }
 
     public function getOrders()
     {
-        $orders = Order::with('customer', 'courier')
+        $orders = Order::with('customer', 'task.courier')
             ->limit(30)
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -36,6 +39,8 @@ class OrderCreateController extends Controller
     {
         $email = $request->get('email');
         $unitType = $request->get('unitType');
+        $startPointId = $request->get('startAddressId');
+        $endPointId = $request->get('endAddressId');
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateOrderWorkflowInterface::class,
@@ -44,7 +49,14 @@ class OrderCreateController extends Controller
 
         $customer = Customer::where('email', $email)->firstOrFail();
 
-        $this->workflowClient->start($workflow, $customer->uuid, $unitType);
+        $orderDTO = new CreateOrderDto(
+            customerUuid: $customer->uuid,
+            unitType: $unitType,
+            startPointId: $startPointId,
+            endPointId: $endPointId,
+        );
+
+        $this->workflowClient->start($workflow, $orderDTO);
 
         return redirect('/orders');
     }

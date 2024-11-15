@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Customer;
 use App\Models\Courier;
+use App\Models\Point;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,5 +18,6 @@ class DatabaseSeeder extends Seeder
     {
         Customer::factory(20)->create();
         Courier::factory(10)->create();
+        Point::factory(10)->create();
     }
 }

@@ -13,6 +13,8 @@
                     <th scope="col">Status</th>
                     <th scope="col">Customer UUID</th>
                     <th scope="col">Courier</th>
+                    <th scope="col">Start address</th>
+                    <th scope="col">End address</th>
                     <th scope="col">Date</th>
                 </tr>
                 </thead>
@@ -24,7 +26,9 @@
                     <td>{{ $order->unit_type }}</td>
                     <td>{{ $order->status }}</td>
                     <td>{{ $order->customer->uuid }}</td>
-                    <td>{{ $order->courier ? $order->courier->name : 'UNASSIGNED'}}</td>
+                    <td>{{ $order->task ? $order->task->courier->name : 'UNASSIGNED'}}</td>
+                    <td>{{ $order->startPoint }}</td>
+                    <td>{{ $order->endPoint }}</td>
                     <td>{{ $order->updated_at }}</td>
                 </tr>
                 @endforeach

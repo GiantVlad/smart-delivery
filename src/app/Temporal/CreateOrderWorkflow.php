@@ -1,16 +1,10 @@
 <?php
 
-/**
- * This file is part of Temporal package.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 declare(strict_types=1);
 
 namespace App\Temporal;
 
+use App\Dto\CreateOrderDto;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -61,11 +55,11 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
         );
     }
 
-    public function create(string $customerUuid, string $unitType): \Generator
+    public function create(CreateOrderDto $orderDto): \Generator
     {
-        $orderUuid = $this->createOrderActivity->createOrder($customerUuid, $unitType);
+        $orderUuid = $this->createOrderActivity->createOrder($orderDto);
 
         yield $this->createOrderErpActivity->createOrderInErp(yield $orderUuid);
-        yield $this->notifyActivity->notifyOrderCreated($customerUuid, yield $orderUuid);
+        yield $this->notifyActivity->notifyOrderCreated($orderDto->customerUuid, yield $orderUuid);
     }
 }

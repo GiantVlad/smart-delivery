@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Point extends Model
 {
+    use HasFactory;
     protected $fillable = [
-        'unit_type',
-        'uuid',
-        'status',
+        'lat',
+        'long',
+        'address',
     ];
 
     protected $hidden = [];
@@ -21,8 +23,8 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function task()
+    public function courier()
     {
-        return $this->belongsTo(Task::class);
+        return $this->belongsTo(Courier::class);
     }
 }
