@@ -23,7 +23,7 @@
                     <td>{{ $task->uuid }}</td>
                     <td>{{ $task->status }}</td>
                     <td>{{ $task->courier->name }}</td>
-                    <td>{{ $task->orders->count() }}</td>
+                    <td>{{ $task->orders()->count() }}</td>
                     <td>{{ $task->updated_at }}</td>
                 </tr>
                 @endforeach
