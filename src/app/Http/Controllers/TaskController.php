@@ -44,14 +44,14 @@ class TaskController extends Controller
     public function createTask(Request $request)
     {
         $courierUuid = $request->get('courierUuid');
-        $ordersIds = explode(',', $request->get('ordersIds'));
+        $orderIds = explode(',', $request->get('orderIds') ?? '');
 
 //        $workflow = $this->workflowClient->newWorkflowStub(
 //            CreateOrderWorkflowInterface::class,
 //            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
 //        );
         $courier = Courier::where('uuid', $courierUuid)->firstOrFail();
-        $orders = Order::whereIn('id', $ordersIds)->get();
+        $orders = Order::whereIn('id', $orderIds ?: [])->get();
 
         DB::transaction(static function () use ($orders, $courier) {
             $task = new Task();

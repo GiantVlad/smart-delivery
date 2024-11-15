@@ -25,7 +25,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <input type="hidden" name="orderIds" id="select-orders">
+                        <input type="hidden" name="orderIds" id="select-orders" value="">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
@@ -45,7 +45,7 @@
                 closeOnSelect: false,
             })
             $("#taskForm").on("submit",function (event) {
-                $('#multiple-select-orders').value = Array.from(selectOrders.selectedOptions).map(option => option.value).join(",");
+                $('#select-orders').value = Array.from(selectOrders.selectedOptions).map(option => option.value).join(",");
             });
         })
     </script>
