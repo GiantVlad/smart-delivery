@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <main class="mt-6">
                 <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-                    <form method="POST" name="task" action="/task">
+                    <form method="POST" name="task" action="/task" id="taskForm">
                         @csrf
                         <div class="mb-3">
                             <label for="courierUuid" class="form-label">Courier</label>
@@ -44,7 +44,9 @@
                 placeholder: $( this ).data( 'placeholder' ),
                 closeOnSelect: false,
             })
-            $('#multiple-select-orders').value = Array.from(selectOrders.selectedOptions).map(option => option.value).join(",");
+            $("#taskForm").on("submit",function (event) {
+                $('#multiple-select-orders').value = Array.from(selectOrders.selectedOptions).map(option => option.value).join(",");
+            });
         })
     </script>
 @endpush
