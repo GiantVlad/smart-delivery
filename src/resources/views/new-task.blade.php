@@ -18,13 +18,14 @@
                         </div>
                         <div class="mb-3">
                             <label for="multiple-select-orders" class="form-label">Orders</label>
-                            <select class="form-select" id="multiple-select-orders" name="ordersIds" data-placeholder="Choose orders" multiple>
+                            <select class="form-select" id="multiple-select-orders" data-placeholder="Choose orders" multiple>
                                     <option></option>
                                 @foreach($orders as $order)
                                     <option value="{{ $order->id }}">{{ $order->uuid }}</option>
                                 @endforeach
                             </select>
                         </div>
+                        <input type="hidden" name="ordersIds" id="select-orders">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
@@ -37,12 +38,13 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            $( '#multiple-select-orders' ).select2({
+            const selectOrders = $('#multiple-select-orders').select2({
                 theme: "bootstrap-5",
                 width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
                 placeholder: $( this ).data( 'placeholder' ),
                 closeOnSelect: false,
             })
+            $('#multiple-select-orders').value = Array.from(selectOrders.selectedOptions).map(option => option.value).join(",");
         })
     </script>
 @endpush
