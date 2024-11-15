@@ -45,7 +45,8 @@
                 closeOnSelect: false,
             })
             $('#multiple-select-orders').on('change', function () {
-                $('#select-orders').value = $(this).val().join(",");
+                const values = $(this).val().join(",");
+                $('#select-orders').val(values);
             });
         })
     </script>
