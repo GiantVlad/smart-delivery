@@ -19,6 +19,6 @@ Route::post('/assign', [ OrderStatusController::class, 'assignCourier']);
 
 Route::get('/tasks', [ TaskController::class, 'getTasks']);
 
-Route::get('/task', [ TaskController::class, 'createTaskForm']);
+Route::get('/new-task', [ TaskController::class, 'createTaskForm']);
 
 Route::post('/task', [ TaskController::class, 'createTask']);
