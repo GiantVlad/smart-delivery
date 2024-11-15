@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <main class="mt-6">
                 <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-                    <form method="POST" name="task" action="/task" id="taskForm">
+                    <form method="POST" name="task" action="/task">
                         @csrf
                         <div class="mb-3">
                             <label for="courierUuid" class="form-label">Courier</label>
@@ -26,7 +26,7 @@
                             </select>
                         </div>
                         <input type="hidden" name="orderIds" id="select-orders" value="">
-                        <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </main>
@@ -38,16 +38,14 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            const selectOrders = $('#multiple-select-orders').select2({
+            $('#multiple-select-orders').select2({
                 theme: "bootstrap-5",
                 width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
                 placeholder: $( this ).data( 'placeholder' ),
                 closeOnSelect: false,
             })
-            $('#submitButton').on('click', function (event) {
-                event.preventDefault()
-                $('#select-orders').value = Array.from(selectOrders.selectedOptions).map(option => option.value).join(",");
-                $('#taskForm').submit();
+            $('#multiple-select-orders').on('change', function () {
+                $('#select-orders').value = $(this).val().join(",");
             });
         })
     </script>
