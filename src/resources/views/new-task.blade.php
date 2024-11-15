@@ -25,7 +25,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <input type="hidden" name="ordersIds" id="select-orders">
+                        <input type="hidden" name="orderIds" id="select-orders">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
