@@ -24,7 +24,7 @@
                     <td>{{ $task->status }}</td>
                     <td>{{ $task->courier->name }}</td>
                     <td>{{ $task->orders->count() }}</td>
-                    <td>{{ $order->updated_at }}</td>
+                    <td>{{ $task->updated_at }}</td>
                 </tr>
                 @endforeach
                 </tbody>
