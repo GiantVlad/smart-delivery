@@ -5,6 +5,17 @@
         "build": "vite build",
         "dev": "vite"
     },
+    "dependencies": {
+        "@tailwindcss/forms": "^0.5.7",
+        "@vueuse/core": "^10.7.0",
+        "chart.js": "^4.4.1",
+        "chartjs-adapter-moment": "^1.0.1",
+        "flatpickr": "^4.6.13",
+        "moment": "^2.29.4",
+        "vue": "^3.2.20",
+        "vue-flatpickr-component": "^11.0.3",
+        "vue-router": "^4.2.5"
+    },
     "devDependencies": {
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
@@ -12,6 +23,8 @@
         "laravel-vite-plugin": "^1.0",
         "postcss": "^8.4.47",
         "tailwindcss": "^3.4.13",
-        "vite": "^5.0"
+        "@vitejs/plugin-vue": "^5.0.5",
+        "@vue/compiler-sfc": "^3.2.20",
+        "vite": "^5.0.6"
     }
 }

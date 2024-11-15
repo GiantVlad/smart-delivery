@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderCreateController;
+
+Route::get('/', [ DashboardController::class, 'index']);
 
 Route::get('/order', [ OrderCreateController::class, 'getOrderForm']);
 
