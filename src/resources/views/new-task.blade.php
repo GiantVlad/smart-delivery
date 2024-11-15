@@ -18,7 +18,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="multiple-select-orders" class="form-label">Orders</label>
-                            <select class="form-select" id="multiple-select-orders" name="ordersIds" data-placeholder="Choose orders">
+                            <select class="form-select" id="multiple-select-orders" name="ordersIds" data-placeholder="Choose orders" multiple>
                                     <option></option>
                                 @foreach($orders as $order)
                                     <option value="{{ $order->id }}">{{ $order->uuid }}</option>
