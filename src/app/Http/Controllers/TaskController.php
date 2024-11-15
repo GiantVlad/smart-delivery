@@ -41,7 +41,7 @@ class TaskController extends Controller
     public function createTask(Request $request)
     {
         $courierUuid = $request->get('courierUuid');
-        $ordersIds = $request->get('ordersIds');
+        $ordersIds = explode(',', $request->get('ordersIds'));
 
 //        $workflow = $this->workflowClient->newWorkflowStub(
 //            CreateOrderWorkflowInterface::class,
