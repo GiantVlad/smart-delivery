@@ -26,7 +26,7 @@
                             </select>
                         </div>
                         <input type="hidden" name="orderIds" id="select-orders" value="">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                     </form>
                 </div>
             </main>
@@ -44,8 +44,10 @@
                 placeholder: $( this ).data( 'placeholder' ),
                 closeOnSelect: false,
             })
-            $("#taskForm").on("submit",function (event) {
+            $('#submitButton').on('click', function (event) {
+                event.preventDefault()
                 $('#select-orders').value = Array.from(selectOrders.selectedOptions).map(option => option.value).join(",");
+                $('#taskForm').submit();
             });
         })
     </script>
