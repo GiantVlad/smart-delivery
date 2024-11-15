@@ -31,6 +31,10 @@
             </main>
         </div>
     </div>
+
+</div>
+@endsection
+@push('scripts')
     <script>
         $( '#multiple-select-orders' ).select2( {
             theme: "bootstrap-5",
@@ -39,5 +43,4 @@
             closeOnSelect: false,
         } );
     </script>
-</div>
-@endsection
+@endpush
