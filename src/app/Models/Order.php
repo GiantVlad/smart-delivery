@@ -25,4 +25,14 @@ class Order extends Model
     {
         return $this->belongsTo(Task::class);
     }
+
+    public function startPoint()
+    {
+        return $this->belongsTo(Point::class);
+    }
+
+    public function endPoint()
+    {
+        return $this->belongsTo(Point::class);
+    }
 }

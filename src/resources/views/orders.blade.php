@@ -27,8 +27,8 @@
                     <td>{{ $order->status }}</td>
                     <td>{{ $order->customer->uuid }}</td>
                     <td>{{ $order->task ? $order->task->courier->name : 'UNASSIGNED'}}</td>
-                    <td>{{ $order->startPoint }}</td>
-                    <td>{{ $order->endPoint }}</td>
+                    <td>{{ $order->startPoint->address }}</td>
+                    <td>{{ $order->endPoint->address }}</td>
                     <td>{{ $order->updated_at }}</td>
                 </tr>
                 @endforeach

@@ -18,4 +18,9 @@ class Task extends Model
     {
         return $this->belongsTo(Courier::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

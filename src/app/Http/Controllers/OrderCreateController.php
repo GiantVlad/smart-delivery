@@ -15,7 +15,6 @@ use Carbon\CarbonInterval;
 
 class OrderCreateController extends Controller
 {
-    //getOrderForm
     public function getOrderForm()
     {
         $customerEmails = Customer::limit(10)->get('email')->pluck('email')->toArray();
@@ -27,7 +26,7 @@ class OrderCreateController extends Controller
 
     public function getOrders()
     {
-        $orders = Order::with('customer', 'task.courier')
+        $orders = Order::with('customer', 'task.courier', 'startPoint', 'endPoint')
             ->limit(30)
             ->orderBy('updated_at', 'desc')
             ->get();
