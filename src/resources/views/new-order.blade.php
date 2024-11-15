@@ -25,16 +25,16 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="startAddress" class="form-label">Start address</label>
-                            <select name="startAddress" class="form-select" id="startAddress">
+                            <label for="startAddress" class="form-label">Pick up</label>
+                            <select name="startAddressId" class="form-select" id="startAddress">
                                 @foreach($points as $point)
                                     <option value="{{ $point->id }}">{{ $point->address }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="endAddress" class="form-label">Start address</label>
-                            <select name="endAddress" class="form-select" id="endAddress">
+                            <label for="endAddress" class="form-label">Destination</label>
+                            <select name="endAddressId" class="form-select" id="endAddress">
                                 @foreach($points as $point)
                                     <option value="{{ $point->id }}">{{ $point->address }}</option>
                                 @endforeach
