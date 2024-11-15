@@ -55,7 +55,7 @@ class TaskController extends Controller
             $order->task()->associate($task);
             $order->save();
         }
-
+        $task->save();
 
        //  $this->workflowClient->start($workflow, $orderDTO);
 
