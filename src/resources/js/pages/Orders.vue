@@ -66,11 +66,6 @@
                                   </div>
                               </td>
                               <td class="p-2 whitespace-nowrap">
-                                  <div class="flex items-center">
-                                      <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div>
-                                  </div>
-                              </td>
-                              <td class="p-2 whitespace-nowrap">
                                   <div class="text-left">{{order.unit_type}}</div>
                               </td>
                               <td class="p-2 whitespace-nowrap">
