@@ -11,8 +11,8 @@ class CreateOrderDto extends Data
     public function __construct(
         public string $customerUuid,
         public string $unitType,
-        public string $startPointId,
-        public string $endPointId,
+        public int $startPointId,
+        public int $endPointId,
     ) {
     }
 }

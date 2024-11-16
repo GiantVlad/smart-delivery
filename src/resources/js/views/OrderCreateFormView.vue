@@ -21,7 +21,7 @@ const unitTypes = ['Small', 'Medium', 'Large']
 
 const form = reactive({
   customer: null,
-  type: 'new',
+  type: unitTypes[1],
   startAddress: null,
   endAddress: null,
 })
