@@ -128,7 +128,7 @@ export default {
     Banner,
   },
   mounted() {
-    axios.get('/orders')
+    axios.get('/api/orders')
         .then((response) => {
             console.log(response.data)
             this.orders = response.data
