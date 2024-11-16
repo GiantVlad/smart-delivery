@@ -1,6 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue'
-import { useMainStore } from '@/stores/main'
+import { ref, onMounted } from 'vue'
 import {
   mdiAccountMultiple,
   mdiCartOutline,
@@ -18,8 +17,6 @@ import CardBox from '@/components/CardBox.vue'
 import TableSampleClients from '@/components/TableSampleClients.vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 import BaseButton from '@/components/BaseButton.vue'
-import CardBoxTransaction from '@/components/CardBoxTransaction.vue'
-import CardBoxClient from '@/components/CardBoxClient.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import SectionBannerStarOnGitHub from '@/components/SectionBannerStarOnGitHub.vue'
@@ -34,11 +31,6 @@ onMounted(() => {
   fillChartData()
 })
 
-const mainStore = useMainStore()
-
-const clientBarItems = computed(() => mainStore.clients.slice(0, 4))
-
-const transactionBarItems = computed(() => mainStore.history)
 </script>
 
 <template>
@@ -83,31 +75,6 @@ const transactionBarItems = computed(() => mainStore.history)
           suffix="%"
           label="Performance"
         />
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div class="flex flex-col justify-between">
-          <CardBoxTransaction
-            v-for="(transaction, index) in transactionBarItems"
-            :key="index"
-            :amount="transaction.amount"
-            :date="transaction.date"
-            :business="transaction.business"
-            :type="transaction.type"
-            :name="transaction.name"
-            :account="transaction.account"
-          />
-        </div>
-        <div class="flex flex-col justify-between">
-          <CardBoxClient
-            v-for="client in clientBarItems"
-            :key="client.id"
-            :name="client.name"
-            :login="client.login"
-            :date="client.created"
-            :progress="client.progress"
-          />
-        </div>
       </div>
 
       <SectionBannerStarOnGitHub class="mt-6 mb-6" />
