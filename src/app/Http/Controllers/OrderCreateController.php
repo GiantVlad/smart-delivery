@@ -13,6 +13,7 @@ use App\Models\Point;
 use App\Temporal\CreateOrderWorkflowInterface;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Temporal\Client\WorkflowOptions;
 use Carbon\CarbonInterval;
 
@@ -20,11 +21,14 @@ class OrderCreateController extends Controller
 {
     public function getOrderForm()
     {
-        $customerEmails = Customer::limit(10)->get('email')->pluck('email')->toArray();
+        $dto = new class {
+            public array $emails;
+            public Collection $points;
+        };
+        $dto->emails = Customer::limit(10)->get('email')->pluck('email')->toArray();
+        $dto->points = Point::all(['id', 'address']);
 
-        $points = Point::all(['id', 'address']);
-
-        return OrderCreateFormResource::make(['emails' => $customerEmails, 'points' => $points]);
+        return OrderCreateFormResource::make($dto);
     }
 
     public function getOrders(): JsonResource
