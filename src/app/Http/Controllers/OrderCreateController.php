@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Dto\CreateOrderDto;
+use App\Http\Resources\OrderCreateFormResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
@@ -23,7 +24,7 @@ class OrderCreateController extends Controller
 
         $points = Point::all(['id', 'address']);
 
-        return view('new-order', ['customerEmails' => $customerEmails, 'points' => $points]);
+        return OrderCreateFormResource::make(['emails' => $customerEmails, 'points' => $points]);
     }
 
     public function getOrders(): JsonResource

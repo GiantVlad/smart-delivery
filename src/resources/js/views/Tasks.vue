@@ -7,7 +7,7 @@
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
 
-      <CardBox class="mb-6" has-table>
+      <CardBox class="mb-6" has-table v-if="tasks.length > 0">
         <!-- Table -->
           <table class="table-auto w-full">
             <!-- Table header -->
@@ -63,13 +63,7 @@
           </table>
       </CardBox>
 
-      <SectionTitleLineWithButton :icon="mdiTableOff" title="Empty variation" />
-
-      <NotificationBar color="danger" :icon="mdiTableOff">
-        <b>Empty table.</b> When there's nothing to show
-      </NotificationBar>
-
-      <CardBox>
+      <CardBox v-if="tasks.length < 1">
         <CardBoxComponentEmpty />
       </CardBox>
     </SectionMain>

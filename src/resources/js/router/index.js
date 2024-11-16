@@ -31,6 +31,14 @@ const routes = [
   },
   {
     meta: {
+      title: 'Create Order'
+    },
+    path: '/order',
+    name: 'order-create',
+    component: () => import('@/views/OrderCreateFormView.vue')
+  },
+  {
+    meta: {
       title: 'Forms'
     },
     path: '/tasks',
