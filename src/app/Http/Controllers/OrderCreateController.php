@@ -43,7 +43,7 @@ class OrderCreateController extends Controller
 
     public function createOrder(Request $request)
     {
-        $email = $request->get('email');
+        $email = $request->get('customerEmail');
         $unitType = $request->get('unitType');
         $startPointId = $request->get('startAddressId');
         $endPointId = $request->get('endAddressId');

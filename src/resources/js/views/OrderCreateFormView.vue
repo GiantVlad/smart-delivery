@@ -20,7 +20,7 @@ const points = ref([])
 const unitTypes = ['Small', 'Medium', 'Large']
 
 const form = reactive({
-  customer: customers[0],
+  customer: null,
   type: 'new',
   startAddress: null,
   endAddress: null,
@@ -30,7 +30,7 @@ const submit = () => {
   console.log(form)
   axios.post('/api/order',
     {
-      email: form.customer,
+      customerEmail: form.customer,
       unitType: form.type,
       startAddressId: form.startAddress,
       endAddressId: form.endAddress
@@ -51,6 +51,9 @@ onMounted(() => {
     .then((response) => {
       customers.value = response.data.data.customerEmails
       points.value = response.data.data.points.map(el => ({id: el.id, label: el.address}))
+      form.customer = customers.value[0]
+      form.startAddress = points.value[0].id
+      form.endAddress = points.value[1].id
     })
 })
 
