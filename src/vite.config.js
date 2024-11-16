@@ -1,4 +1,4 @@
-import path from 'path'
+import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import laravel from 'laravel-vite-plugin';
@@ -17,7 +17,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@tailwindConfig': path.resolve(__dirname, 'tailwind.config.js'),
+      // '@tailwindConfig': path.resolve(__dirname, 'tailwind.config.js'),
+      "@": fileURLToPath(new URL("./resources/js", import.meta.url)),
     },
   },
   optimizeDeps: {

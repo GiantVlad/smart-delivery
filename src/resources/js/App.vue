@@ -1,8 +1,7 @@
-<template>
-  <router-view />
-</template>
-
-<script>
-import './charts/ChartjsConfig';
+<script setup>
+import { RouterView } from 'vue-router'
 </script>
 
+<template>
+  <RouterView />
+</template>
