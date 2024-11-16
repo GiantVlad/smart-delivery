@@ -41,7 +41,7 @@ export default [
   },
   {
     to: '/',
-    label: 'Styles',
+    label: 'Good morning',
     icon: mdiPalette
   },
   {

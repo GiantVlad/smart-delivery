@@ -26,7 +26,7 @@
                 <div class="font-semibold text-center">Status</div>
               </th>
               <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-left">Customer UUID</div>
+                <div class="font-semibold text-left">Customer</div>
               </th>
               <th class="p-2 whitespace-nowrap">
                 <div class="font-semibold text-left">Courier</div>
