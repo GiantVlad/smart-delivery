@@ -65,8 +65,8 @@ const formStatusSubmit = () => {
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Create order" main>
-        </SectionTitleLineWithButton>
-      <CardBox form @submit.prevent="submit">
+      </SectionTitleLineWithButton>
+      <CardBox form @submit.prevent="submit" :is-form="true">
         <FormField label="Customer">
           <FormControl v-model="form.customer" :options="customers" />
         </FormField>
