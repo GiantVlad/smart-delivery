@@ -2,15 +2,6 @@
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Orders" main>
-        <BaseButton
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          target="_blank"
-          :icon="mdiGithub"
-          label="Star on GitHub"
-          color="contrast"
-          rounded-full
-          small
-        />
       </SectionTitleLineWithButton>
       <NotificationBar color="info" :icon="mdiMonitorCellphone">
         <b>Responsive table.</b> Collapses on mobile
@@ -53,7 +44,7 @@
             </thead>
             <!-- Table body -->
             <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-            <tr v-for="order in orders" :key="order.id">
+            <tr v-for="order in orders.data" :key="order.id">
               <td class="p-2 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="font-medium text-gray-800 dark:text-gray-100">{{ order.id }}</div>
@@ -105,23 +96,24 @@
 
 <script setup>
 
-import { mdiMonitorCellphone, mdiTableBorder, mdiTableOff, mdiGithub } from '@mdi/js'
+import { mdiMonitorCellphone, mdiTableBorder, mdiTableOff } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import BaseButton from '@/components/BaseButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
 import {ref, onMounted} from "vue";
+import * as chartConfig from "@/components/Charts/chart.config.js";
 
-const orders = ref([])
+const orders = ref({ data: [] })
+
 
 onMounted(() => {
   axios.get('/api/orders')
     .then((response) => {
-      this.orders = response.data.data
+      orders.data = response.data.data
     })
 })
 
