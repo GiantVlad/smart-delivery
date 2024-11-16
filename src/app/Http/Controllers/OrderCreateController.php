@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Dto\CreateOrderDto;
+use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Point;
 use App\Temporal\CreateOrderWorkflowInterface;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
 use Temporal\Client\WorkflowOptions;
 use Carbon\CarbonInterval;
@@ -24,14 +26,14 @@ class OrderCreateController extends Controller
         return view('new-order', ['customerEmails' => $customerEmails, 'points' => $points]);
     }
 
-    public function getOrders()
+    public function getOrders(): JsonResource
     {
         $orders = Order::with('customer', 'task.courier', 'startPoint', 'endPoint')
             ->limit(30)
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        return view('orders', ['orders' => $orders]);
+        return OrderResource::collection($orders);
     }
 
     public function createOrder(Request $request)

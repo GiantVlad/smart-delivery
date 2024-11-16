@@ -6,7 +6,7 @@
 
     <!-- Content area -->
     <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-      
+
       <!-- Site header -->
       <Header :sidebarOpen="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
 
@@ -63,7 +63,7 @@
             <!-- Card (Customers) -->
             <DashboardCard10 />
             <!-- Card (Reasons for Refunds) -->
-            <DashboardCard11 /> 
+            <DashboardCard11 />
             <!-- Card (Recent Activity) -->
             <DashboardCard12 />
             <!-- Card (Income/Expenses) -->
@@ -76,7 +76,7 @@
 
       <Banner />
 
-    </div> 
+    </div>
 
   </div>
 </template>
@@ -96,7 +96,6 @@ import DashboardCard06 from '../partials/dashboard/DashboardCard06.vue'
 import DashboardCard07 from '../partials/dashboard/DashboardCard07.vue'
 import DashboardCard08 from '../partials/dashboard/DashboardCard08.vue'
 import DashboardCard09 from '../partials/dashboard/DashboardCard09.vue'
-import DashboardCard10 from '../partials/dashboard/DashboardCard10.vue'
 import DashboardCard11 from '../partials/dashboard/DashboardCard11.vue'
 import DashboardCard12 from '../partials/dashboard/DashboardCard12.vue'
 import DashboardCard13 from '../partials/dashboard/DashboardCard13.vue'
@@ -118,7 +117,6 @@ export default {
     DashboardCard07,
     DashboardCard08,
     DashboardCard09,
-    DashboardCard10,
     DashboardCard11,
     DashboardCard12,
     DashboardCard13,
@@ -130,7 +128,7 @@ export default {
 
     return {
       sidebarOpen,
-    }  
+    }
   }
 }
 </script>
