@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Dto\CreateTaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
+use App\Http\Resources\TaskResource;
 use App\Models\Courier;
 use App\Models\Order;
 use App\Models\Task;
@@ -33,7 +34,7 @@ class TaskController extends Controller
             ->orderBy('updated_at', 'desc')
             ->get();
 
-        return view('tasks', ['tasks' => $tasks]);
+        return TaskResource::collection($tasks);
     }
 
     public function createTask(Request $request)

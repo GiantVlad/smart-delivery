@@ -72,7 +72,7 @@
                                   <div class="text-left font-medium text-green-500">{{order.status}}</div>
                               </td>
                               <td class="p-2 whitespace-nowrap">
-                                  <div class="text-lg text-center">{{order.customerUuid}}</div>
+                                  <div class="text-left">{{order.customerUuid}}</div>
                               </td>
                               <td class="p-2 whitespace-nowrap">
                                   <div class="text-left">{{order.taskCourierName}}</div>
@@ -89,9 +89,7 @@
                           </tr>
                           </tbody>
                       </table>
-
                   </div>
-
               </div>
           </div>
       </main>
@@ -114,7 +112,7 @@ import Banner from '../partials/Banner.vue'
 import axios from 'axios'
 
 export default {
-  name: 'Dashboard',
+  name: 'Orders',
   components: {
     Sidebar,
     Header,
