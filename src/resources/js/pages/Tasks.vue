@@ -30,9 +30,6 @@
                                   <div class="font-semibold text-left">UUID</div>
                               </th>
                               <th class="p-2 whitespace-nowrap">
-                                  <div class="font-semibold text-left">Type</div>
-                              </th>
-                              <th class="p-2 whitespace-nowrap">
                                   <div class="font-semibold text-center">Status</div>
                               </th>
                               <th class="p-2 whitespace-nowrap">
