@@ -27,6 +27,7 @@ const form = reactive({
 })
 
 const submit = () => {
+  console.log(form)
   axios.post('/api/order',
     {
       email: form.customer,
@@ -63,7 +64,7 @@ const formStatusSubmit = () => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Forms example" main>
+      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Create order" main>
         </SectionTitleLineWithButton>
       <CardBox form @submit.prevent="submit">
         <FormField label="Customer">

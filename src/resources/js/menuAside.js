@@ -30,13 +30,13 @@ export default [
     icon: mdiSquareEditOutline
   },
   {
-    to: '/ui',
-    label: 'UI',
+    to: '/order',
+    label: 'Create order',
     icon: mdiTelevisionGuide
   },
   {
-    to: '/responsive',
-    label: 'Responsive',
+    to: '/task',
+    label: 'Create task',
     icon: mdiResponsive
   },
   {

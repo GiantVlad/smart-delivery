@@ -64,6 +64,6 @@ class OrderCreateController extends Controller
 
         $this->workflowClient->start($workflow, $orderDTO);
 
-        return redirect('/orders');
+        return response()->json(['data' => true]);
     }
 }
