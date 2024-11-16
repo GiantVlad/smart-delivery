@@ -44,7 +44,7 @@
             </thead>
             <!-- Table body -->
             <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-            <tr v-for="order in orders.data" :key="order.id">
+            <tr v-for="order in orders" :key="order.id">
               <td class="p-2 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="font-medium text-gray-800 dark:text-gray-100">{{ order.id }}</div>
@@ -105,15 +105,14 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
 import {ref, onMounted} from "vue";
-import * as chartConfig from "@/components/Charts/chart.config.js";
 
-const orders = ref({ data: [] })
+let orders = ref([])
 
 
 onMounted(() => {
   axios.get('/api/orders')
     .then((response) => {
-      orders.data = response.data.data
+      orders = response.data.data
     })
 })
 

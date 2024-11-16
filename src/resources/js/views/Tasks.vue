@@ -35,7 +35,7 @@
             </thead>
             <!-- Table body -->
             <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-            <tr v-for="task in tasks.data" :key="task.id">
+            <tr v-for="task in tasks" :key="task.id">
               <td class="p-2 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="font-medium text-gray-800 dark:text-gray-100">{{ task.id }}</div>
@@ -88,12 +88,13 @@ import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
 import {ref, onMounted} from "vue";
 
-const tasks = ref({data: []})
+let tasks = ref([])
 
 onMounted(() => {
   axios.get('/api/tasks')
     .then((response) => {
-      tasks.data = response.data.data
+      console.log(response.data)
+      tasks = response.data.data
     })
 })
 
