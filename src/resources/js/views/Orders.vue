@@ -56,13 +56,13 @@
                 </div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{order.unit_type}}</div>
+                <div class="text-left">{{order.unitType}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left font-medium text-green-500">{{order.status}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{order.customerUuid}}</div>
+                <div class="text-left">{{order.customerEmail}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{order.taskCourierName}}</div>
@@ -90,7 +90,7 @@
 
 <script setup>
 
-import { mdiMonitorCellphone, mdiTableBorder, mdiTableOff } from '@mdi/js'
+import { mdiMonitorCellphone, mdiTableBorder } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 import CardBox from '@/components/CardBox.vue'
@@ -98,7 +98,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
-import {ref, onMounted, useTemplateRef} from "vue";
+import {ref, onMounted} from "vue";
 
 let list = ref([])
 

@@ -19,9 +19,9 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
-            'unit_type' => $this->unit_type,
+            'unitType' => $this->unit_type,
             'status' => $this->status,
-            'customerUuid ' => $this->customer->uuid,
+            'customerEmail ' => $this->customer->email,
             'taskCourierName' => $this?->task->courier->namme ?? 'Undefined',
             'startPointAddress' => $this->startPoint->address,
             'endPointAddress' => $this->endPoint->address,
