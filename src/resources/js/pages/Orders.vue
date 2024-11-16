@@ -111,6 +111,7 @@ import FilterButton from '../components/DropdownFilter.vue'
 import Datepicker from '../components/Datepicker.vue'
 
 import Banner from '../partials/Banner.vue'
+import axios from 'axios'
 
 export default {
   name: 'Dashboard',
