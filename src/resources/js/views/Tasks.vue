@@ -94,7 +94,7 @@ onMounted(() => {
   axios.get('/api/tasks')
     .then((response) => {
       console.log(response.data)
-      tasks = response.data.data
+      tasks.value = response.data.data
     })
 })
 

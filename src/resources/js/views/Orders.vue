@@ -44,7 +44,7 @@
             </thead>
             <!-- Table body -->
             <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-            <tr v-for="order in list" ref="items">
+            <tr v-for="order in list" :key="order.id">
               <td class="p-2 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="font-medium text-gray-800 dark:text-gray-100">{{ order.id }}</div>
@@ -108,12 +108,10 @@ import {ref, onMounted, useTemplateRef} from "vue";
 
 let list = ref([])
 
-const itemRefs = useTemplateRef('items')
-
 onMounted(() => {
   axios.get('/api/orders')
     .then((response) => {
-      itemRefs.value = response.data.data
+      list.value = response.data.data
     })
 })
 
