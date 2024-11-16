@@ -18,7 +18,6 @@
 
       <CardBox class="mb-6" has-table>
         <!-- Table -->
-        <div class="overflow-x-auto">
           <table class="table-auto w-full">
             <!-- Table header -->
             <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
@@ -71,7 +70,6 @@
             </tr>
             </tbody>
           </table>
-        </div>
       </CardBox>
 
       <SectionTitleLineWithButton :icon="mdiTableOff" title="Empty variation" />
