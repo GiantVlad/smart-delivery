@@ -23,18 +23,18 @@ const routes = [
   },
   {
     meta: {
-      title: 'Tables'
+      title: 'Orders'
     },
-    path: '/order',
-    name: 'tables',
+    path: '/orders',
+    name: 'orders',
     component: () => import('@/views/Orders.vue')
   },
   {
     meta: {
       title: 'Forms'
     },
-    path: '/forms',
-    name: 'forms',
+    path: '/tasks',
+    name: 'tasks',
     component: () => import('@/views/Tasks.vue')
   },
 ]
