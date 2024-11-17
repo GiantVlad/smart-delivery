@@ -9,6 +9,8 @@ use App\Dto\CreateTaskDto;
 use App\Enums\OrderStatusEnum;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
+use Temporal\Client\GRPC\ServiceClient;
+use Temporal\Client\WorkflowClient;
 use Temporal\Common\RetryOptions;
 use Temporal\Workflow;
 
@@ -50,14 +52,16 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
 
         yield $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, yield $taskUuid);
 
-        $client = Workflow::getClient()->newRunningWorkflowStub(
+        $client = WorkflowClient::create(
+            ServiceClient::create('temporal:7233')
+        );
+        $workflowOrderStatusHandler = $client->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
             $taskDto->orderStatusWFId,
         );
 
-
         foreach ($taskDto->orderUuids as $orderUuid) {
-            $client->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
+            $workflowOrderStatusHandler->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
         }
     }
 }
