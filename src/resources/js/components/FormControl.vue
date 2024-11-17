@@ -133,6 +133,10 @@ if (props.ctrlKFocus) {
 }
 </script>
 
+<style scoped>
+  @import "vue-multiselect/dist/vue-multiselect.css";
+</style>
+
 <template>
   <div class="relative">
     <multiselect
