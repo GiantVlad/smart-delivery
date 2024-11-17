@@ -54,9 +54,6 @@ const emit = defineEmits(['update:modelValue', 'setRef'])
 
 const computedValue = computed({
   get: () => {
-    if (props.type === 'mSelect') {
-      console.log(props.modelValue)
-    }
     return props.modelValue
   },
   set: (value) => {
@@ -88,8 +85,6 @@ const mainStore = useMainStore()
 
 const selectEl = ref(null)
 
-const mSelectEl = ref(null)
-
 const textareaEl = ref(null)
 
 const inputEl = ref(null)
@@ -97,8 +92,6 @@ const inputEl = ref(null)
 onMounted(() => {
   if (selectEl.value) {
     emit('setRef', selectEl.value)
-  } else if (mSelectEl.value) {
-    emit('setRef', mSelectEl.value)
   } else if (textareaEl.value) {
     emit('setRef', textareaEl.value)
   } else {

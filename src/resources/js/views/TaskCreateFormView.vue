@@ -67,8 +67,7 @@ const formStatusSubmit = () => {
           <FormControl v-model="form.courier" :options="couriers" type="select"/>
         </FormField>
 
-        <FormField label="Unit type">
-          <div class="relative">
+        <FormField label="Orders">
             <multiselect
               v-model="form.orders"
               :options="orders"
@@ -87,9 +86,7 @@ const formStatusSubmit = () => {
                 </span>
               </template>
             </multiselect>
-          </div>
-          <FormControl v-model="form.orders" :options="orders" type="mSelect"/>
-        </FormField>
+          </FormField>
 
         <BaseDivider />
 
