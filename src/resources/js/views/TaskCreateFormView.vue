@@ -12,6 +12,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "axios";
 import router from "@/router/index.js";
+import Multiselect from "vue-multiselect";
 
 const couriers = ref([])
 
@@ -67,6 +68,26 @@ const formStatusSubmit = () => {
         </FormField>
 
         <FormField label="Unit type">
+          <div class="relative">
+            <multiselect
+              v-model="form.orders"
+              :options="orders"
+              :multiple="true"
+              :close-on-select="false"
+              :clear-on-select="false"
+              :preserve-search="true"
+              placeholder="Pick some"
+              label="label"
+              track-by="label"
+              :preselect-first="true"
+            >
+              <template #selection="{ values, search, isOpen }">
+                <span class="multiselect__single" v-if="values.length" v-show="!isOpen">
+                  {{ values.length }} selected
+                </span>
+              </template>
+            </multiselect>
+          </div>
           <FormControl v-model="form.orders" :options="orders" type="mSelect"/>
         </FormField>
 
@@ -81,3 +102,7 @@ const formStatusSubmit = () => {
     </SectionMain>
 </LayoutAuthenticated>
 </template>
+
+<style scoped>
+  @import "vue-multiselect/dist/vue-multiselect.css";
+</style>

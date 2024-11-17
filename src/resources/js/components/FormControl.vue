@@ -2,7 +2,6 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainStore } from '@/stores/main'
 import FormControlIcon from '@/components/FormControlIcon.vue'
-import Multiselect from 'vue-multiselect'
 
 const props = defineProps({
   name: {
@@ -133,31 +132,10 @@ if (props.ctrlKFocus) {
 }
 </script>
 
-<style scoped>
-  @import "vue-multiselect/dist/vue-multiselect.css";
-</style>
+
 
 <template>
   <div class="relative">
-    <multiselect
-      v-if="computedType === 'mSelect'"
-      v-model="computedValue"
-      :options="options"
-      :multiple="true"
-      :close-on-select="false"
-      :clear-on-select="false"
-      :preserve-search="true"
-      placeholder="Pick some"
-      label="label"
-      track-by="label"
-      :preselect-first="true"
-    >
-      <template #selection="{ values, search, isOpen }">
-      <span class="multiselect__single"
-            v-if="values.length"
-            v-show="!isOpen">{{ values.length }} options selected</span>
-      </template>
-    </multiselect>
     <select
       v-if="computedType === 'select'"
       :id="id"
