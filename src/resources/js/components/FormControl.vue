@@ -54,7 +54,12 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'setRef'])
 
 const computedValue = computed({
-  get: () => props.modelValue,
+  get: () => {
+    if (props.type === 'mSelect') {
+      console.log(props.modelValue)
+    }
+    return props.modelValue
+  },
   set: (value) => {
     emit('update:modelValue', value)
   }
@@ -130,8 +135,19 @@ if (props.ctrlKFocus) {
 
 <template>
   <div class="relative">
-    <multiselect v-if="computedType === 'mSelect'" v-model="computedValue" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false"
-                 :preserve-search="true" placeholder="Pick some orders" label="label" track-by="id" :preselect-first="true">
+    <multiselect
+      v-if="computedType === 'mSelect'"
+      v-model="computedValue"
+      :options="options"
+      :multiple="true"
+      :close-on-select="false"
+      :clear-on-select="false"
+      :preserve-search="true"
+      placeholder="Pick some"
+      label="label"
+      track-by="label"
+      :preselect-first="true"
+    >
       <template #selection="{ values, search, isOpen }">
       <span class="multiselect__single"
             v-if="values.length"
