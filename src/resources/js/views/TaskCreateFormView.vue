@@ -64,7 +64,7 @@ const formStatusSubmit = () => {
       </SectionTitleLineWithButton>
       <CardBox form @submit.prevent="submit" :is-form="true">
         <FormField label="Couriers">
-          <FormControl v-model="form.courier" :options="couriers" type="select"/>
+          <FormControl v-model="form.courier" :options="couriers"/>
         </FormField>
 
         <FormField label="Orders">
