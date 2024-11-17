@@ -45,6 +45,14 @@ const routes = [
     name: 'tasks',
     component: () => import('@/views/Tasks.vue')
   },
+  {
+    meta: {
+      title: 'Create Task'
+    },
+    path: '/task',
+    name: 'rask-create',
+    component: () => import('@/views/TaskCreateFormView.vue')
+  },
 ]
 
 const router = createRouter({
