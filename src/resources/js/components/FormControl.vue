@@ -76,7 +76,7 @@ const inputElClass = computed(() => {
   return base
 })
 
-const computedType = computed(() => (props.type ? props.type : (props.options ? 'select' : props.type)))
+const computedType = computed(() => ((props.options && !props.type) ? 'select' : props.type))
 
 const controlIconH = computed(() => (props.type === 'textarea' ? 'h-full' : 'h-12'))
 
@@ -131,7 +131,7 @@ if (props.ctrlKFocus) {
 <template>
   <div class="relative">
     <multiselect v-if="computedType === 'mSelect'" v-model="computedValue" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false"
-                 :preserve-search="true" placeholder="Pick some" label="name" track-by="name" :preselect-first="true">
+                 :preserve-search="true" placeholder="Pick some orders" label="label" track-by="id" :preselect-first="true">
       <template #selection="{ values, search, isOpen }">
       <span class="multiselect__single"
             v-if="values.length"

@@ -59,11 +59,11 @@ const formStatusSubmit = () => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Create order" main>
+      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Create task" main>
       </SectionTitleLineWithButton>
       <CardBox form @submit.prevent="submit" :is-form="true">
-        <FormField label="Customer">
-          <FormControl v-model="form.courier" :options="couriers" />
+        <FormField label="Couriers">
+          <FormControl v-model="form.courier" :options="couriers" type="select"/>
         </FormField>
 
         <FormField label="Unit type">
