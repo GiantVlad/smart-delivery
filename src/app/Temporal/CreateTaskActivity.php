@@ -29,7 +29,7 @@ class CreateTaskActivity implements CreateTaskActivityInterface
             $task->status = TaskStatusEnum::CREATED->value;
             $task->save();
             foreach ($orders as $order) {
-                $order->task()->associate($task);
+                $order->task_id = $task->id;
                 $order->save();
             }
         });
