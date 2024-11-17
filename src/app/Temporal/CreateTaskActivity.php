@@ -20,7 +20,7 @@ class CreateTaskActivity implements CreateTaskActivityInterface
     public function createTask(CreateTaskDto $taskDto): string
     {
         $courier = Courier::where('uuid', $taskDto->courierUuid)->firstOrFail();
-        $orders = Order::whereIn('id', $taskDto->orderUuids)->get();
+        $orders = Order::whereIn('uuid', $taskDto->orderUuids)->get();
         $task = new Task();
 
         DB::transaction(static function () use ($orders, $courier, $task) {

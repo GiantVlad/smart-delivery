@@ -45,14 +45,14 @@ class TaskController extends Controller
     public function createTask(Request $request)
     {
         $courierUuid = $request->get('courierUuid');
-        $orderIds = explode(',', $request->get('orderIds') ?? '');
+        $orderUuids = explode(',', $request->get('orderUuids') ?? '');
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateTaskWorkflowInterface::class,
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
         );
 
-       $this->workflowClient->start($workflow, new CreateTaskDto($courierUuid, $orderIds));
+       $this->workflowClient->start($workflow, new CreateTaskDto($courierUuid, $orderUuids));
 
         return response()->json(['data' => true]);
     }
