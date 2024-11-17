@@ -50,13 +50,14 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
 
         yield $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, yield $taskUuid);
 
-        $child = Workflow::newRunningWorkflowStub(
+        $client = Workflow::getClient()->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
             $taskDto->orderStatusWFId,
         );
 
+
         foreach ($taskDto->orderUuids as $orderUuid) {
-            yield $child->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
+            $client->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
         }
     }
 }
