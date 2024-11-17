@@ -2,6 +2,7 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainStore } from '@/stores/main'
 import FormControlIcon from '@/components/FormControlIcon.vue'
+import Multiselect from 'vue-multiselect'
 
 const props = defineProps({
   name: {
@@ -75,13 +76,15 @@ const inputElClass = computed(() => {
   return base
 })
 
-const computedType = computed(() => (props.options ? 'select' : props.type))
+const computedType = computed(() => (props.type ? props.type : (props.options ? 'select' : props.type)))
 
 const controlIconH = computed(() => (props.type === 'textarea' ? 'h-full' : 'h-12'))
 
 const mainStore = useMainStore()
 
 const selectEl = ref(null)
+
+const mSelectEl = ref(null)
 
 const textareaEl = ref(null)
 
@@ -90,6 +93,8 @@ const inputEl = ref(null)
 onMounted(() => {
   if (selectEl.value) {
     emit('setRef', selectEl.value)
+  } else if (mSelectEl.value) {
+    emit('setRef', mSelectEl.value)
   } else if (textareaEl.value) {
     emit('setRef', textareaEl.value)
   } else {
@@ -125,6 +130,14 @@ if (props.ctrlKFocus) {
 
 <template>
   <div class="relative">
+    <multiselect v-if="computedType === 'mSelect'" v-model="computedValue" :options="options" :multiple="true" :close-on-select="false" :clear-on-select="false"
+                 :preserve-search="true" placeholder="Pick some" label="name" track-by="name" :preselect-first="true">
+      <template #selection="{ values, search, isOpen }">
+      <span class="multiselect__single"
+            v-if="values.length"
+            v-show="!isOpen">{{ values.length }} options selected</span>
+      </template>
+    </multiselect>
     <select
       v-if="computedType === 'select'"
       :id="id"
