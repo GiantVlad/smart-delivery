@@ -28,7 +28,7 @@ const submit = () => {
   axios.post('/api/task',
     {
       courierUuid: form.courier,
-      orderIds: form.orders.map(el => el.label).join(','),
+      orderUuids: form.orders.map(el => el.label).join(','),
     })
     .then((response) => {
       router.push({ path: 'tasks' })
