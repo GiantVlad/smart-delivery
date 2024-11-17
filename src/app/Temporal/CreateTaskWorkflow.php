@@ -6,6 +6,7 @@ namespace App\Temporal;
 
 
 use App\Dto\CreateTaskDto;
+use App\Enums\OrderStatusEnum;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -48,5 +49,14 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         $taskUuid = $this->createTaskActivity->createTask($taskDto);
 
         yield $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, yield $taskUuid);
+
+        $child = Workflow::newRunningWorkflowStub(
+            OrderStatusHandlerWorkflowInterface::class,
+            $taskDto->orderStatusWFId,
+        );
+
+        foreach ($taskDto->orderUuids as $orderUuid) {
+            yield $child->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
+        }
     }
 }

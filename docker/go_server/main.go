@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-        "encoding/json"
+    "encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -66,7 +66,7 @@ func sendWebhook(o Order) error {
     }
     jsonData, err := json.Marshal(o)
     // delay
-    time.Sleep(5 * time.Second)
+    time.Sleep(2 * time.Minutes)
 
     resp, err := client.Post(targetURL, "application/json", bytes.NewBuffer(jsonData))
     if err != nil {

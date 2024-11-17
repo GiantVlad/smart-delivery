@@ -52,7 +52,7 @@ class TaskController extends Controller
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
         );
 
-       $this->workflowClient->start($workflow, new CreateTaskDto($courierUuid, $orderUuids));
+       $this->workflowClient->start($workflow, new CreateTaskDto($courierUuid, $orderUuids, $this->getWfId()));
 
         return response()->json(['data' => true]);
     }
