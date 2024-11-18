@@ -34,7 +34,7 @@
           </tr>
           </thead>
           <!-- Table body -->
-          <VueDraggableNext class="dragArea list-group w-full text-sm divide-y divide-gray-100 dark:divide-gray-700/60" :list="orders" @change="orderPoints" tag="tbody">
+          <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
           <tr v-for="order in orders" :key="order.id">
             <td class="p-2 whitespace-nowrap">
               <div class="flex items-center">
@@ -54,7 +54,7 @@
               <div class="text-left">{{order.endPointAddress}}</div>
             </td>
           </tr>
-          </VueDraggableNext>
+          </tbody>
         </table>
         <BaseDivider />
         <table class="table-auto w-full" v-if="selectedTask !== null">
@@ -65,15 +65,12 @@
               <div class="font-semibold text-left">#</div>
             </th>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-left">Start point</div>
-            </th>
-            <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-left">End point</div>
+              <div class="font-semibold text-left">Point</div>
             </th>
           </tr>
           </thead>
           <!-- Table body -->
-          <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
+          <VueDraggableNext class="dragArea list-group w-full text-sm divide-y divide-gray-100 dark:divide-gray-700/60" :list="orders" @change="log" tag="tbody">
           <tr v-for="(point, idx) in points" :key="idx">
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">{{idx}}</div>
@@ -81,11 +78,8 @@
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">{{point.startAddress}}</div>
             </td>
-            <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{point.endAddress}}</div>
-            </td>
           </tr>
-          </tbody>
+          </VueDraggableNext>
         </table>
         <template #footer>
           <BaseButtons>
@@ -113,7 +107,6 @@ import FormField from "@/components/FormField.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import router from "@/router/index.js";
 
 
 const selectedTask = ref(null)
@@ -141,14 +134,13 @@ const getOrders = () => {
   axios.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
       orders.value = response.data.data
-      orderPoints()
     })
 }
 
 const getRoute = () => {
   axios.get('/api/route/' + selectedTask.value)
     .then((response) => {
-      console.log(response.data.data)
+      points.value = response.data.data
     })
 }
 
@@ -173,6 +165,8 @@ const orderPoints = () => {
     next.startAddress = order.endPointAddress
   })
 }
+
+const log = () => ''
 
 const form = reactive({
   taskUuid: null,

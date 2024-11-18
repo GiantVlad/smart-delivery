@@ -15,7 +15,7 @@ class RouteController extends Controller
 {
     public function getRoute(string $taskUuid): JsonResource
     {
-        $task = Task::where('uuid', $taskUuid)->with('routes')->firstOrFail();
+        $task = Task::where('uuid', $taskUuid)->with('routes', 'routes.point')->orderBy('sequence')->firstOrFail();
 
         return RouteResource::collection($task->routes);
     }

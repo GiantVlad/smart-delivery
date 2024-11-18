@@ -13,7 +13,9 @@ use App\Models\Courier;
 use App\Models\Order;
 use App\Models\Task;
 use App\Temporal\CreateTaskWorkflowInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Temporal\Client\WorkflowOptions;
 use Carbon\CarbonInterval;
@@ -32,7 +34,7 @@ class TaskController extends Controller
         return TaskCreateFormResource::make($dto);
     }
 
-    public function getTasks()
+    public function getTasks(): JsonResource
     {
         $tasks = Task::with('courier')
             ->limit(30)
@@ -42,7 +44,7 @@ class TaskController extends Controller
         return TaskResource::collection($tasks);
     }
 
-    public function createTask(Request $request)
+    public function createTask(Request $request): JsonResponse
     {
         $courierUuid = $request->get('courierUuid');
         $orderUuids = explode(',', $request->get('orderUuids') ?? '');
