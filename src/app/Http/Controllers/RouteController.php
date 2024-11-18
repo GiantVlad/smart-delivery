@@ -38,7 +38,7 @@ class RouteController extends Controller
                 $route->save();
             } else {
                 $routes->each(static function (Route $route) use ($idx, $pointId) {
-                    if ($route->id === $pointId) {
+                    if ($route->point_id === $pointId) {
                         $route->sequence = $idx;
                         $route->save();
                     }
