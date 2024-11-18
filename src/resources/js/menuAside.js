@@ -10,7 +10,7 @@ import {
   mdiTelevisionGuide,
   mdiResponsive,
   mdiPalette,
-  mdiReact
+  mdiReact, mdiRoutes
 } from '@mdi/js'
 
 export default [
@@ -45,9 +45,9 @@ export default [
     icon: mdiPalette
   },
   {
-    to: '/profile',
-    label: 'Profile',
-    icon: mdiAccountCircle
+    to: '/edit-route',
+    label: 'Edit Route',
+    icon: mdiRoutes
   },
   {
     to: '/login',

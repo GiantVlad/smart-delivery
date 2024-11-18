@@ -38,7 +38,7 @@
           </thead>
           <!-- Table body -->
           <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-          <VueDraggableNext class="dragArea list-group w-full" :list="orders" @change="log">
+          <VueDraggableNext class="dragArea list-group w-full" :list="orders" @change="orderPoints">
           <tr v-for="order in orders" :key="order.id">
             <td class="p-2 whitespace-nowrap">
               <div class="flex items-center">
@@ -130,11 +130,17 @@ const getOrders = () => {
   axios.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
       orders.value = response.data.data
+      orderPoints()
     })
 }
 
-const log = (e) => {
-  console.log(e)
+const orderPoints = () => {
+  points.value = []
+  orders.value.forEach(order => {
+    points.value.push(
+      {startAddress: order.startPointAddress, endAddress: order.endPointAddress}
+    )
+  })
 }
 
 </script>
