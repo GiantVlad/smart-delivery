@@ -30,4 +30,4 @@ Route::post('/task', [ TaskController::class, 'createTask']);
 
 Route::post('/update-route', [ RouteController::class, 'updateRoute']);
 
-Route::post('/route/{taskUuid}', [ RouteController::class, 'getRoute']);
+Route::get('/route/{taskUuid}', [ RouteController::class, 'getRoute']);
