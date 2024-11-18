@@ -30,13 +30,13 @@ const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
 const showActionButton = ref({})
 const onUpdateStatus = (order) => {
+  showActionButton.value[order.uuid] = !showActionButton.value[order.uuid]
   if (!showActionButton.value[order.uuid]) {
     form.orderUuid = order.uuid
     selectedStatus.vale[order.uuid] = order.status
   } else {
     form.orderUuid = null
   }
-  showActionButton.value[order.uuid] = !showActionButton.value[order.uuid]
 }
 
 onMounted(() => {
@@ -77,7 +77,7 @@ const submit = () => {
   axios.post('/api/update-order-status-in-task',
     {
       status: form.status,
-      orderUuids: form.orderUuid,
+      orderUuid: form.orderUuid,
     })
     .then(response => {
       showActionButton.value[form.orderUuid] = true
