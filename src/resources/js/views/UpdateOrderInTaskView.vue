@@ -12,7 +12,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "axios";
 
-const selectedTask = ref({id: null, label: ''})
+const selectedTask = ref(null)
 const tasks = ref([])
 const orders = ref([])
 
@@ -48,7 +48,7 @@ onMounted(() => {
 
 watch(selectedTask, async (newTask, oldTask) => {
   console.log(newTask)
-  if (newTask !== null && (newTask.id !== oldTask?.id)) {
+  if (newTask !== null && (newTask !== oldTask)) {
     await getOrders()
   }
 })
