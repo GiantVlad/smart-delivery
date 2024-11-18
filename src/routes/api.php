@@ -11,7 +11,7 @@ Route::get('/order', [ OrderCreateController::class, 'getOrderForm']);
 
 Route::post('/order', [ OrderCreateController::class, 'createOrder']);
 
-Route::post('update-order-status-in-task', [ OrderCreateController::class, 'updateStatusByCourier']);
+Route::post('update-order-status-in-task', [ OrderStatusController::class, 'updateStatusByCourier']);
 
 Route::get('/orders', [ OrderCreateController::class, 'getOrders']);
 

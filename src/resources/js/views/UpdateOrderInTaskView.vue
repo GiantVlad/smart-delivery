@@ -22,18 +22,6 @@ const form = reactive({
   orderUuid: null,
 })
 
-const submit = () => {
-  console.log(form)
-  axios.post('/api/update-order-status-in-task',
-    {
-      status: form.status,
-      orderUuids: form.orderUuid,
-    })
-    .then(response => {
-      console.log('Updated')
-    })
-}
-
 const formStatusWithHeader = ref(true)
 
 const formStatusCurrent = ref(0)
@@ -80,6 +68,25 @@ const getOrders = () => {
       }
 
       orders.value = response.data.data
+    })
+}
+
+
+const submit = () => {
+  console.log(form)
+  axios.post('/api/update-order-status-in-task',
+    {
+      status: form.status,
+      orderUuids: form.orderUuid,
+    })
+    .then(response => {
+      showActionButton.value[form.orderUuid] = true
+      orders.map(el => {
+        if (el.uuid === form.orderUuid) {
+          el.status = form.status
+        }
+      })
+      console.log('Updated')
     })
 }
 
