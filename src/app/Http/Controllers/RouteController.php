@@ -10,6 +10,7 @@ use App\Models\Task;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class RouteController extends Controller
 {
@@ -26,14 +27,20 @@ class RouteController extends Controller
     {
         $task = Task::where('uuid', $request->get('taskUuid'))->firstOrFail();
         $points = $request->get('points');
+        /** @var Collection $routes */
         $routes = $task->routes;
-        if ($routes->isEmpty()) {
-            foreach ($points as $idx => $pointId) {
+        foreach ($points as $idx => $pointId) {
+            if ($routes->isEmpty()) {
                 $route = new Route();
                 $route->task_id = $task->id;
                 $route->sequence = $idx;
                 $route->point_id = $pointId;
                 $route->save();
+            } else {
+                $routes->each(static function (Route $route) use ($idx) {
+                    $route->sequence = $idx;
+                    $route->save();
+                });
             }
         }
 
