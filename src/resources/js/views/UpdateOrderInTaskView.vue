@@ -15,6 +15,7 @@ import axios from "axios";
 const selectedTask = ref(null)
 const tasks = ref([])
 const orders = ref([])
+const selectedStatus = ref(null)
 
 const form = reactive({
   status: null,
@@ -39,6 +40,16 @@ const formStatusCurrent = ref(0)
 
 const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
+const showActionButton = ref(true)
+const onUpdateStatus = (uuid) => {
+  showActionButton.value = !showActionButton.value
+  if (showActionButton.value) {
+    form.orderUuid = uuid
+  } else {
+    form.orderUuid = null
+  }
+}
+
 onMounted(() => {
   axios.get('/api/tasks')
     .then((response) => {
@@ -50,6 +61,13 @@ watch(selectedTask, async (newTask, oldTask) => {
   console.log(newTask)
   if (newTask !== null && (newTask !== oldTask)) {
     await getOrders()
+  }
+})
+
+watch(selectedStatus, async (newStatus, oldStatus) => {
+  console.log(newStatus)
+  if (newStatus !== null && (newStatus !== oldStatus)) {
+    form.status = selectedStatus.value
   }
 })
 
@@ -93,6 +111,9 @@ const formStatusSubmit = () => {
               <div class="font-semibold text-center">Status</div>
             </th>
             <th class="p-2 whitespace-nowrap">
+              <div class="font-semibold text-center">Action</div>
+            </th>
+            <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-left">Pick up</div>
             </th>
             <th class="p-2 whitespace-nowrap">
@@ -113,6 +134,12 @@ const formStatusSubmit = () => {
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">{{order.status}}</div>
+            </td>
+            <td class="p-2 whitespace-nowrap">
+              <div class="text-left font-medium text-green-500">
+                <BaseButton v-show="showActionButton" type="button" color="success" label="Change status" small @click="onUpdateStatus(order.uuid)"/>
+                <FormControl v-show="showActionButton" v-model="selectedStatus" :options="['assigned', 'started', 'canceled']"/>
+              </div>
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">{{order.startPointAddress}}</div>
