@@ -14,7 +14,6 @@
         <BaseDivider />
         <table class="table-auto w-full" v-if="selectedTask !== null">
           <!-- Table header -->
-          <VueDraggableNext class="dragArea list-group w-full" :list="orders" @change="orderPoints">
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
             <th class="p-2 whitespace-nowrap">
@@ -27,9 +26,6 @@
               <div class="font-semibold text-center">Status</div>
             </th>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-center">Action</div>
-            </th>
-            <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-left">Pick up</div>
             </th>
             <th class="p-2 whitespace-nowrap">
@@ -38,7 +34,7 @@
           </tr>
           </thead>
           <!-- Table body -->
-          <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
+          <VueDraggableNext class="dragArea list-group w-full text-sm divide-y divide-gray-100 dark:divide-gray-700/60" :list="orders" @change="orderPoints" tag="tbody">
           <tr v-for="order in orders" :key="order.id">
             <td class="p-2 whitespace-nowrap">
               <div class="flex items-center">
@@ -58,7 +54,6 @@
               <div class="text-left">{{order.endPointAddress}}</div>
             </td>
           </tr>
-          </tbody>
           </VueDraggableNext>
         </table>
         <BaseDivider />
@@ -66,6 +61,9 @@
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
+            <th class="p-2 whitespace-nowrap">
+              <div class="font-semibold text-left">#</div>
+            </th>
             <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-left">Start point</div>
             </th>
@@ -76,7 +74,10 @@
           </thead>
           <!-- Table body -->
           <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-          <tr v-for="point in points">
+          <tr v-for="(point, idx) in points" :key="idx">
+            <td class="p-2 whitespace-nowrap">
+              <div class="text-left">{{idx}}</div>
+            </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">{{point.startAddress}}</div>
             </td>
@@ -132,6 +133,7 @@ watch(selectedTask, async (newTask, oldTask) => {
   if (newTask !== null && (newTask !== oldTask)) {
     getOrders()
     getRoute()
+    form.taskUuid = newTask
   }
 })
 
@@ -152,12 +154,16 @@ const getRoute = () => {
 
 const orderPoints = () => {
   points.value = []
+  form.routes = []
   let next = {startAddress: null, endAddress: null}
   orders.value.forEach((order, idx) => {
     if (next.startAddress !== null) {
       next.endAddress = order.startPointAddress
       points.value.push(next)
+    } else {
+      form.routes.push(order.sartPointId)
     }
+    form.routes.push(order.endPointId)
     points.value.push(
       {startAddress: order.startPointAddress, endAddress: order.endPointAddress}
     )
@@ -178,10 +184,10 @@ const submit = () => {
   axios.post('/api/update-route',
     {
       taskUuid: form.taskUuid,
-      routes: form.routes,
+      routes: [...new Set(form.routes)]
     })
     .then((response) => {
-      router.push({ path: 'tasks' })
+      console.log('updated')
     })
 }
 

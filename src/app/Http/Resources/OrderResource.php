@@ -25,6 +25,8 @@ class OrderResource extends JsonResource
             'taskCourierName' => $this?->task->courier->namme ?? 'Undefined',
             'startPointAddress' => $this->startPoint->address,
             'endPointAddress' => $this->endPoint->address,
+            'startPointId' => $this->startPoint->id,
+            'endPointId' => $this->endPoint->id,
             'updated_at' => $this->updated_at,
         ];
     }
