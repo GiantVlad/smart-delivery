@@ -22,6 +22,6 @@ class Route extends Model
 
     public function point()
     {
-        return $this->belongsTo(Point::class);
+        return $this->hasOne(Point::class);
     }
 }

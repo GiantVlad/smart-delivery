@@ -145,25 +145,26 @@ const getRoute = () => {
 }
 
 const orderPoints = () => {
-  points.value = []
-  form.points = []
-  let next = {startAddress: null, endAddress: null}
-  orders.value.forEach((order, idx) => {
-    if (next.startAddress !== null) {
-      next.endAddress = order.startPointAddress
-      points.value.push(next)
-    } else {
-      form.points.push(order.startPointId)
-    }
-    form.points.push(order.endPointId)
-    points.value.push(
-      {startAddress: order.startPointAddress, endAddress: order.endPointAddress}
-    )
-    if ((idx+1) === orders.value.length) {
-      return
-    }
-    next.startAddress = order.endPointAddress
-  })
+  // points.value.map((point, idx) => point.sequence = idx)
+  // points.value = []
+  // form.points = []
+  // let next = {startAddress: null, endAddress: null}
+  // orders.value.forEach((order, idx) => {
+  //   if (next.startAddress !== null) {
+  //     next.endAddress = order.startPointAddress
+  //     points.value.push(next)
+  //   } else {
+  //     form.points.push(order.startPointId)
+  //   }
+  //   form.points.push(order.endPointId)
+  //   points.value.push(
+  //     {startAddress: order.startPointAddress, endAddress: order.endPointAddress}
+  //   )
+  //   if ((idx+1) === orders.value.length) {
+  //     return
+  //   }
+  //   next.startAddress = order.endPointAddress
+  // })
 }
 
 const log = () => ''
