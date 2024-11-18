@@ -33,7 +33,7 @@ const onUpdateStatus = (order) => {
   showActionButton.value[order.uuid] = !showActionButton.value[order.uuid]
   if (!showActionButton.value[order.uuid]) {
     form.orderUuid = order.uuid
-    selectedStatus.value[order.uuid] = order.status
+    selectedStatus.value = order.status
   } else {
     form.orderUuid = null
   }
@@ -71,7 +71,6 @@ const getOrders = () => {
     })
 }
 
-
 const submit = () => {
   console.log(form)
   axios.post('/api/update-order-status-in-task',
@@ -88,6 +87,10 @@ const submit = () => {
       })
       console.log('Updated')
     })
+}
+
+const unassignOrder = (order) => {
+  orders.value = orders.value.filter(el => el.uuid !== order.uuid)
 }
 
 const formStatusSubmit = () => {
@@ -150,7 +153,10 @@ const formStatusSubmit = () => {
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
                 <BaseButton v-show="showActionButton[order.uuid]" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
-                <FormControl v-show="!showActionButton[order.uuid]" v-model="selectedStatus" :options="['assigned', 'started', 'canceled']"/>
+                <template v-show="!showActionButton[order.uuid]" >
+                  <FormControl v-model="selectedStatus" :options="['assigned', 'started', 'canceled', 'finished']"/>
+                  <BaseButton type="submit" color="info" label="Submit" small />
+                </template>
               </div>
             </td>
             <td class="p-2 whitespace-nowrap">
@@ -159,12 +165,17 @@ const formStatusSubmit = () => {
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">{{order.endPointAddress}}</div>
             </td>
+            <td class="p-2 whitespace-nowrap">
+              <div class="text-left font-medium text-green-500">
+                <BaseButton type="button" color="success" label="Unassign order" small @click="unassignOrder(order)"/>
+              </div>
+            </td>
           </tr>
           </tbody>
         </table>
         <template #footer>
           <BaseButtons>
-            <BaseButton type="submit" color="info" label="Submit" />
+            <BaseButton type="button" color="info" label="Add order" />
           </BaseButtons>
         </template>
       </CardBox>
