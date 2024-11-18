@@ -40,7 +40,7 @@ const formStatusCurrent = ref(0)
 
 const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
-const showActionButton = ref(null)
+const showActionButton = ref({})
 const onUpdateStatus = (order) => {
   if (!showActionButton[order.uuid].value) {
     form.orderUuid = order.uuid
