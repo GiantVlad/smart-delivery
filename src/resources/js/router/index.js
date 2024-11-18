@@ -61,6 +61,14 @@ const routes = [
     name: 'update-order-in-task',
     component: () => import('@/views/UpdateOrderInTaskView.vue')
   },
+  {
+    meta: {
+      title: 'Edit route'
+    },
+    path: '/edit-route',
+    name: 'edit-route',
+    component: () => import('@/views/EditRouteView.vue')
+  },
 ]
 
 const router = createRouter({
