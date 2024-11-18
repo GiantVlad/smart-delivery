@@ -40,15 +40,15 @@ const formStatusCurrent = ref(0)
 
 const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
-const showActionButton = ref(true)
+const showActionButton = ref(null)
 const onUpdateStatus = (order) => {
-  showActionButton.value = !showActionButton.value
-  if (showActionButton.value) {
+  if (!showActionButton[order.uuid].value) {
     form.orderUuid = order.uuid
-    selectedStatus.value = order.status
+    selectedStatus.value[order.uuid] = order.status
   } else {
     form.orderUuid = null
   }
+  showActionButton.value[order.uuid] = !showActionButton.value[order.uuid]
 }
 
 onMounted(() => {
@@ -75,6 +75,10 @@ watch(selectedStatus, async (newStatus, oldStatus) => {
 const getOrders = () => {
   axios.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
+      for (const order of response.data.data) {
+        showActionButton[order.uuid] = true
+      }
+
       orders.value = response.data.data
     })
 }
@@ -138,8 +142,8 @@ const formStatusSubmit = () => {
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
-                <BaseButton v-show="showActionButton" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
-                <FormControl v-show="!showActionButton" v-model="selectedStatus" :options="['assigned', 'started', 'canceled']"/>
+                <BaseButton v-show="showActionButton[order.uuid]" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
+                <FormControl v-show="!showActionButton[order.uuid]" v-model="selectedStatus" :options="['assigned', 'started', 'canceled']"/>
               </div>
             </td>
             <td class="p-2 whitespace-nowrap">
