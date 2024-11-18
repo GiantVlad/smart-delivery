@@ -15,6 +15,8 @@ Route::post('update-order-status-in-task', [ OrderCreateController::class, 'upda
 
 Route::get('/orders', [ OrderCreateController::class, 'getOrders']);
 
+Route::get('/orders-by-task/{taskUuid}', [ OrderCreateController::class, 'getOrdersByTask']);
+
 Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder']);
 
 Route::post('/assign', [ OrderStatusController::class, 'assignCourier']);

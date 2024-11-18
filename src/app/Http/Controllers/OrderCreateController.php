@@ -10,6 +10,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Point;
+use App\Models\Task;
 use App\Temporal\CreateOrderWorkflowInterface;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
@@ -35,6 +36,18 @@ class OrderCreateController extends Controller
     {
         $orders = Order::with('customer', 'task.courier', 'startPoint', 'endPoint')
             ->limit(30)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return OrderResource::collection($orders);
+    }
+
+    public function getOrdersByTask(string $taskUuid): JsonResource
+    {
+        $task = Task::where('uuid', $taskUuid)->firstOrFail();
+
+        $orders = Order::with('startPoint', 'endPoint')
+            ->where('task_id', $task->id)
             ->orderBy('updated_at', 'desc')
             ->get();
 

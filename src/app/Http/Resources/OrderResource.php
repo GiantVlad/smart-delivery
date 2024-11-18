@@ -21,7 +21,7 @@ class OrderResource extends JsonResource
             'uuid' => $this->uuid,
             'unitType' => $this->unit_type,
             'status' => $this->status,
-            'customerEmail ' => $this->customer->email,
+            'customerEmail ' => $this->customer?->email ?? '',
             'taskCourierName' => $this?->task->courier->namme ?? 'Undefined',
             'startPointAddress' => $this->startPoint->address,
             'endPointAddress' => $this->endPoint->address,

@@ -12,7 +12,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "axios";
 
-const selectedTask = ref(null)
+const selectedTask = ref({id: null, label: ''})
 const tasks = ref([])
 const orders = ref([])
 
@@ -42,19 +42,19 @@ const formStatusOptions = ['info', 'success', 'danger', 'warning']
 onMounted(() => {
   axios.get('/api/tasks')
     .then((response) => {
-      tasks.value = response.data.data.map(el => el.uuid + ': ' + el.courierName)
+      tasks.value = response.data.data.map(el => ({id: el.uuid, label: el.uuid + ': ' + el.courierName}))
     })
 })
 
 watch(selectedTask, async (newTask, oldTask) => {
   console.log(newTask)
-  if (newTask !== null && (newTask !== oldTask)) {
+  if (newTask !== null && (newTask.id !== oldTask?.id)) {
     await getOrders()
   }
 })
 
 const getOrders = () => {
-  axios.get('/api/orders')
+  axios.get('/api/orders-by-task/' + selectedTask.id)
     .then((response) => {
       orders.value = response.data.data
     })
