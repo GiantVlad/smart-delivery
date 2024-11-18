@@ -15,9 +15,11 @@ class RouteController extends Controller
 {
     public function getRoute(string $taskUuid): JsonResource
     {
-        $task = Task::where('uuid', $taskUuid)->with('routes', 'routes.point')->orderBy('sequence')->firstOrFail();
+        $task = Task::where('uuid', $taskUuid)->firstOrFail();
 
-        return RouteResource::collection($task->routes);
+        $routes = Route::where('task_id', $task->id)->with('point')->orderBy('sequence')->get();
+
+        return RouteResource::collection($routes);
     }
 
     public function updateRoute(Request $request): JsonResponse
