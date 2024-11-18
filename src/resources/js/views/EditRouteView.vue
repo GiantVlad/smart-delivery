@@ -161,7 +161,7 @@ const orderPoints = () => {
       next.endAddress = order.startPointAddress
       points.value.push(next)
     } else {
-      form.routes.push(order.sartPointId)
+      form.routes.push(order.startPointId)
     }
     form.routes.push(order.endPointId)
     points.value.push(

@@ -24,12 +24,13 @@ class RouteController extends Controller
     {
         $task = Task::where('uuid', $request->get('taskUuid'))->firstOrFail();
         $points = $request->get('points');
-        if ($task->routes()->isEmpty()) {
-            foreach ($points as $idx => $point) {
+        $routes = $task->routes;
+        if ($routes->isEmpty()) {
+            foreach ($points as $idx => $pointId) {
                 $route = new Route();
                 $route->task_id = $task->id;
                 $route->sequence = $idx;
-                $route->point_id = $point->id;
+                $route->point_id = $pointId;
                 $route->save();
             }
         }
