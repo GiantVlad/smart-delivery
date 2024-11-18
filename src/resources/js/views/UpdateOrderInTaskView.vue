@@ -76,7 +76,7 @@ const getOrders = () => {
   axios.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
       for (const order of response.data.data) {
-        showActionButton[order.uuid] = true
+        showActionButton.value[order.uuid] = true
       }
 
       orders.value = response.data.data
