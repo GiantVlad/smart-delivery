@@ -154,16 +154,16 @@ const getRoute = () => {
 
 const orderPoints = () => {
   points.value = []
-  form.routes = []
+  form.points = []
   let next = {startAddress: null, endAddress: null}
   orders.value.forEach((order, idx) => {
     if (next.startAddress !== null) {
       next.endAddress = order.startPointAddress
       points.value.push(next)
     } else {
-      form.routes.push(order.startPointId)
+      form.points.push(order.startPointId)
     }
-    form.routes.push(order.endPointId)
+    form.points.push(order.endPointId)
     points.value.push(
       {startAddress: order.startPointAddress, endAddress: order.endPointAddress}
     )
@@ -176,7 +176,7 @@ const orderPoints = () => {
 
 const form = reactive({
   taskUuid: null,
-  routes: [],
+  points: [],
 })
 
 const submit = () => {
@@ -184,7 +184,7 @@ const submit = () => {
   axios.post('/api/update-route',
     {
       taskUuid: form.taskUuid,
-      routes: [...new Set(form.routes)]
+      points: [...new Set(form.routes)]
     })
     .then((response) => {
       console.log('updated')
