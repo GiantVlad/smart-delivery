@@ -1,7 +1,5 @@
 import {
-  mdiAccountCircle,
   mdiMonitor,
-  mdiGithub,
   mdiLock,
   mdiAlertCircle,
   mdiSquareEditOutline,
@@ -10,7 +8,7 @@ import {
   mdiTelevisionGuide,
   mdiResponsive,
   mdiPalette,
-  mdiReact, mdiRoutes
+  mdiRoutes
 } from '@mdi/js'
 
 export default [

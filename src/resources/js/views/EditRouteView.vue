@@ -7,13 +7,14 @@
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
 
-      <CardBox class="mb-6" has-table>
+      <CardBox class="mb-6" has-table form @submit.prevent="submit" :is-form="true">
         <FormField label="Task">
           <FormControl v-model="selectedTask" :options="tasks"/>
         </FormField>
         <BaseDivider />
         <table class="table-auto w-full" v-if="selectedTask !== null">
           <!-- Table header -->
+          <VueDraggableNext class="dragArea list-group w-full" :list="orders" @change="orderPoints">
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
             <th class="p-2 whitespace-nowrap">
@@ -38,7 +39,6 @@
           </thead>
           <!-- Table body -->
           <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-          <VueDraggableNext class="dragArea list-group w-full" :list="orders" @change="orderPoints">
           <tr v-for="order in orders" :key="order.id">
             <td class="p-2 whitespace-nowrap">
               <div class="flex items-center">
@@ -58,8 +58,8 @@
               <div class="text-left">{{order.endPointAddress}}</div>
             </td>
           </tr>
-          </VueDraggableNext>
           </tbody>
+          </VueDraggableNext>
         </table>
         <BaseDivider />
         <table class="table-auto w-full" v-if="selectedTask !== null">
@@ -86,6 +86,11 @@
           </tr>
           </tbody>
         </table>
+        <template #footer>
+          <BaseButtons>
+            <BaseButton type="submit" color="info" label="Save route" />
+          </BaseButtons>
+        </template>
       </CardBox>
       </SectionMain>
   </LayoutAuthenticated>
@@ -101,10 +106,13 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import axios from "axios";
-import {ref, onMounted, watch} from "vue";
+import {ref, onMounted, watch, reactive} from "vue";
 import FormControl from "@/components/FormControl.vue";
 import FormField from "@/components/FormField.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
+import BaseButtons from "@/components/BaseButtons.vue";
+import BaseButton from "@/components/BaseButton.vue";
+import router from "@/router/index.js";
 
 
 const selectedTask = ref(null)
@@ -122,7 +130,8 @@ onMounted(() => {
 
 watch(selectedTask, async (newTask, oldTask) => {
   if (newTask !== null && (newTask !== oldTask)) {
-    await getOrders()
+    getOrders()
+    getRoute()
   }
 })
 
@@ -131,6 +140,13 @@ const getOrders = () => {
     .then((response) => {
       orders.value = response.data.data
       orderPoints()
+    })
+}
+
+const getRoute = () => {
+  axios.get('/api/route/' + selectedTask.value)
+    .then((response) => {
+      console.log(response.data.data)
     })
 }
 
@@ -150,6 +166,23 @@ const orderPoints = () => {
     }
     next.startAddress = order.endPointAddress
   })
+}
+
+const form = reactive({
+  taskUuid: null,
+  routes: [],
+})
+
+const submit = () => {
+  console.log(form)
+  axios.post('/api/update-route',
+    {
+      taskUuid: form.taskUuid,
+      routes: form.routes,
+    })
+    .then((response) => {
+      router.push({ path: 'tasks' })
+    })
 }
 
 </script>

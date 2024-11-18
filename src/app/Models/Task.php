@@ -23,4 +23,9 @@ class Task extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function routes()
+    {
+        return $this->hasMany(Route::class);
+    }
 }

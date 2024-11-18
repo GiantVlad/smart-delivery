@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\OrderStatusController;
+use App\Http\Controllers\RouteController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderCreateController;
@@ -26,3 +27,7 @@ Route::get('/tasks', [ TaskController::class, 'getTasks']);
 Route::get('/task', [ TaskController::class, 'createTaskForm']);
 
 Route::post('/task', [ TaskController::class, 'createTask']);
+
+Route::post('/update-route', [ RouteController::class, 'updateRoute']);
+
+Route::post('/route/{taskUuid}', [ RouteController::class, 'getRoute']);
