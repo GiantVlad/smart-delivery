@@ -76,7 +76,7 @@
               <div class="text-left">{{idx}}</div>
             </td>
             <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{point.startAddress}}</div>
+              <div class="text-left">{{point.pointAddress}}</div>
             </td>
           </tr>
           </VueDraggableNext>
