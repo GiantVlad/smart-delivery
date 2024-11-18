@@ -184,7 +184,7 @@ const submit = () => {
   axios.post('/api/update-route',
     {
       taskUuid: form.taskUuid,
-      points: [...new Set(form.routes)]
+      points: [...new Set(form.points)]
     })
     .then((response) => {
       console.log('updated')
