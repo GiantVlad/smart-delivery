@@ -54,7 +54,7 @@ watch(selectedTask, async (newTask, oldTask) => {
 })
 
 const getOrders = () => {
-  axios.get('/api/orders-by-task/' + selectedTask)
+  axios.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
       orders.value = response.data.data
     })
