@@ -41,10 +41,11 @@ const formStatusCurrent = ref(0)
 const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
 const showActionButton = ref(true)
-const onUpdateStatus = (uuid) => {
+const onUpdateStatus = (order) => {
   showActionButton.value = !showActionButton.value
   if (showActionButton.value) {
-    form.orderUuid = uuid
+    form.orderUuid = order.uuid
+    selectedStatus.value = order.status
   } else {
     form.orderUuid = null
   }
@@ -137,8 +138,8 @@ const formStatusSubmit = () => {
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
-                <BaseButton v-show="showActionButton" type="button" color="success" label="Change status" small @click="onUpdateStatus(order.uuid)"/>
-                <FormControl v-show="showActionButton" v-model="selectedStatus" :options="['assigned', 'started', 'canceled']"/>
+                <BaseButton v-show="showActionButton" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
+                <FormControl v-show="!showActionButton" v-model="selectedStatus" :options="['assigned', 'started', 'canceled']"/>
               </div>
             </td>
             <td class="p-2 whitespace-nowrap">
