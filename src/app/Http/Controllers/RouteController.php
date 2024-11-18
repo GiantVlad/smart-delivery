@@ -37,9 +37,11 @@ class RouteController extends Controller
                 $route->point_id = $pointId;
                 $route->save();
             } else {
-                $routes->each(static function (Route $route) use ($idx) {
-                    $route->sequence = $idx;
-                    $route->save();
+                $routes->each(static function (Route $route) use ($idx, $pointId) {
+                    if ($route->id === $pointId) {
+                        $route->sequence = $idx;
+                        $route->save();
+                    }
                 });
             }
         }
