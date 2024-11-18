@@ -33,7 +33,7 @@ const onUpdateStatus = (order) => {
   showActionButton.value[order.uuid] = !showActionButton.value[order.uuid]
   if (!showActionButton.value[order.uuid]) {
     form.orderUuid = order.uuid
-    selectedStatus.vale[order.uuid] = order.status
+    selectedStatus.value[order.uuid] = order.status
   } else {
     form.orderUuid = null
   }
@@ -81,7 +81,7 @@ const submit = () => {
     })
     .then(response => {
       showActionButton.value[form.orderUuid] = true
-      orders.map(el => {
+      orders.value.map(el => {
         if (el.uuid === form.orderUuid) {
           el.status = form.status
         }
