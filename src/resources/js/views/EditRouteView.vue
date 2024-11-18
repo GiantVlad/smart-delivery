@@ -136,10 +136,19 @@ const getOrders = () => {
 
 const orderPoints = () => {
   points.value = []
-  orders.value.forEach(order => {
+  let next = null
+  orders.value.forEach((order, idx) => {
+    if (next !== null) {
+      next.endAddress = order.startPointAddress
+      points.value.push(next)
+    }
     points.value.push(
       {startAddress: order.startPointAddress, endAddress: order.endPointAddress}
     )
+    if ((idx+1) === orders.value.length) {
+      return
+    }
+    next.startAddress = order.endPointAddress
   })
 }
 
