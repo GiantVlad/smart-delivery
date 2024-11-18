@@ -42,12 +42,13 @@ const formStatusOptions = ['info', 'success', 'danger', 'warning']
 onMounted(() => {
   axios.get('/api/tasks')
     .then((response) => {
-      tasks.value = response.data.data.map(el => el.uuid)
+      tasks.value = response.data.data.map(el => el.uuid + ': ' + el.courierName)
     })
 })
 
 watch(selectedTask, async (newTask, oldTask) => {
-  if (newTask !== null && (newTask.uuid !== oldTask?.uuid)) {
+  console.log(newTask)
+  if (newTask !== null && (newTask !== oldTask)) {
     await getOrders()
   }
 })
