@@ -31,7 +31,7 @@ const routes = [
   },
   {
     meta: {
-      title: 'Create Order'
+      title: 'Create order'
     },
     path: '/order',
     name: 'order-create',
@@ -39,7 +39,7 @@ const routes = [
   },
   {
     meta: {
-      title: 'Forms'
+      title: 'Tasks'
     },
     path: '/tasks',
     name: 'tasks',
@@ -47,11 +47,19 @@ const routes = [
   },
   {
     meta: {
-      title: 'Create Task'
+      title: 'Create task'
     },
     path: '/task',
-    name: 'rask-create',
+    name: 'task-create',
     component: () => import('@/views/TaskCreateFormView.vue')
+  },
+  {
+    meta: {
+      title: 'Update order in task'
+    },
+    path: '/update-order-in-task',
+    name: 'update-order-in-task',
+    component: () => import('@/views/UpdateOrderInTaskView.vue')
   },
 ]
 

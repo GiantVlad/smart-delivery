@@ -40,8 +40,8 @@ export default [
     icon: mdiResponsive
   },
   {
-    to: '/',
-    label: 'Good morning',
+    to: '/update-order-in-task',
+    label: 'Update order in task',
     icon: mdiPalette
   },
   {

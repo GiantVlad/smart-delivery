@@ -11,6 +11,8 @@ Route::get('/order', [ OrderCreateController::class, 'getOrderForm']);
 
 Route::post('/order', [ OrderCreateController::class, 'createOrder']);
 
+Route::post('update-order-status-in-task', [ OrderCreateController::class, 'updateStatusByCourier']);
+
 Route::get('/orders', [ OrderCreateController::class, 'getOrders']);
 
 Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder']);

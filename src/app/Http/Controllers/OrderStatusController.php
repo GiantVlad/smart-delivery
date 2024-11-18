@@ -34,7 +34,7 @@ class OrderStatusController extends Controller
         $courierUuid = $request->get('courierUuid');
         $order = Order::where('uuid', $orderUuid)->firstOrFail();
 
-        if (! in_array($order->status,  [OrderStatusEnum::ACCEPTED->value])) {
+        if (! in_array($order->status, [OrderStatusEnum::ACCEPTED->value])) {
             throw new \Exception("You can't assign order that has status $order->status", 412);
         }
 
@@ -46,6 +46,32 @@ class OrderStatusController extends Controller
         );
 
         $workflow->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value, $courierUuid);
+
+        return response()->json(OrderStatusEnum::ASSIGNED->value);
+    }
+
+    public function updateStatusByCourier(Request $request): JsonResponse
+    {
+        $orderUuid = $request->get('orderUuid');
+        $status = $request->get('status');
+        $order = Order::where('uuid', $orderUuid)->firstOrFail();
+
+        try {
+            $statusEnum = OrderStatusEnum::from($status);
+        } catch (\ValueError $error) {
+            throw new \Exception("Invalid status: $status", 412);
+        }
+
+        if (! in_array($order->status, OrderStatusEnum::courierCanUpdate())) {
+            throw new \Exception("You can't change order status to $status since current status is $order->status", 412);
+        }
+
+        $workflow = $this->workflowClient->newRunningWorkflowStub(
+            OrderStatusHandlerWorkflowInterface::class,
+            $this->getWfId(),
+        );
+
+        $workflow->updateStatus($orderUuid, $status);
 
         return response()->json(OrderStatusEnum::ASSIGNED->value);
     }
