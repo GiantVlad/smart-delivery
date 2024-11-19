@@ -15,7 +15,7 @@ import axios from "axios";
 const selectedTask = ref(null)
 const tasks = ref([])
 const orders = ref([])
-const selectedStatus = ref(null)
+const selectedStatus = ref({})
 
 const form = reactive({
   status: null,
@@ -58,6 +58,7 @@ const getOrders = () => {
     .then((response) => {
       for (const order of response.data.data) {
         showActionButton.value[order.uuid] = true
+        selectedStatus.value[order.uuid] = order.status
       }
 
       orders.value = response.data.data
