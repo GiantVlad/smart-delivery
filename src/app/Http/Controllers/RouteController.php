@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditRouteRequest;
 use App\Http\Resources\RouteResource;
 use App\Models\Route;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
@@ -23,9 +23,9 @@ class RouteController extends Controller
         return RouteResource::collection($routes);
     }
 
-    public function updateRoute(Request $request): JsonResponse
+    public function updateRoute(EditRouteRequest $request): JsonResponse
     {
-        $task = Task::where('uuid', $request->get('taskUuid'))->firstOrFail();
+        $task = Task::where('uuid', $request->get('taskUuid'))->first();
         $points = $request->get('points');
         /** @var Collection $routes */
         $routes = $task->routes;
