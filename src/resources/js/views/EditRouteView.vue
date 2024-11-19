@@ -194,7 +194,7 @@ const submit = () => {
       error.value = 0
     }).catch(e => {
       console.log(e)
-      error.value = e.data.message
+      error.value = e.response.data.message
   })
 }
 
