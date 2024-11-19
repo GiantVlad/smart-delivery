@@ -6,7 +6,9 @@
       <NotificationBar color="info" :icon="mdiMonitorCellphone">
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
-
+      <BaseButtons>
+        <BaseButton type="button" color="info" label="Create Order" @click="router.push('/order')"/>
+      </BaseButtons>
       <CardBox class="mb-6" has-table v-if="orders.length > 0">
         <!-- Table -->
           <table class="table-auto w-full">
@@ -99,6 +101,9 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
 import {ref, onMounted} from "vue";
+import BaseButton from "@/components/BaseButton.vue";
+import BaseButtons from "@/components/BaseButtons.vue";
+import router from "@/router/index.js";
 
 let orders = ref([])
 
