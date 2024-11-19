@@ -20,7 +20,7 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'status' => $this->status,
-            'courierName' => $this->courier->name,
+            'courierName' => $this->whenLoaded('courier') ? $this->courier->name : 'Undefined',
             'countOrders' => $this->orders()->count(),
             'updated_at' => $this->updated_at,
         ];

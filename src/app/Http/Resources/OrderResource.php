@@ -22,7 +22,7 @@ class OrderResource extends JsonResource
             'unitType' => $this->unit_type,
             'status' => $this->status,
             'customerEmail' => $this->whenLoaded('customer') ? $this->customer->email : '',
-            'taskCourierName' => $this->whenLoaded('task') ? ($this->task?->uuid ?? 'Undefined') : 'Undefined2',
+            'taskCourierName' => (new TaskResource($this->whenLoaded('task')))?->courierName ?? 'Undefined',
             'startPointAddress' => $this->startPoint->address,
             'endPointAddress' => $this->endPoint->address,
             'startPointId' => $this->startPoint->id,
