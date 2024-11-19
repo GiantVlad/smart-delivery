@@ -63,9 +63,16 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         $taskUuidPromise = $this->createTaskActivity->createTask($taskDto);
         $taskUuid = yield $taskUuidPromise;
 
-        yield $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, $taskUuid);
+        $notificationPr = Workflow::async(static function () use ($taskDto, $taskUuid) {
+            return $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, $taskUuid);
+        });
 
-        yield $this->createRouteActivity->createRoute($taskUuid);
+        $createRoutePr =  Workflow::async(static function () use ($taskUuid) {
+            return $this->createRouteActivity->createRoute($taskUuid);
+        });
+
+        yield $notificationPr;
+        yield $createRoutePr;
 
         $workflowOrderStatusHandler = Workflow::newExternalWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
