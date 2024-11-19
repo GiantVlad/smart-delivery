@@ -80,10 +80,11 @@
               <div class="text-left">{{idx}}</div>
             </td>
             <td class="p-2 whitespace-nowrap">
-              <div class="text-left"
-                   :class="(idx === 0 && invalidFirstRoute) ? 'text-red-500' : ''"
-                   :class="(idx === points.length - 1 && invalidLastRoute) ? 'text-red-500' : ''"
-              >{{point.pointAddress}}</div>
+              <div :class="[
+                'text-left',
+                 (idx === 0 && invalidFirstRoute) ? 'text-red-500' : '',
+                  (idx === points.length - 1 && invalidLastRoute) ? 'text-red-500' : '',
+              ]">{{point.pointAddress}}</div>
             </td>
           </tr>
           </VueDraggableNext>
