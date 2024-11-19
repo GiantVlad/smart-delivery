@@ -146,6 +146,8 @@ const getOrders = () => {
       orderStartPoints = orderEndPoints = orders.value = response.data.data
       orderStartPoints = orderStartPoints.map(el => el.startPointId)
       orderEndPoints = orderEndPoints.map(el => el.endPointId)
+      console.log(orderStartPoints)
+      console.log(orderEndPoints)
     })
 }
 
@@ -162,11 +164,11 @@ const invalidLastRoute =  ref(false)
 const orderPoints = () => {
   invalidFirstRoute.value = false
   invalidLastRoute.value = false
-  if (! orderStartPoints.includes(points[0])) {
+  if (! orderStartPoints.includes(points[0].pointId)) {
     console.log('first err')
     invalidFirstRoute.value = true
   }
-  if (! orderEndPoints.includes(points[points.length-1])) {
+  if (! orderEndPoints.includes(points[points.length-1].pointId)) {
     console.log('last err')
     invalidLastRoute.value = true
   }
