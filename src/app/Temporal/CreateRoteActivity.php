@@ -23,7 +23,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         $destinations = new Collection();
         foreach ($orders as $order) {
             $from->add($order->start_point_id);
-            $destinations->add($order->start_point_id);
+            $destinations->add($order->end_point_id);
         }
         $from = $from->unique();
         $destinations = $destinations->unique();
