@@ -27,7 +27,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         }
         $from = $from->unique();
         $destinations = $destinations->unique();
-        $pointIds = $from->merge($destinations)->unique();
+        $pointIds = $from->concat($destinations)->unique();
 
         DB::transaction(static function () use ($task, $pointIds) {
             foreach ($pointIds as $idx => $pointId) {
