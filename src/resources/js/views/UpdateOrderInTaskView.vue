@@ -46,13 +46,6 @@ watch(selectedTask, async (newTask, oldTask) => {
   }
 })
 
-// watch(selectedStatus, async (newStatus, oldStatus) => {
-//   console.log(newStatus)
-//   if (newStatus !== null && (newStatus !== oldStatus)) {
-//     form.status = selectedStatus.value
-//   }
-// })
-
 const getOrders = () => {
   axios.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
@@ -65,11 +58,14 @@ const getOrders = () => {
     })
 }
 
+const unassignOrder = (order) => {
+  orders.value = orders.value.filter(el => el.uuid !== order.uuid)
+}
+
 const submit = (orderUuid) => {
-  console.log(orderUuid, status)
   axios.post('/api/update-order-status-in-task',
     {
-      status: selectedStatus[orderUuid],
+      status: selectedStatus.value[orderUuid],
       orderUuid: orderUuid,
     })
     .then(response => {
@@ -125,8 +121,8 @@ const submit = (orderUuid) => {
           <tr v-for="order in orders" :key="order.id">
             <td class="p-2 whitespace-nowrap">
               <div class="flex items-center">
-                <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div>
-                <div class="text-left">{{order.startPointAddress}}</div>
+                <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div><br/>
+                <div class="text-left">{{order.startPointAddress}}</div><br/>
                 <div class="text-left">{{order.endPointAddress}}</div>
               </div>
             </td>
@@ -140,7 +136,7 @@ const submit = (orderUuid) => {
               <div class="text-left font-medium text-green-500">
                 <BaseButton v-show="showActionButton[order.uuid]" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
                 <div v-show="!showActionButton[order.uuid]">
-                  <FormControl v-model="selectedStatus[order.uuid]" :options="['assigned', 'started', 'canceled', 'finished']"/>
+                  <FormControl v-model="selectedStatus[order.uuid]" :options="['accepted', 'assigned', 'started', 'canceled', 'finished']"/>
                   <BaseButton type="button" color="info" label="Submit" small @click="submit(order.uuid)"/>
                 </div>
               </div>
