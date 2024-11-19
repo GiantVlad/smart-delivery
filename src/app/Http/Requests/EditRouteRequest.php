@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Rules\FirstLastRouteRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Spatie\LaravelData\Attributes\Validation\Uppercase;
 
 class EditRouteRequest extends FormRequest
 {
@@ -21,9 +22,17 @@ class EditRouteRequest extends FormRequest
      */
     public function rules(): array
     {
+        if (!$this->taskUuid) {
+            throw new \Exception('no taskUUID');
+        }
         return [
             'taskUuid' => 'bail|required|string|exists:tasks,uuid',
-            'points' => ['required', 'array', 'min:1', (new FirstLastRouteRule())->setData(['taskUuid' => $this->request->get('taskUuid')])],
+            'points' => [
+                'required',
+                'array',
+                'min:1',
+                (new FirstLastRouteRule())->setData(['taskUuid' => $this->taskUuid]),
+            ],
         ];
     }
 }
