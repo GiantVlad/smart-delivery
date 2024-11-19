@@ -57,9 +57,16 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
 
     public function create(CreateOrderDto $orderDto): \Generator
     {
-        $orderUuid = $this->createOrderActivity->createOrder($orderDto);
+        $orderUuidPr = $this->createOrderActivity->createOrder($orderDto);
+        $orderUuid = yield $orderUuidPr;
+        $createOrderErpActivityPr = Workflow::async(function () use ($orderUuid) {
+            return $this->createOrderErpActivity->createOrderInErp($orderUuid);
+        });
+        $notifyActivityPr = Workflow::async(function () use ($orderDto, $orderUuid) {
+            return $this->notifyActivity->notifyOrderCreated($orderDto->customerUuid, $orderUuid);
+        });
 
-        yield $this->createOrderErpActivity->createOrderInErp(yield $orderUuid);
-        yield $this->notifyActivity->notifyOrderCreated($orderDto->customerUuid, yield $orderUuid);
+        yield $createOrderErpActivityPr;
+        yield $notifyActivityPr;
     }
 }
