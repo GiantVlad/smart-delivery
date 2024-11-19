@@ -70,13 +70,20 @@
           </tr>
           </thead>
           <!-- Table body -->
-          <VueDraggableNext class="dragArea list-group w-full text-sm divide-y divide-gray-100 dark:divide-gray-700/60" :list="points" @change="orderPoints" tag="tbody">
+          <VueDraggableNext class="dragArea list-group w-full text-sm divide-y divide-gray-100 dark:divide-gray-700/60"
+                            :list="points"
+                            @change="orderPoints"
+                            tag="tbody"
+          >
           <tr v-for="(point, idx) in points" :key="idx">
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">{{idx}}</div>
             </td>
             <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{point.pointAddress}}</div>
+              <div class="text-left"
+                   :class="(idx === 0 && invalidFirstRoute) ? 'text-red-500' : ''"
+                   :class="(idx === points.length - 1 && invalidLastRoute) ? 'text-red-500' : ''"
+              >{{point.pointAddress}}</div>
             </td>
           </tr>
           </VueDraggableNext>
@@ -130,10 +137,15 @@ watch(selectedTask, async (newTask, oldTask) => {
   }
 })
 
+let orderStartPoints = []
+let orderEndPoints = []
+
 const getOrders = () => {
   axios.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
-      orders.value = response.data.data
+      orderStartPoints = orderEndPoints = orders.value = response.data.data
+      orderStartPoints = orderStartPoints.map(el => el.startPointId)
+      orderEndPoints = orderEndPoints.map(el => el.endPointId)
     })
 }
 
@@ -144,7 +156,18 @@ const getRoute = () => {
     })
 }
 
+const invalidFirstRoute = ref(false)
+const invalidLastRoute =  ref(false)
+
 const orderPoints = () => {
+  invalidFirstRoute.value = false
+  invalidLastRoute.value = false
+  if (! orderStartPoints.includes(points[0])) {
+    invalidFirstRoute.value = true
+  }
+  if (! orderEndPoints.includes(points[points.length-1])) {
+    invalidLastRoute.value = true
+  }
   points.value.map((point, idx) => point.sequence = idx)
 }
 

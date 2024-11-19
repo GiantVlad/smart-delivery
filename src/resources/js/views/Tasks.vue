@@ -3,8 +3,11 @@
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Tasks" main>
       </SectionTitleLineWithButton>
+      <BaseButtons>
+        <BaseButton type="button" color="info" label="Create Task" @click="router.push('/task')"/>
+      </BaseButtons>
       <NotificationBar color="info" :icon="mdiMonitorCellphone">
-        <b>Responsive table.</b> Collapses on mobile
+        <b>Resdevops ponsive table.</b> Collapses on mobile
       </NotificationBar>
 
       <CardBox class="mb-6" has-table v-if="tasks.length > 0">
@@ -81,6 +84,9 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
 import {ref, onMounted} from "vue";
+import router from "@/router/index.js";
+import BaseButton from "@/components/BaseButton.vue";
+import BaseButtons from "@/components/BaseButtons.vue";
 
 let tasks = ref([])
 

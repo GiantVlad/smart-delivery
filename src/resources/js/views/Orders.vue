@@ -3,12 +3,12 @@
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Orders" main>
       </SectionTitleLineWithButton>
-      <NotificationBar color="info" :icon="mdiMonitorCellphone">
-        <b>Responsive table.</b> Collapses on mobile
-      </NotificationBar>
       <BaseButtons>
         <BaseButton type="button" color="info" label="Create Order" @click="router.push('/order')"/>
       </BaseButtons>
+      <NotificationBar color="info" :icon="mdiMonitorCellphone">
+        <b>Responsive table.</b> Collapses on mobile
+      </NotificationBar>
       <CardBox class="mb-6" has-table v-if="orders.length > 0">
         <!-- Table -->
           <table class="table-auto w-full">
