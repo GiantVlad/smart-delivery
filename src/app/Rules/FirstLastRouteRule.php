@@ -45,7 +45,7 @@ class FirstLastRouteRule implements DataAwareRule, ValidationRule
         $task = Task::where('uuid', $this->data['taskUuid'])->first();
         $orders = Order::where('task_id', $task->id)->get();
         $startPoints = $orders->map(static fn ($order) => $order->start_point_id);
-        $endPoints = $orders->map(static fn ($order) => $order->start_point_id);
+        $endPoints = $orders->map(static fn ($order) => $order->end_point_id);
         Log::info('$startPoints: ' . json_encode($startPoints));
         Log::info('$endPoints: ' . json_encode($endPoints));
         Log::info('first: ' . $value[0]);
