@@ -14,6 +14,5 @@ interface UpdateOrderStatusActivityInterface
     public function updateOrderStatus(
         string $orderUuid,
         string $status,
-        ?string $courierUuid = null,
     ): string;
 }

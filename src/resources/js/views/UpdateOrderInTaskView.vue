@@ -22,18 +22,11 @@ const form = reactive({
   orderUuid: null,
 })
 
-const formStatusWithHeader = ref(true)
-
-const formStatusCurrent = ref(0)
-
-const formStatusOptions = ['info', 'success', 'danger', 'warning']
-
 const showActionButton = ref({})
 const onUpdateStatus = (order) => {
   showActionButton.value[order.uuid] = !showActionButton.value[order.uuid]
   if (!showActionButton.value[order.uuid]) {
-    form.orderUuid = order.uuid
-    selectedStatus.value = order.status
+    selectedStatus.value[order.uuid] = order.status
   } else {
     form.orderUuid = null
   }
@@ -53,12 +46,12 @@ watch(selectedTask, async (newTask, oldTask) => {
   }
 })
 
-watch(selectedStatus, async (newStatus, oldStatus) => {
-  console.log(newStatus)
-  if (newStatus !== null && (newStatus !== oldStatus)) {
-    form.status = selectedStatus.value
-  }
-})
+// watch(selectedStatus, async (newStatus, oldStatus) => {
+//   console.log(newStatus)
+//   if (newStatus !== null && (newStatus !== oldStatus)) {
+//     form.status = selectedStatus.value
+//   }
+// })
 
 const getOrders = () => {
   axios.get('/api/orders-by-task/' + selectedTask.value)
@@ -71,12 +64,12 @@ const getOrders = () => {
     })
 }
 
-const submit = () => {
-  console.log(form)
+const submit = (orderUuid) => {
+  console.log(orderUuid, status)
   axios.post('/api/update-order-status-in-task',
     {
-      status: form.status,
-      orderUuid: form.orderUuid,
+      status: selectedStatus[orderUuid],
+      orderUuid: orderUuid,
     })
     .then(response => {
       showActionButton.value[form.orderUuid] = true
@@ -89,24 +82,14 @@ const submit = () => {
     })
 }
 
-const unassignOrder = (order) => {
-  orders.value = orders.value.filter(el => el.uuid !== order.uuid)
-}
-
-const formStatusSubmit = () => {
-  formStatusCurrent.value = formStatusOptions[formStatusCurrent.value + 1]
-    ? formStatusCurrent.value + 1
-    : 0
-}
-
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Update order in task" main>
+      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Update orders in task" main>
       </SectionTitleLineWithButton>
-      <CardBox form @submit.prevent="submit" :is-form="true">
+      <CardBox form :is-form="true">
         <FormField label="Task">
           <FormControl v-model="selectedTask" :options="tasks"/>
         </FormField>
@@ -117,7 +100,7 @@ const formStatusSubmit = () => {
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-left">UUID</div>
+              <div class="font-semibold text-left">Order</div>
             </th>
             <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-left">Type</div>
@@ -142,6 +125,8 @@ const formStatusSubmit = () => {
             <td class="p-2 whitespace-nowrap">
               <div class="flex items-center">
                 <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div>
+                <div class="text-left">{{order.startPointAddress}}</div>
+                <div class="text-left">{{order.endPointAddress}}</div>
               </div>
             </td>
             <td class="p-2 whitespace-nowrap">
@@ -153,9 +138,9 @@ const formStatusSubmit = () => {
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
                 <BaseButton v-show="showActionButton[order.uuid]" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
-                <template v-show="!showActionButton[order.uuid]" >
-                  <FormControl v-model="selectedStatus" :options="['assigned', 'started', 'canceled', 'finished']"/>
-                  <BaseButton type="submit" color="info" label="Submit" small />
+                <template v-show="!showActionButton[order.uuid]">
+                  <FormControl v-model="selectedStatus[order.uuid]" :options="['assigned', 'started', 'canceled', 'finished']"/>
+                  <BaseButton type="button" color="info" label="Submit" small @click="submit(order.uuid)"/>
                 </template>
               </div>
             </td>

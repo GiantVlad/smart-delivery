@@ -20,8 +20,6 @@ Route::get('/orders-by-task/{taskUuid}', [ OrderCreateController::class, 'getOrd
 
 Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder']);
 
-Route::post('/assign', [ OrderStatusController::class, 'assignCourier']);
-
 Route::get('/tasks', [ TaskController::class, 'getTasks']);
 
 Route::get('/task', [ TaskController::class, 'createTaskForm']);
