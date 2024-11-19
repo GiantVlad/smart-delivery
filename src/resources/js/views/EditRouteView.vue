@@ -57,15 +57,11 @@
           </tbody>
         </table>
         <CardBox />
-
-        <CardBox class="mb-6" has-table form @submit.prevent="submit" :is-form="true">
-          <NotificationBarInCard
-            color="danger"
-            v-if="error"
-          >
-            <span>{{error}}</span>
-          </NotificationBarInCard>
-        <table class="table-auto w-full" v-if="selectedTask !== null">
+        <NotificationBar color="danger" v-if="error && selectedTask">
+          {{error}}
+        </NotificationBar>
+        <CardBox class="mb-6" has-table form @submit.prevent="submit" :is-form="true" v-if="selectedTask !== null">
+          <table class="table-auto w-full">
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
