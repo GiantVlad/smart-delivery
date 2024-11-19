@@ -16,6 +16,7 @@ use Temporal\Workflow\WorkflowExecution;
 class CreateTaskWorkflow implements CreateTaskWorkflowInterface
 {
     private $createTaskActivity;
+    private $createRouteActivity;
     private $notifyTaskActivity;
 
     public function __construct()
@@ -33,9 +34,21 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         );
 
         $this->notifyTaskActivity = Workflow::newActivityStub(
-            NotifyTaskCreatedActivity::class,
+            NotifyTaskCreatedActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
+                ->withRetryOptions(
+                    RetryOptions::new()
+                        ->withInitialInterval(CarbonInterval::seconds(1))
+                        ->withMaximumAttempts(3)
+                        ->withNonRetryableExceptions([\InvalidArgumentException::class])
+                )
+        );
+
+        $this->createRouteActivity = Workflow::newActivityStub(
+            CreateRouteActivityInterface::class,
+            ActivityOptions::new()
+                ->withStartToCloseTimeout(CarbonInterval::seconds(10))
                 ->withRetryOptions(
                     RetryOptions::new()
                         ->withInitialInterval(CarbonInterval::seconds(1))
@@ -47,9 +60,12 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
 
     public function create(CreateTaskDto $taskDto): \Generator
     {
-        $taskUuid = $this->createTaskActivity->createTask($taskDto);
+        $taskUuidPromise = $this->createTaskActivity->createTask($taskDto);
+        $taskUuid = yield $taskUuidPromise;
 
-        yield $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, yield $taskUuid);
+        yield $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, $taskUuid);
+
+        yield $this->createRouteActivity->createRoute($taskUuid);
 
         $workflowOrderStatusHandler = Workflow::newExternalWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
