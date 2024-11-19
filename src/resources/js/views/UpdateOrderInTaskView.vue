@@ -139,10 +139,10 @@ const submit = (orderUuid) => {
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
                 <BaseButton v-show="showActionButton[order.uuid]" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
-                <template v-show="!showActionButton[order.uuid]">
+                <div v-show="!showActionButton[order.uuid]">
                   <FormControl v-model="selectedStatus[order.uuid]" :options="['assigned', 'started', 'canceled', 'finished']"/>
                   <BaseButton type="button" color="info" label="Submit" small @click="submit(order.uuid)"/>
-                </template>
+                </div>
               </div>
             </td>
             <td class="p-2 whitespace-nowrap">
