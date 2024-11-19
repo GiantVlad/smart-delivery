@@ -7,7 +7,7 @@
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
 
-      <CardBox class="mb-6" has-table form @submit.prevent="submit" :is-form="true">
+      <CardBox class="mb-6" has-table>
         <FormField label="Task">
           <FormControl v-model="selectedTask" :options="tasks"/>
         </FormField>
@@ -56,13 +56,15 @@
           </tr>
           </tbody>
         </table>
-        <BaseDivider />
-        <NotificationBarInCard
-          color="danger"
-          v-if="error"
-        >
-          <span>{{error}}</span>
-        </NotificationBarInCard>
+        <CardBox />
+
+        <CardBox class="mb-6" has-table form @submit.prevent="submit" :is-form="true">
+          <NotificationBarInCard
+            color="danger"
+            v-if="error"
+          >
+            <span>{{error}}</span>
+          </NotificationBarInCard>
         <table class="table-auto w-full" v-if="selectedTask !== null">
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
