@@ -44,7 +44,7 @@
             </thead>
             <!-- Table body -->
             <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-            <tr v-for="order in list" :key="order.id">
+            <tr v-for="order in orders" :key="order.id">
               <td class="p-2 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="font-medium text-gray-800 dark:text-gray-100">{{ order.id }}</div>
@@ -62,7 +62,7 @@
                 <div class="text-left font-medium text-green-500">{{order.status}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{order.customerEmail}}</div>
+                <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{order.customerEmail}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{order.taskCourierName}}</div>
@@ -100,12 +100,12 @@ import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
 import {ref, onMounted} from "vue";
 
-let list = ref([])
+let orders = ref([])
 
 onMounted(() => {
   axios.get('/api/orders')
     .then((response) => {
-      list.value = response.data.data
+      orders.value = response.data.data
     })
 })
 
