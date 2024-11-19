@@ -7,7 +7,7 @@
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
 
-      <CardBox class="mb-6" has-table v-if="list.length > 0">
+      <CardBox class="mb-6" has-table v-if="orders.length > 0">
         <!-- Table -->
           <table class="table-auto w-full">
             <!-- Table header -->
@@ -81,7 +81,7 @@
           </table>
       </CardBox>
 
-      <CardBox v-if="list.length < 1">
+      <CardBox v-if="orders.length < 1">
         <CardBoxComponentEmpty />
       </CardBox>
     </SectionMain>
