@@ -32,7 +32,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         DB::transaction(static function () use ($task, $pointIds) {
             foreach ($pointIds as $idx => $pointId) {
                 $route = new Route();
-                $route->sequance = $idx;
+                $route->sequence = $idx;
                 $route->task_id = $task->id;
                 $route->point_id = $pointId;
                 $route->save();
