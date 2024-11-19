@@ -35,7 +35,7 @@ class OrderStatusController extends Controller
         $order = Order::where('uuid', $orderUuid)->firstOrFail();
 
         if (! in_array($order->status, [OrderStatusEnum::ACCEPTED->value])) {
-            throw new \Exception("You can't assign order that has status $order->status", 412);
+            throw new \Exception("You can't assign order that has status $order->status", 422);
         }
 
         Courier::where('uuid', $courierUuid)->firstOrFail();
@@ -59,11 +59,11 @@ class OrderStatusController extends Controller
         try {
             $statusEnum = OrderStatusEnum::from($status);
         } catch (\ValueError $error) {
-            throw new \Exception("Invalid status: $status", 412);
+            throw new \Exception("Invalid status: $status", 422);
         }
 
         if (! in_array($order->status, OrderStatusEnum::courierCanUpdate())) {
-            throw new \Exception("You can't change order status to $status since current status is $order->status", 412);
+            throw new \Exception("You can't change order status to $status since current status is $order->status", 422);
         }
 
         $workflow = $this->workflowClient->newRunningWorkflowStub(

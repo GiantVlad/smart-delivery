@@ -57,6 +57,12 @@
           </tbody>
         </table>
         <BaseDivider />
+        <NotificationBarInCard
+          color="danger"
+          v-if="error"
+        >
+          <span>{{error}}</span>
+        </NotificationBarInCard>
         <table class="table-auto w-full" v-if="selectedTask !== null">
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
@@ -114,12 +120,14 @@ import FormField from "@/components/FormField.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import NotificationBarInCard from "@/components/NotificationBarInCard.vue";
 
 
 const selectedTask = ref(null)
 const tasks = ref([])
 const orders = ref([])
 const points = ref([])
+const error = ref(null)
 
 onMounted(() => {
   axios.get('/api/tasks')
@@ -177,15 +185,17 @@ const form = reactive({
 })
 
 const submit = () => {
-  console.log(form)
   axios.post('/api/update-route',
     {
       taskUuid: form.taskUuid,
       points: [...new Set(points.value.map(el => el.pointId))]
     })
-    .then((response) => {
-      console.log('updated')
-    })
+    .then(response => {
+      error.value = 0
+    }).catch(e => {
+      console.log(e)
+      error.value = e.data.message
+  })
 }
 
 </script>
