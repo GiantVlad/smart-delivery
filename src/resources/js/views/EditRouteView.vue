@@ -82,8 +82,7 @@
             <td class="p-2 whitespace-nowrap">
               <div :class="[
                 'text-left',
-                 (idx === 0 && invalidFirstRoute) ? 'text-red-500' : '',
-                  (idx === points.length - 1 && invalidLastRoute) ? 'text-red-500' : '',
+                 (idx === 0 && invalidFirstRoute) || (idx === (points.length - 1) && invalidLastRoute) ? 'text-red-500' : '',
               ]">{{point.pointAddress}}</div>
             </td>
           </tr>
@@ -164,9 +163,11 @@ const orderPoints = () => {
   invalidFirstRoute.value = false
   invalidLastRoute.value = false
   if (! orderStartPoints.includes(points[0])) {
+    console.log('first err')
     invalidFirstRoute.value = true
   }
   if (! orderEndPoints.includes(points[points.length-1])) {
+    console.log('last err')
     invalidLastRoute.value = true
   }
   points.value.map((point, idx) => point.sequence = idx)
