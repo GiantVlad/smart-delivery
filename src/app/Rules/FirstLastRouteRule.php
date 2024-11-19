@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
+use App\Models\Order;
 use App\Models\Task;
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
@@ -40,7 +41,8 @@ class FirstLastRouteRule implements DataAwareRule, ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         /** @var Collection $orders */
-        $orders = Task::where('uuid', $this->data['taskUuid'])->with('orders')->orders;
+        $task = Task::where('uuid', $this->data['taskUuid'])->first();
+        $orders = Order::where('task_id', $task->id)->get();
         $startPoints = $orders->flatMap(static fn ($order) => $order->start_point_id);
         $endPoints = $orders->flatMap(static fn ($order) => $order->start_point_id);
 
