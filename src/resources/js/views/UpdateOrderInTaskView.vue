@@ -120,7 +120,7 @@ const submit = (orderUuid) => {
           <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
           <tr v-for="order in orders" :key="order.id">
             <td class="p-2 whitespace-nowrap">
-              <div class="flex items-center">
+              <div class="items-center">
                 <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div><br/>
                 <div class="text-left">{{order.startPointAddress}}</div><br/>
                 <div class="text-left">{{order.endPointAddress}}</div>
