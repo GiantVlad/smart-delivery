@@ -15,6 +15,7 @@ class Courier extends Model
     protected $fillable = [
         'uuid',
         'status',
+        'name',
     ];
 
     protected $hidden = [];
