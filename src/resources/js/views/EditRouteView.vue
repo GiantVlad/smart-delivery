@@ -56,7 +56,8 @@
           </tr>
           </tbody>
         </table>
-        <CardBox />
+      </CardBox>
+      <CardBox />
         <NotificationBar color="danger" v-if="error && selectedTask">
           {{error}}
         </NotificationBar>
