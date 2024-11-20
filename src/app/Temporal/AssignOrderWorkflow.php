@@ -12,7 +12,7 @@ use Temporal\Workflow;
 
 class AssignOrderWorkflow implements AssignOrderWorkflowInterface
 {
-    private AssignOrderActivityInterface $assignOrderActivity;
+    private $assignOrderActivity;
     private $notifyCustomerActivity;
 
     private $notifyCouirierActivity;
