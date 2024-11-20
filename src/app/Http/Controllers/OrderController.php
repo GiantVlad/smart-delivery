@@ -7,9 +7,15 @@ namespace App\Http\Controllers;
 use App\Enums\OrderStatusEnum;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\UnassignOrderRequest;
+use App\Http\Resources\OrderResource;
+use App\Http\Resources\OrderToAssignResource;
 use App\Models\Order;
 use App\Models\Task;
+use App\Temporal\AssignOrderWorkflowInterface;
+use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Temporal\Client\WorkflowOptions;
 
 class OrderController extends Controller
 {
@@ -23,14 +29,36 @@ class OrderController extends Controller
         return response()->json(['data' => true]);
     }
 
-    public function addOrdersToTask(AddOrderRequest $request)
+    public function addOrdersToTask(AddOrderRequest $request): JsonResponse
     {
-        $task = Task::where('uuid', $request->get('taskUuid'))->first();
-        $orders = Order::whereIn('uuid', $request->get('orderUuids'))->get();
-        foreach ($orders as $order) {
-            $order->task_id = $task->id;
-            $order->status = OrderStatusEnum::ASSIGNED->value;
-            $order->save();
-        }
+        $workflow = $this->workflowClient->newWorkflowStub(
+            AssignOrderWorkflowInterface::class,
+            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(3))
+        );
+
+        $this->workflowClient->start($workflow, $request->get('orderUuids'), $request->get('taskUuid'));
+
+        return response()->json(['data' => true]);
+    }
+
+    public function getOrdersToAssign(): JsonResource
+    {
+        $orders = Order::with('startPoint', 'endPoint')
+            ->whereNull('task_id')
+            ->whereIn('status', [OrderStatusEnum::ACCEPTED->value, OrderStatusEnum::CANCELED->value])
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return OrderToAssignResource::collection($orders);
+    }
+
+    public function getOrders(): JsonResource
+    {
+        $orders = Order::with('customer', 'task.courier', 'startPoint', 'endPoint')
+            ->limit(30)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return OrderResource::collection($orders);
     }
 }

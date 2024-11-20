@@ -15,7 +15,9 @@ Route::post('/order', [ OrderCreateController::class, 'createOrder']);
 
 Route::post('update-order-status-in-task', [ OrderStatusController::class, 'updateStatusByCourier']);
 
-Route::get('/orders', [ OrderCreateController::class, 'getOrders']);
+Route::get('/orders', [ OrderController::class, 'getOrders']);
+
+Route::get('/orders-to-assign', [ OrderController::class, 'getOrdersToAssign']);
 
 Route::get('/orders-by-task/{taskUuid}', [ OrderCreateController::class, 'getOrdersByTask']);
 

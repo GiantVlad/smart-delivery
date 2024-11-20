@@ -32,16 +32,6 @@ class OrderCreateController extends Controller
         return OrderCreateFormResource::make($dto);
     }
 
-    public function getOrders(): JsonResource
-    {
-        $orders = Order::with('customer', 'task.courier', 'startPoint', 'endPoint')
-            ->limit(30)
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
-        return OrderResource::collection($orders);
-    }
-
     public function getOrdersByTask(string $taskUuid): JsonResource
     {
         $task = Task::where('uuid', $taskUuid)->firstOrFail();
