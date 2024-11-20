@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-use App\Dto\CreateOrderDto;
+use App\Dto\AssignOrderDto;
 use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
 
@@ -12,5 +12,5 @@ use Temporal\Workflow\WorkflowMethod;
 interface AssignOrderWorkflowInterface
 {
     #[WorkflowMethod(name: "AssignOrderActivity.assign")]
-    public function assign(array $orderUuids, string $taskUuid);
+    public function assign(AssignOrderDto $assignOrderDto);
 }

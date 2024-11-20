@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-use App\Models\Order;
-use App\Models\Task;
+use App\Dto\AssignOrderDto;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -57,14 +56,12 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
         );
     }
 
-    public function assign(array $orderUuids, string $taskUuid): \Generator
+    public function assign(AssignOrderDto $assignOrderDto): \Generator
     {
         $promises = [];
-        foreach ($orderUuids as $orderUuid) {
-            $order = Order::where('uuid', $orderUuid)->firstOrFail();
-            $customerUuid = $order->customer->uuid;
-            $promises[] = Workflow::async(function () use ($orderUuid, $taskUuid) {
-                return $this->assignOrderActivity->assignOrder($orderUuid, $taskUuid);
+        foreach ($assignOrderDto->orderCustomerUuids as $orderUuid => $customerUuid) {
+            $promises[] = Workflow::async(function () use ($orderUuid, $assignOrderDto) {
+                return $this->assignOrderActivity->assignOrder($orderUuid, $assignOrderDto->taskUuid);
             });
             $promises[] = Workflow::async(function () use ($orderUuid, $customerUuid) {
                 return $this->notifyCustomerActivity->notifyOrderCreated($customerUuid, $orderUuid);
@@ -74,8 +71,7 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
         foreach ($promises as $activity) {
             yield $activity;
         }
-        $task = Task::where('uuid', $taskUuid)->firstOrFail();
 
-        yield $this->notifyCouirierActivity->notifyTaskCreated($task->courier->uuid, $taskUuid);
+        yield $this->notifyCouirierActivity->notifyTaskCreated($assignOrderDto->courierUuid, $assignOrderDto->taskUuid);
     }
 }

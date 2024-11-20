@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Dto\AssignOrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\UnassignOrderRequest;
@@ -31,12 +32,25 @@ class OrderController extends Controller
 
     public function addOrdersToTask(AddOrderRequest $request): JsonResponse
     {
+        $task = Task::whare('uuid', $request->get('taskUuid'))->first();
+
+        $dto = new AssignOrderDto(
+            [],
+            $task->uuid,
+            $task->courier->uuid
+        );
+
+        $orders = Order::whereIn('uuid', $request->get('orderUuids'))->with('customer')->get();
+        foreach ($orders as $order) {
+            $dto->orderCustomerUuids[$order->uuid] = $order->customer->uuid;
+        }
+
         $workflow = $this->workflowClient->newWorkflowStub(
             AssignOrderWorkflowInterface::class,
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(3))
         );
 
-        $this->workflowClient->start($workflow, $request->get('orderUuids'), $request->get('taskUuid'));
+        $this->workflowClient->start($workflow, $dto);
 
         return response()->json(['data' => true]);
     }
