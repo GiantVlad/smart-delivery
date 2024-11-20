@@ -10,7 +10,6 @@ use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
 class FirstLastRouteRule implements DataAwareRule, ValidationRule
@@ -46,10 +45,6 @@ class FirstLastRouteRule implements DataAwareRule, ValidationRule
         $orders = Order::where('task_id', $task->id)->get();
         $startPoints = $orders->map(static fn ($order) => $order->start_point_id);
         $endPoints = $orders->map(static fn ($order) => $order->end_point_id);
-        Log::info('$startPoints: ' . json_encode($startPoints));
-        Log::info('$endPoints: ' . json_encode($endPoints));
-        Log::info('first: ' . $value[0]);
-        Log::info('last: ' . $value[count($value)-1]);
         if (! $startPoints->contains($value[0])) {
             $fail('Invalid first point in the route.');
         }

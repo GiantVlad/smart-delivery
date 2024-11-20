@@ -7,12 +7,12 @@ enum OrderStatusEnum: string
     case NEW = 'new';
     case ACCEPTED = 'accepted';
     case ASSIGNED = 'assigned';
-    case STARTED = 'started';
-    case FINISHED = 'finished';
+    case COLLECTED = 'collected';
+    case DELIVERED = 'delivered';
     case CANCELED = 'canceled';
 
     public static function courierCanUpdate(): array
     {
-        return [self::ASSIGNED->value, self::STARTED->value, self::ACCEPTED->value];
+        return [self::ACCEPTED->value, self::ASSIGNED->value, self::COLLECTED->value];
     }
 }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Rules\FirstLastRouteRule;
+use App\Rules\OrderCanBeUnassignedRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditRouteRequest extends FormRequest
+class UnassignOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -23,13 +23,7 @@ class EditRouteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'taskUuid' => 'bail|required|string|exists:tasks,uuid',
-            'points' => [
-                'required',
-                'array',
-                'min:1',
-                (new FirstLastRouteRule())->setData(['taskUuid' => $this->taskUuid]),
-            ],
+            'orderUuid' => ['bail','required','string','exists:orders,uuid', new OrderCanBeUnassignedRule()],
         ];
     }
 }

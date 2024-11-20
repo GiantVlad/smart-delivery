@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\TaskController;
@@ -25,6 +26,8 @@ Route::get('/tasks', [ TaskController::class, 'getTasks']);
 Route::get('/task', [ TaskController::class, 'createTaskForm']);
 
 Route::post('/task', [ TaskController::class, 'createTask']);
+
+Route::post('/unassign-order', [ OrderController::class, 'unassignOrder']);
 
 Route::post('/update-route', [ RouteController::class, 'updateRoute']);
 
