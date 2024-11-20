@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Rules\OrderCanBeUnassignedRule;
+use App\Rules\OrdersCanBeAddedRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,7 +23,8 @@ class AddOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'orderUuid' => ['bail','required','string','exists:orders,uuid', new OrderCanBeUnassignedRule()],
+            'taskUuid' => 'bail|required|string|exists:tasks,uuid',
+            'orderUuids' => ['required', 'array', 'min:1', new OrdersCanBeAddedRule()],
         ];
     }
 }
