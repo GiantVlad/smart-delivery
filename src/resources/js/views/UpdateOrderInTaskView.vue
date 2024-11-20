@@ -108,7 +108,7 @@ const submit = (orderUuid) => {
 
         <NotificationBar color="danger" v-if="error && selectedTask">
           <template #right>
-            <BaseButton v-else :icon="mdiClose" small rounded-full color="white" @click="error.value = null" />
+            <BaseButton :icon="mdiClose" small rounded-full color="white" @click="error.value = null" />
           </template>
           {{error}}
         </NotificationBar>
