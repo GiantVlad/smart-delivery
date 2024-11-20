@@ -23,7 +23,8 @@ class AddOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'orderUuid' => ['bail','required','string','exists:orders,uuid', new OrderCanBeUnassignedRule()],
+            'taskUuid' => 'bail|required|string|exists:tasks,uuid',
+            'orderUuids' => ['bail','required','string','exists:orders,uuid', new OrderCanBeUnassignedRule()],
         ];
     }
 }
