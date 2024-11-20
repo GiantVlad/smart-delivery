@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Rules\OrderCanBeUnassignedRule;
-use App\Rules\OrdersCanBeAddedRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UnassignOrderRequest extends FormRequest
+class AddOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -24,8 +23,7 @@ class UnassignOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'taskUuid' => 'bail|required|string|exists:tasks,uuid',
-            'orderUuids' => ['required', 'array', 'min:1', new OrdersCanBeAddedRule()],
+            'orderUuid' => ['bail','required','string','exists:orders,uuid', new OrderCanBeUnassignedRule()],
         ];
     }
 }

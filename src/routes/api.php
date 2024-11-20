@@ -29,6 +29,8 @@ Route::post('/task', [ TaskController::class, 'createTask']);
 
 Route::post('/unassign-order', [ OrderController::class, 'unassignOrder']);
 
+Route::post('/add-orders-to-task', [ OrderController::class, 'addOrdersToTask']);
+
 Route::post('/update-route', [ RouteController::class, 'updateRoute']);
 
 Route::get('/route/{taskUuid}', [ RouteController::class, 'getRoute']);
