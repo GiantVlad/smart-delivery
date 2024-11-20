@@ -12,6 +12,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "axios";
 import {OrderStatuses} from "@/constants/Statuses.js";
+import NotificationBar from "@/components/NotificationBar.vue";
 
 const selectedTask = ref(null)
 const tasks = ref([])
@@ -63,8 +64,7 @@ const error = ref('')
 
 const unassignOrder = (order) => {
   axios.post('/api/unassign-order', {
-    taskUuid: selectedTask.value,
-    orderUuid: order.Uuid,
+    orderUuid: order.uuid,
   })
     .then(response => {
       orders.value = orders.value.filter(el => el.uuid !== order.uuid)
@@ -105,6 +105,10 @@ const submit = (orderUuid) => {
         </FormField>
 
         <BaseDivider />
+
+        <NotificationBar color="danger" v-if="error && selectedTask">
+          {{error}}
+        </NotificationBar>
         <table class="table-auto w-full" v-if="selectedTask !== null">
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
