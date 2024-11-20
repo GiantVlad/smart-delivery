@@ -206,11 +206,11 @@ const addOrdersToTask = () => {
           </tr>
           </tbody>
         </table>
-        <template #footer>
+        <template #footer v-if="selectedTask">
           <div v-if="orderSelector">
           <FormField label="Orders">
             <multiselect
-              v-model="selectedOrdersToAdd.value"
+              v-model="selectedOrdersToAdd"
               :options="ordersToAdd"
               :multiple="true"
               :close-on-select="false"
