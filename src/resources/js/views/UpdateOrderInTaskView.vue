@@ -111,10 +111,9 @@ const hideOrderSelector = () => {
 const dismiss = () => error.value = ''
 
 const addOrdersToTask = () => {
-  console.log(selectedOrdersToAdd.value)
   axios.post('/api/add-orders-to-task', {
     taskUuid: selectedTask.value,
-    ordersUuids: selectedOrdersToAdd.value.map(el => el.label)
+    orderUuids: selectedOrdersToAdd.value.map(el => el.label)
   })
     .then((response) => {
       ordersToAdd.value = response.data.data.orders.map(el => ({id: el.id, label: el.uuid}))
