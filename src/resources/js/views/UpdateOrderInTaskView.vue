@@ -206,7 +206,6 @@ const addOrdersToTask = () => {
           </tr>
           </tbody>
         </table>
-        <div v-if="selectedTask !== null">
         <template #footer>
           <div v-if="orderSelector">
           <FormField label="Orders">
@@ -238,7 +237,6 @@ const addOrdersToTask = () => {
             <BaseButton type="button" color="info" label="Add orders" @click="showOrderSelector"/>
           </BaseButtons>
         </template>
-        </div>
       </CardBox>
     </SectionMain>
 </LayoutAuthenticated>
