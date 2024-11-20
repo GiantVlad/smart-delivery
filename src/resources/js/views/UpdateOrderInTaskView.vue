@@ -106,7 +106,7 @@ const submit = (orderUuid) => {
 
         <BaseDivider />
 
-        <NotificationBar color="danger" v-if="error && selectedTask" ref="childRef">
+        <NotificationBar color="danger" v-if="error && selectedTask">
           <template #right>
             <BaseButton v-else :icon="mdiClose" small rounded-full color="white" @click="error.value = null" />
           </template>
