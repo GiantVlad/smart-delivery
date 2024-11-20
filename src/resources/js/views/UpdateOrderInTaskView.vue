@@ -95,9 +95,9 @@ const orderSelector = ref(false)
 const ordersToAdd = ref([])
 const selectedOrdersToAdd = ref([])
 const showOrderSelector = () => {
-  axios.get('/api/task')
+  axios.get('/api/orders-to-assign')
     .then((response) => {
-      ordersToAdd.value = response.data.data.orders.map(el => ({id: el.id, label: el.uuid}))
+      ordersToAdd.value = response.data.data.map(el => ({id: el.id, label: el.uuid}))
       orderSelector.value = true
     })
 }
