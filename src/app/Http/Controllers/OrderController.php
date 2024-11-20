@@ -32,7 +32,7 @@ class OrderController extends Controller
 
     public function addOrdersToTask(AddOrderRequest $request): JsonResponse
     {
-        $task = Task::whare('uuid', $request->get('taskUuid'))->first();
+        $task = Task::where('uuid', $request->get('taskUuid'))->first();
 
         $dto = new AssignOrderDto(
             [],
