@@ -13,6 +13,7 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import axios from "axios";
 import {OrderStatuses} from "@/constants/Statuses.js";
 import NotificationBar from "@/components/NotificationBar.vue";
+import Multiselect from "vue-multiselect";
 
 const selectedTask = ref(null)
 const tasks = ref([])
@@ -90,8 +91,29 @@ const submit = (orderUuid) => {
     })
 }
 
+const orderSelector = ref(false)
+const ordersToAdd = ref([])
+const selectedOrdersToAdd = ref([])
+const showOrderSelector = () => {
+  axios.get('/api/task')
+    .then((response) => {
+      ordersToAdd.value = response.data.data.orders.map(el => ({id: el.id, label: el.uuid}))
+      orderSelector.value = true
+    })
+}
+
+const hideOrderSelector = () => {
+  ordersToAdd.value = []
+  selectedOrdersToAdd.value = []
+  orderSelector.value = false
+}
 
 const dismiss = () => error.value = ''
+
+const addOrdersToTask = () => {
+  console.log(selectedOrdersToAdd.value)
+}
+
 
 </script>
 
@@ -177,8 +199,34 @@ const dismiss = () => error.value = ''
           </tbody>
         </table>
         <template #footer>
+          <div v-if="orderSelector">
+          <FormField label="Orders">
+            <multiselect
+              v-model="selectedOrdersToAdd"
+              :options="ordersToAdd"
+              :multiple="true"
+              :close-on-select="false"
+              :clear-on-select="false"
+              :preserve-search="true"
+              placeholder="Pick some orders"
+              label="label"
+              track-by="label"
+              :preselect-first="true"
+            >
+              <template #selection="{ values, search, isOpen }">
+                <span class="multiselect__single" v-if="values.length" v-show="!isOpen">
+                  {{ values.length }} selected
+                </span>
+              </template>
+            </multiselect>
+          </FormField>
           <BaseButtons>
-            <BaseButton type="button" color="info" label="Add order" />
+            <BaseButton type="button" color="info" label="Add" small @click="addOrdersToTask"/>
+            <BaseButton type="button" color="danger" label="Cancel" small @click="hideOrderSelector"/>
+          </BaseButtons>
+          </div>
+          <BaseButtons v-else>
+            <BaseButton type="button" color="info" label="Add orders" @click="showOrderSelector"/>
           </BaseButtons>
         </template>
       </CardBox>
