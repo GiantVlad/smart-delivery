@@ -18,6 +18,7 @@ const selectedTask = ref(null)
 const tasks = ref([])
 const orders = ref([])
 const selectedStatus = ref({})
+const error = ref('')
 
 const form = reactive({
   status: null,
@@ -60,8 +61,6 @@ const getOrders = () => {
     })
 }
 
-const error = ref('')
-
 const unassignOrder = (order) => {
   axios.post('/api/unassign-order', {
     orderUuid: order.uuid,
@@ -71,7 +70,6 @@ const unassignOrder = (order) => {
     }).catch(e => {
       error.value = e.response.data.message
   })
-
 }
 
 const submit = (orderUuid) => {
@@ -92,6 +90,9 @@ const submit = (orderUuid) => {
     })
 }
 
+
+const dismiss = () => error.value = ''
+
 </script>
 
 <template>
@@ -108,7 +109,7 @@ const submit = (orderUuid) => {
 
         <NotificationBar color="danger" v-if="error && selectedTask">
           <template #right>
-            <BaseButton :icon="mdiClose" small rounded-full color="white" @click="error.value = null" />
+            <BaseButton :icon="mdiClose" small rounded-full color="white" @click="dismiss" />
           </template>
           {{error}}
         </NotificationBar>
