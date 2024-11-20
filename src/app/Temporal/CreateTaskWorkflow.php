@@ -71,9 +71,6 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
             return $this->createRouteActivity->createRoute($taskUuid);
         });
 
-        yield $notificationPr;
-        yield $createRoutePr;
-
         $workflowOrderStatusHandler = Workflow::newExternalWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
             new WorkflowExecution($taskDto->orderStatusWFId),
@@ -82,5 +79,8 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         foreach ($taskDto->orderUuids as $orderUuid) {
             $workflowOrderStatusHandler->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
         }
+
+        yield $notificationPr;
+        yield $createRoutePr;
     }
 }

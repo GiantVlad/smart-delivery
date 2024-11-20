@@ -1,6 +1,6 @@
 <script setup>
-import {onMounted, reactive, ref, watch} from 'vue'
-import { mdiBallotOutline } from '@mdi/js'
+import {computed, onMounted, reactive, ref, watch} from 'vue'
+import {mdiBallotOutline, mdiClose} from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import FormField from '@/components/FormField.vue'
@@ -106,7 +106,10 @@ const submit = (orderUuid) => {
 
         <BaseDivider />
 
-        <NotificationBar color="danger" v-if="error && selectedTask">
+        <NotificationBar color="danger" v-if="error && selectedTask" ref="childRef">
+          <template #right>
+            <BaseButton v-else :icon="mdiClose" small rounded-full color="white" @click="error.value = null" />
+          </template>
           {{error}}
         </NotificationBar>
         <table class="table-auto w-full" v-if="selectedTask !== null">
