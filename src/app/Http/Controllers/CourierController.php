@@ -14,9 +14,9 @@ class CourierController extends Controller
     {
         $statuses = explode(',', $statuses ?? '');
         $couriers = Courier::query();
-        if (count($statuses) > 0) {
-            $couriers = $couriers->whereIn('status', $statuses);
-        }
+//        if (count($statuses) > 0) {
+//            $couriers = $couriers->whereIn('status', $statuses);
+//        }
 
         $couriers = $couriers->get();
 
