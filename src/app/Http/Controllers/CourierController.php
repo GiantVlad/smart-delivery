@@ -8,6 +8,7 @@ use App\Dto\AssignOrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\UnassignOrderRequest;
+use App\Http\Resources\CourierResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrderToAssignResource;
 use App\Models\Courier;
