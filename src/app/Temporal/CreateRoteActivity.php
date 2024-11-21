@@ -40,7 +40,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         $destinations = $destinations->unique();
 
         $destinations->map(function ($destination) use ($from) {
-            $matchingItem = $from->firstWhere('id', $destination->id);
+            $matchingItem = $from->first(static fn ($el) => $el->id === $destination->id, false);
             if ($matchingItem) {
                 $destination->type = RoutePointTypeEnum::INTERMEDIATE->value;
             }
