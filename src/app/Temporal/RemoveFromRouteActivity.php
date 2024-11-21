@@ -19,7 +19,7 @@ class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
         int $startPointId,
         int $endPointId,
     ): array {
-        $task = Task::where('uuid', $taskUuid)-with(['orders', 'routes'])->first();
+        $task = Task::where('uuid', $taskUuid)->with(['orders', 'routes'])->first();
 
         /** @var Collection $routes */
         $routes = $task->routes;

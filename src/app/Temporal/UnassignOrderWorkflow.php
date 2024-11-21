@@ -77,11 +77,13 @@ class UnassignOrderWorkflow implements UnassignOrderWorkflowInterface
         $orderDto = yield $this->unAssignOrderActivity->unassignOrder(
             array_key_first($assignOrderDto->orderCustomerUuids)
         );
+
         yield $this->removeFromRouteActivity->removeFromRoute(
             $assignOrderDto->taskUuid,
             $orderDto->startPointId,
             $orderDto->endPointId
         );
+
         yield $this->notifyCustomerActivity->notifyOrderCreated($orderDto->customerUuid, $orderDto->uuid);
         yield $this->notifyCouirierActivity->notifyTaskCreated($assignOrderDto->courierUuid, $assignOrderDto->taskUuid);
     }
