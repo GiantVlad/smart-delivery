@@ -47,7 +47,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
             $route = new Route();
             $route->point_type = RoutePointTypeEnum::START->value;
             $route->point_id = $startPointId;
-            $route->sequince = $lastStart;
+            $route->sequence = $lastStart;
             $route->save();
         }
 
@@ -55,19 +55,19 @@ class AddToRouteActivity implements AddToRouteActivityInterface
             $route = new Route();
             $route->point_type = RoutePointTypeEnum::FINISH->value;
             $route->point_id = $endPointId;
-            $route->sequince = $lastFinish;
+            $route->sequence = $lastFinish;
             $route->save();
         }
 
         $routes->map(static function (Route $route) use ($lastStart, $lastFinish, $startPointId, $endPointId) {
-            if ($startPointId !== null && $startPointId !== $route->point_id && $route->sequince >= $lastStart) {
-                $route->sequince++;
+            if ($startPointId !== null && $startPointId !== $route->point_id && $route->sequence >= $lastStart) {
+                $route->sequence++;
             }
-            if ($endPointId !== null && $endPointId !== $route->point_id && $route->sequince >= $lastFinish) {
-                $route->sequince++;
+            if ($endPointId !== null && $endPointId !== $route->point_id && $route->sequence >= $lastFinish) {
+                $route->sequence++;
             }
         });
 
-        return [$startPointId, $endPointIdId];
+        return [$startPointId, $endPointId];
     }
 }
