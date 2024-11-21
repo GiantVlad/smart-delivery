@@ -8,7 +8,7 @@ import {
   mdiTelevisionGuide,
   mdiResponsive,
   mdiPalette,
-  mdiRoutes
+  mdiRoutes, mdiTruckDelivery
 } from '@mdi/js'
 
 export default [
@@ -48,25 +48,13 @@ export default [
     icon: mdiRoutes
   },
   {
+    to: '/couriers',
+    label: 'Couriers',
+    icon: mdiTruckDelivery
+  },
+  {
     to: '/login',
     label: 'Login',
     icon: mdiLock
-  },
-  {
-    to: '/error',
-    label: 'Error',
-    icon: mdiAlertCircle
-  },
-  {
-    label: 'Dropdown',
-    icon: mdiViewList,
-    menu: [
-      {
-        label: 'Item One'
-      },
-      {
-        label: 'Item Two'
-      }
-    ]
   },
 ]

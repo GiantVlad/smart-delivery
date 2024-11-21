@@ -69,6 +69,14 @@ const routes = [
     name: 'edit-route',
     component: () => import('@/views/EditRouteView.vue')
   },
+  {
+    meta: {
+      title: 'Couriers'
+    },
+    path: '/couriers',
+    name: 'couriers',
+    component: () => import('@/views/CouriersView.vue')
+  },
 ]
 
 const router = createRouter({
