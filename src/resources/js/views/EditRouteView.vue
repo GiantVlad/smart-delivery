@@ -72,6 +72,9 @@
             <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-left">Point</div>
             </th>
+            <th class="p-2 whitespace-nowrap">
+              <div class="text-left">Type</div>
+            </th>
           </tr>
           </thead>
           <!-- Table body -->
@@ -89,6 +92,9 @@
                 'text-left',
                  (idx === 0 && invalidFirstRoute) || (idx === (points.length - 1) && invalidLastRoute) ? 'text-red-500' : '',
               ]">{{point.pointAddress}}</div>
+            </td>
+            <td class="p-2 whitespace-nowrap">
+              <div class="text-left">{{point.type}}</div>
             </td>
           </tr>
           </VueDraggableNext>
@@ -119,7 +125,6 @@ import FormField from "@/components/FormField.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import NotificationBarInCard from "@/components/NotificationBarInCard.vue";
 
 
 const selectedTask = ref(null)

@@ -13,6 +13,7 @@ use App\Http\Resources\OrderToAssignResource;
 use App\Models\Order;
 use App\Models\Task;
 use App\Temporal\AssignOrderWorkflowInterface;
+use App\Temporal\UnassignOrderWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,10 +23,22 @@ class OrderController extends Controller
 {
     public function unassignOrder(UnassignOrderRequest $request): JsonResponse
     {
-        $order = Order::where('uuid', $request->get('orderUuid'))->first();
-        $order->task_id = null;
-        $order->status = OrderStatusEnum::ACCEPTED->value;
-        $order->save();
+        $order = Order::where('uuid', $request->get('orderUuid'))
+            ->with('task', 'task.courier', 'customer')
+            ->first();
+
+        $dto = new AssignOrderDto(
+            [$order->uuid => $order->customer->uuid],
+            $order->task->uuid,
+            $order->task->courier->uuid
+        );
+
+        $workflow = $this->workflowClient->newWorkflowStub(
+            UnassignOrderWorkflowInterface::class,
+            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(3))
+        );
+
+        $this->workflowClient->start($workflow, $dto);
 
         return response()->json(['data' => true]);
     }

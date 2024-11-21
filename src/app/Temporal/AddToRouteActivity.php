@@ -29,16 +29,20 @@ class AddToRouteActivity implements AddToRouteActivityInterface
             if ($route->point_type !== RoutePointTypeEnum::FINISH->value) {
                 $lastStart = $route->sequence;
             }
-
             if ($route->point_type !== RoutePointTypeEnum::START->value) {
                 $lastFinish = $route->sequence;
             }
-
-            if ($startPointId && $route->point_id === $startPointId && $route->point_type !== RoutePointTypeEnum::FINISH->value) {
+            if ($startPointId
+                && $route->point_id === $startPointId
+                && $route->point_type !== RoutePointTypeEnum::FINISH->value
+            ) {
                 $startPointId = null;
                 continue;
             }
-            if ($endPointId && $route->point_id === $endPointId && $route->point_type !== RoutePointTypeEnum::START->value) {
+            if ($endPointId
+                && $route->point_id === $endPointId
+                && $route->point_type !== RoutePointTypeEnum::START->value
+            ) {
                 $endPointId = null;
             }
         }
@@ -67,6 +71,9 @@ class AddToRouteActivity implements AddToRouteActivityInterface
             }
             if ($endPointId !== null && $endPointId !== $route->point_id && $route->sequence >= $lastFinish) {
                 $route->sequence++;
+            }
+            if ($route->isDirty('sequence')) {
+                $route->save();
             }
         });
 

@@ -20,6 +20,7 @@ class RouteResource extends JsonResource
             'pointId' => $this->point_id,
             'pointAddress' => $this->whenLoaded('point') ? $this->point->address : '',
             'sequence' => $this->sequence,
+            'type' => $this->point_type,
         ];
     }
 }
