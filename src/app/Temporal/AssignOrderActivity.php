@@ -24,7 +24,7 @@ class AssignOrderActivity implements AssignOrderActivityInterface
         return new OrderDto(
             $order->customer->uuid,
             $order->unit_type,
-            $order->strart_point_id,
+            $order->start_point_id,
             $order->end_point_id,
             $order->uuid
         );
