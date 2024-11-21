@@ -12,12 +12,10 @@ class CourierController extends Controller
 {
     public function get(string $statuses = ''): JsonResource
     {
-        $statuses = explode(',', $statuses);
         $couriers = Courier::query();
 
-        if (is_array($statuses) && !empty($statuses)) {
-            dd($statuses);
-            $couriers = $couriers->whereIn('status', $statuses);
+        if ($statuses) {
+            $couriers = $couriers->whereIn('status', explode(',', $statuses));
         }
 
         $couriers = $couriers->get();
