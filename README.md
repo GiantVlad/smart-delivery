@@ -11,6 +11,10 @@ cp src/.env.example src/.env
 
 docker compose up -d
 
+docker compose exec roadrunner php artisan migrate
+
+docker compose exec roadrunner php artisan db:seed
+
 docker compose exec roadrunner php artisan wf-status-handler:start
 
 docker compose exec roadrunner php artisan wf-status-handler:stop <workflow_id>
