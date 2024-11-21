@@ -73,7 +73,7 @@
               <div class="font-semibold text-left">Point</div>
             </th>
             <th class="p-2 whitespace-nowrap">
-              <div class="text-left">Type</div>
+              <div class="font-semibold text-left">Type</div>
             </th>
           </tr>
           </thead>
