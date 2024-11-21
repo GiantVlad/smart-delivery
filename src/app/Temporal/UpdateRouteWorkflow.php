@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-use App\Dto\CreateOrderDto;
+use App\Dto\OrderDto;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;

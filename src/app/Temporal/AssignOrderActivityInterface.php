@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
+use App\Dto\OrderDto;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
 
@@ -14,5 +15,5 @@ interface AssignOrderActivityInterface
     public function assignOrder(
         string $orderUuid,
         string $taskUuid,
-    ): string;
+    ): OrderDto;
 }

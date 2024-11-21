@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-use App\Dto\CreateOrderDto;
+use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
@@ -14,7 +14,7 @@ use Temporal\Exception\IllegalStateException;
 
 class CreateOrderActivity implements CreateOrderActivityInterface
 {
-    public function createOrder(CreateOrderDto $orderDto): string
+    public function createOrder(OrderDto $orderDto): string
     {
         $customer = Customer::where('uuid', $orderDto->customerUuid)->firstOrFail();
         $order = new Order();

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Dto\CreateOrderDto;
+use App\Dto\OrderDto;
 use App\Http\Resources\OrderCreateFormResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Customer;
@@ -58,7 +58,7 @@ class OrderCreateController extends Controller
 
         $customer = Customer::where('email', $email)->firstOrFail();
 
-        $orderDTO = new CreateOrderDto(
+        $orderDTO = new OrderDto(
             customerUuid: $customer->uuid,
             unitType: $unitType,
             startPointId: $startPointId,

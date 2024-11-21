@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Temporal;
 
 use App\Dto\AssignOrderDto;
+use App\Dto\OrderDto;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -13,6 +14,8 @@ use Temporal\Workflow;
 class AssignOrderWorkflow implements AssignOrderWorkflowInterface
 {
     private $assignOrderActivity;
+
+    private $addToRouteActivity;
     private $notifyCustomerActivity;
 
     private $notifyCouirierActivity;
@@ -21,6 +24,18 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
     {
         $this->assignOrderActivity = Workflow::newActivityStub(
             AssignOrderActivityInterface::class,
+            ActivityOptions::new()
+                ->withStartToCloseTimeout(CarbonInterval::seconds(20))
+                ->withRetryOptions(
+                    RetryOptions::new()
+                        ->withInitialInterval(CarbonInterval::seconds(1))
+                        ->withMaximumAttempts(3)
+                        ->withNonRetryableExceptions([\InvalidArgumentException::class])
+                )
+        );
+
+        $this->addToRouteActivity = Workflow::newActivityStub(
+            AddToRouteActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -69,7 +84,10 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
         }
 
         foreach ($promises as $activity) {
-            yield $activity;
+            $res = yield $activity;
+            if ($res instanceof OrderDto) {
+                yield $this->addToRouteActivity->addToRoute($assignOrderDto->taskUuid, $res->startPointId, $res->endPointId);
+            }
         }
 
         yield $this->notifyCouirierActivity->notifyTaskCreated($assignOrderDto->courierUuid, $assignOrderDto->taskUuid);

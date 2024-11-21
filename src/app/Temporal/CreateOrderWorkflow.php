@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-use App\Dto\CreateOrderDto;
+use App\Dto\OrderDto;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -55,7 +55,7 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
         );
     }
 
-    public function create(CreateOrderDto $orderDto): \Generator
+    public function create(OrderDto $orderDto): \Generator
     {
         $orderUuidPr = $this->createOrderActivity->createOrder($orderDto);
         $orderUuid = yield $orderUuidPr;
