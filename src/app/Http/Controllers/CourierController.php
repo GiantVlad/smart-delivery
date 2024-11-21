@@ -18,7 +18,7 @@ class CourierController extends Controller
             $couriers = $couriers->whereIn('status', $statuses);
         }
 
-        $couriers->get();
+        $couriers = $couriers->get();
 
         return CourierResource::collection($couriers);
     }
