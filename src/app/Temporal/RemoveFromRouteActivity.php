@@ -46,7 +46,7 @@ class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
                 }
             }
 
-            if ($foundStart->count() === 1 && $foundEnd->count() === 1) {
+            if ($foundStart?->count() === 1 && $foundEnd?->count() === 1) {
                 $route = $routes->firstWhere('point_id', $pointId);
 
                 $route->delete();
