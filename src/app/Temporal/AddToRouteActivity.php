@@ -17,7 +17,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
     public function addToRoute(
         string $taskUuid,
         int $startPointId,
-        int $endPointIdId,
+        int $endPointId,
     ): array {
         $task = Task::where('uuid', $taskUuid)->first();
 
