@@ -26,20 +26,20 @@ class AddToRouteActivity implements AddToRouteActivityInterface
 
         $lastStart = 0;
         foreach ($routes as $route) {
+            if ($route->point_type !== RoutePointTypeEnum::FINISH->value) {
+                $lastStart = $route->sequence;
+            }
+
+            if ($route->point_type !== RoutePointTypeEnum::START->value) {
+                $lastFinish = $route->sequence;
+            }
+
             if ($startPointId && $route->point_id === $startPointId && $route->point_type !== RoutePointTypeEnum::FINISH->value) {
                 $startPointId = null;
                 continue;
             }
             if ($endPointId && $route->point_id === $endPointId && $route->point_type !== RoutePointTypeEnum::START->value) {
                 $endPointId = null;
-                continue;
-            }
-
-            if ($route->point_type !== RoutePointTypeEnum::FINISH->value) {
-                $lastStart = $route->sequence;
-            }
-            if ($route->point_type !== RoutePointTypeEnum::START->value) {
-                $lastFinish = $route->sequence;
             }
         }
 
