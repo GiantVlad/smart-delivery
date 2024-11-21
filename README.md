@@ -30,13 +30,12 @@ Services:
 It requires Nginx proxy on the host machine for https
 
 ### Orders
-<img src="https://drive.google.com/file/d/16cbE-RQyaELB9R_RPZvN4N1NBVVnh0as/view?usp=sharing" alt="orders">
+<iframe src="https://drive.google.com/file/d/1ne4dWNmYl61FYtOHXWiXIuQRGeaFGnam/preview" width="640" height="480" allow="autoplay"></iframe>
 ### Tasks
-<img src="https://drive.google.com/file/d/13p-dkxYoKdHqmYZjewQkFSQTvv4UJC04/view?usp=sharing" alt="tasks">
+<iframe src="https://drive.google.com/file/d/1G82NcATV2v7x7CkhpAudWLYZyBytBRlh/preview" width="640" height="480" allow="autoplay"></iframe>
 ### Edit orders
-<img src="https://drive.google.com/file/d/1G82NcATV2v7x7CkhpAudWLYZyBytBRlh/view?usp=sharing" alt="edit orders">
+<iframe src="https://drive.google.com/file/d/13p-dkxYoKdHqmYZjewQkFSQTvv4UJC04/preview" width="640" height="480" allow="autoplay"></iframe>
 ### Routes
-<img src="https://drive.google.com/file/d/1ne4dWNmYl61FYtOHXWiXIuQRGeaFGnam/view?usp=sharing" alt="routes">
-
+<iframe src="https://drive.google.com/file/d/16cbE-RQyaELB9R_RPZvN4N1NBVVnh0as/preview" width="640" height="480" allow="autoplay"></iframe>
 
 Uladzimir Sadkou hofirma@gmail.com MIT
