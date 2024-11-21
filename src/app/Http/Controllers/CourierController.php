@@ -24,7 +24,7 @@ use function PHPUnit\Framework\isEmpty;
 
 class CourierController extends Controller
 {
-    public function get(?string $statuses): JsonResource
+    public function get(?string $statuses = ''): JsonResource
     {
         $statuses = explode(',', $statuses ?? '');
         $couriers = Courier::query();
