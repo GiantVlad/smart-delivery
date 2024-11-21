@@ -16,13 +16,13 @@ class AssignOrderActivity implements AssignOrderActivityInterface
     public function assignOrder(string $orderUuid, string $taskUuid,): OrderDto
     {
         $task = Task::where('uuid', $taskUuid)->firstOrFail();
-        $order = Order::where('uuid', $orderUuid)->firstOrFail();
+        $order = Order::where('uuid', $orderUuid)->with('customer')->firstOrFail();
         $order->task_id = $task->id;
         $order->status = OrderStatusEnum::ASSIGNED->value;
         $order->save();
 
         return new OrderDto(
-            $order->customerUuid,
+            $order->customer->uuid,
             $order->unit_type,
             $order->strart_point_id,
             $order->end_point_id,
