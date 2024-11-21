@@ -11,7 +11,7 @@ use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\Workflow;
 
-class UnassignOrderWorkflow implements UnAssignOrderWorkflowInterface
+class UnassignOrderWorkflow implements UnassignOrderWorkflowInterface
 {
     private $unAssignOrderActivity;
 
@@ -23,7 +23,7 @@ class UnassignOrderWorkflow implements UnAssignOrderWorkflowInterface
     public function __construct()
     {
         $this->unAssignOrderActivity = Workflow::newActivityStub(
-            UnAssignOrderActivityInterface::class,
+            UnassignOrderActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(

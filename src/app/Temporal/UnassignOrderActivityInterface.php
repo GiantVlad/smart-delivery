@@ -11,7 +11,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'UnassignOrderActivity.')]
 interface UnassignOrderActivityInterface
 {
-    #[ActivityMethod(name: "UnassignOrderRoute")]
+    #[ActivityMethod(name: "UnassignOrder")]
     public function unassignOrder(
         string $orderUuid,
     ): OrderDto;
