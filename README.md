@@ -30,12 +30,12 @@ Services:
 It requires Nginx proxy on the host machine for https
 
 ### Orders
-<iframe src="https://drive.google.com/file/d/1ne4dWNmYl61FYtOHXWiXIuQRGeaFGnam/preview" width="640" height="480" allow="autoplay"></iframe>
+![orders](https://drive.google.com/uc?id=1ne4dWNmYl61FYtOHXWiXIuQRGeaFGnam)
 ### Tasks
-<iframe src="https://drive.google.com/file/d/1G82NcATV2v7x7CkhpAudWLYZyBytBRlh/preview" width="640" height="480" allow="autoplay"></iframe>
+![tasks](https://drive.google.com/uc?id=1G82NcATV2v7x7CkhpAudWLYZyBytBRlh)
 ### Edit orders
-<iframe src="https://drive.google.com/file/d/13p-dkxYoKdHqmYZjewQkFSQTvv4UJC04/preview" width="640" height="480" allow="autoplay"></iframe>
+![edit orders](https://drive.google.com/uc?id=13p-dkxYoKdHqmYZjewQkFSQTvv4UJC04)
 ### Routes
-<iframe src="https://drive.google.com/file/d/16cbE-RQyaELB9R_RPZvN4N1NBVVnh0as/preview" width="640" height="480" allow="autoplay"></iframe>
+![routes](https://drive.google.com/uc?id=16cbE-RQyaELB9R_RPZvN4N1NBVVnh0as)
 
 Uladzimir Sadkou hofirma@gmail.com MIT
