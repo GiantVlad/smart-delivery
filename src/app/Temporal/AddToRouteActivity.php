@@ -48,6 +48,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
             $route->point_type = RoutePointTypeEnum::START->value;
             $route->point_id = $startPointId;
             $route->sequence = $lastStart;
+            $route->task_id = $task->id;
             $route->save();
         }
 
@@ -56,6 +57,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
             $route->point_type = RoutePointTypeEnum::FINISH->value;
             $route->point_id = $endPointId;
             $route->sequence = $lastFinish;
+            $route->task_id = $task->id;
             $route->save();
         }
 
