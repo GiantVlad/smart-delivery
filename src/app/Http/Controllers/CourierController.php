@@ -10,11 +10,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CourierController extends Controller
 {
-    public function get(?string $statuses = ''): JsonResource
+    public function get(string $statuses = ''): JsonResource
     {
-        $statuses = explode(',', $statuses ?? '');
+        $statuses = explode(',', $statuses);
         $couriers = Courier::query();
-        if (! empty($statuses)) {
+        if ($statuses) {
             $couriers = $couriers->whereIn('status', $statuses);
         }
 
