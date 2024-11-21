@@ -23,19 +23,22 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         $from = new Collection();
         $destinations = new Collection();
 
-        $tmpObject = new class(){
-            public $id;
-            public $type;
+        $tmpObjectFn = static function (int $pointId, string $type)  {
+            $obj = new class() {
+                public $id;
+                public $type;
+            };
+            $obj->id = $pointId;
+            $obj->type = $type;
+
+            return $obj;
         };
 
         foreach ($orders as $order) {
-            $tmpObject->id = $order->start_point_id;
-            $tmpObject->type = RoutePointTypeEnum::START->value;
-            $from->add($tmpObject);
-            $tmpObject->id = $order->end_point_id;
-            $tmpObject->type = RoutePointTypeEnum::FINISH->value;
-            $destinations->add($order->end_point_id);
+            $from->add($tmpObjectFn($order->start_point_id, RoutePointTypeEnum::START->value));
+            $destinations->add($tmpObjectFn($order->end_point_id, RoutePointTypeEnum::FINISH->value));
         }
+
         $from = $from->unique();
         $destinations = $destinations->unique();
 
