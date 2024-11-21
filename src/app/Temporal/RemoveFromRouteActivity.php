@@ -38,7 +38,7 @@ class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
             } else {
                 $route = $routes->firstWhere('point_id', $pointId);
                 if ($route->point_type === RoutePointTypeEnum::INTERMEDIATE->value
-                    && ($foundStart->count() === 0 || $foundEnd->count() === 0)
+                    && ($foundStart?->count() === 0 || $foundEnd?->count() === 0)
                 ) {
                     $route->point_type = $idx === 0
                         ? RoutePointTypeEnum::FINISH->value
