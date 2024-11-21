@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\CourierController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\RouteController;
@@ -9,30 +10,32 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderCreateController;
 
-Route::get('/order', [ OrderCreateController::class, 'getOrderForm']);
+Route::get('/order', [ OrderCreateController::class, 'getOrderForm' ]);
 
-Route::post('/order', [ OrderCreateController::class, 'createOrder']);
+Route::post('/order', [ OrderCreateController::class, 'createOrder' ]);
 
-Route::post('update-order-status-in-task', [ OrderStatusController::class, 'updateStatusByCourier']);
+Route::post('update-order-status-in-task', [ OrderStatusController::class, 'updateStatusByCourier' ]);
 
-Route::get('/orders', [ OrderController::class, 'getOrders']);
+Route::get('/orders', [ OrderController::class, 'getOrders' ]);
 
-Route::get('/orders-to-assign', [ OrderController::class, 'getOrdersToAssign']);
+Route::get('/orders-to-assign', [ OrderController::class, 'getOrdersToAssign' ]);
 
-Route::get('/orders-by-task/{taskUuid}', [ OrderCreateController::class, 'getOrdersByTask']);
+Route::get('/orders-by-task/{taskUuid}', [ OrderCreateController::class, 'getOrdersByTask' ]);
 
-Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder']);
+Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder' ]);
 
-Route::get('/tasks', [ TaskController::class, 'getTasks']);
+Route::get('/tasks', [ TaskController::class, 'getTasks' ]);
 
-Route::get('/task', [ TaskController::class, 'createTaskForm']);
+Route::get('/task', [ TaskController::class, 'createTaskForm' ]);
 
-Route::post('/task', [ TaskController::class, 'createTask']);
+Route::post('/task', [ TaskController::class, 'createTask' ]);
 
-Route::post('/unassign-order', [ OrderController::class, 'unassignOrder']);
+Route::post('/unassign-order', [ OrderController::class, 'unassignOrder' ]);
 
-Route::post('/add-orders-to-task', [ OrderController::class, 'addOrdersToTask']);
+Route::post('/add-orders-to-task', [ OrderController::class, 'addOrdersToTask' ]);
 
-Route::post('/update-route', [ RouteController::class, 'updateRoute']);
+Route::post('/update-route', [ RouteController::class, 'updateRoute' ]);
 
-Route::get('/route/{taskUuid}', [ RouteController::class, 'getRoute']);
+Route::get('/route/{taskUuid}', [ RouteController::class, 'getRoute' ]);
+
+Route::get('/couriers/{statuses?}', [ CourierController::class, 'get' ]);
