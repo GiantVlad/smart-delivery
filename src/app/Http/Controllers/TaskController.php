@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Dto\CreateTaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
-use App\Http\Requests\UnassignOrderRequest;
+use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskCreateFormResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Courier;
@@ -15,7 +15,6 @@ use App\Models\Order;
 use App\Models\Task;
 use App\Temporal\CreateTaskWorkflowInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Temporal\Client\WorkflowOptions;
@@ -45,10 +44,10 @@ class TaskController extends Controller
         return TaskResource::collection($tasks);
     }
 
-    public function createTask(Request $request): JsonResponse
+    public function createTask(CreateTaskRequest $request): JsonResponse
     {
         $courierUuid = $request->get('courierUuid');
-        $orderUuids = explode(',', $request->get('orderUuids') ?? '');
+        $orderUuids = $request->get('orderUuids');
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateTaskWorkflowInterface::class,
