@@ -35,6 +35,10 @@ class CourierController extends Controller
     {
         $courier = Courier::whereUuid($request->get('uuid'))->first();
 
+        $courier->name = $request->get('name');
+        $courier->status = $request->get('status');
+        $courier->save();
+
         return CourierResource::make($courier);
     }
 }
