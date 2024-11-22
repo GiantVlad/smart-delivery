@@ -3,7 +3,7 @@
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Couriers" main>
       </SectionTitleLineWithButton>
-      <CardBoxModal v-model="isModalActive" title="Edit courier" button-label="Update"  @update:modelValue="updateCourier" >
+      <CardBoxModal v-model="isModalActive" title="Edit courier" button-label="Update"  @update:modelValue="updateCourier" has-cancel>
         <FormField label="Grouped with icons">
           <FormControl v-model="form.uuid" :icon="mdiAccount" is-disabled/>
           <FormControl v-model="form.name" :icon="mdiAccount" />
@@ -11,7 +11,6 @@
         <FormField label="Status">
           <FormControl v-model="form.status" :options="statuses" />
         </FormField>
-        <BaseButton type="button" color="info" label="Save" @click="updateCourier"/>
       </CardBoxModal>
       <CardBox class="mb-6" has-table>
         <!-- Table -->
