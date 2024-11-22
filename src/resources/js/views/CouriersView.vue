@@ -86,7 +86,7 @@ import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
 import {CourierStatuses} from "@/constants/Statuses.js";
 
-const couriers = ref([])
+const couriers = reactive([])
 const statuses = Object.values(CourierStatuses)
 const isModalActive = ref(false)
 const form = reactive({
