@@ -110,7 +110,7 @@ const updateCourier = () => {
       name: form.name,
     })
     .then((response) => {
-      couriers.value.map(el => {
+      couriers.value = couriers.value.map(el => {
         if (el.uuid === response.data.uuid) {
           el.name = response.data.uuid
           el.status = response.data.status
