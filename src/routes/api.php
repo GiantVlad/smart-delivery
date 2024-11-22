@@ -43,3 +43,5 @@ Route::get('/couriers/{statuses?}', [ CourierController::class, 'get' ]);
 Route::get('/courier/{uuid}', [ CourierController::class, 'getCourier' ]);
 
 Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);
+
+Route::post('create-courier', [ CourierController::class, 'createCourier' ]);

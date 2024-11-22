@@ -6,7 +6,7 @@
       <CardBoxModal
         v-model="isModalActive"
         :title="form.uuid ? 'Edit courier' : 'Create courier'"
-        button-label="Update"
+        :button-label="form.uuid ? 'Update' : 'Create'"
         @update:modelValue="updateCourier"
         has-cancel
       >
@@ -14,8 +14,8 @@
           <FormControl v-if="form.uuid" v-model="form.uuid" :icon="mdiAccount" is-disabled/>
           <FormControl v-model="form.name" :icon="mdiAccount" />
         </FormField>
-        <FormField label="Status">
-          <FormControl v-if="form.uuid" v-model="form.status" :options="statuses" />
+        <FormField label="Status" v-if="form.uuid" >
+          <FormControl v-model="form.status" :options="statuses" />
         </FormField>
       </CardBoxModal>
       <CardBox class="mb-6" has-table>
