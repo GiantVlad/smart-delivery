@@ -44,7 +44,6 @@ onMounted(() => {
 })
 
 watch(selectedTask, async (newTask, oldTask) => {
-  console.log(newTask)
   if (newTask !== null && (newTask !== oldTask)) {
     await getOrders()
   }
@@ -118,6 +117,7 @@ const addOrdersToTask = () => {
     .then((response) => {
       ordersToAdd.value = response.data.data.orders.map(el => ({id: el.id, label: el.uuid}))
       orderSelector.value = true
+      getOrders()
     })
 }
 
