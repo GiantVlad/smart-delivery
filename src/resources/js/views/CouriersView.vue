@@ -115,6 +115,7 @@ const updateCourier = () => {
           el.name = response.data.name
           el.status = response.data.status
         }
+        return el
       })
     })
     .finally(() => {
