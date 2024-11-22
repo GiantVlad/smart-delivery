@@ -22,7 +22,7 @@ class CourierController extends Controller
             $couriers = $couriers->whereIn('status', explode(',', $statuses));
         }
 
-        $couriers = $couriers->get();
+        $couriers = $couriers->orderBy('updated_at', 'desc')->get();
 
         return CourierResource::collection($couriers);
     }

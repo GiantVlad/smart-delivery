@@ -93,7 +93,7 @@ const submit = (orderUuid) => {
 
 const orderSelector = ref(false)
 const ordersToAdd = ref([])
-const selectedOrdersToAdd = ref([])
+const selectedOrdersToAdd = ref(null)
 const showOrderSelector = () => {
   axios.get('/api/orders-to-assign')
     .then((response) => {
@@ -104,7 +104,7 @@ const showOrderSelector = () => {
 
 const hideOrderSelector = () => {
   ordersToAdd.value = []
-  selectedOrdersToAdd.value = []
+  selectedOrdersToAdd.value = null
   orderSelector.value = false
 }
 
