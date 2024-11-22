@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\CourierStatusEnum;
+use App\Http\Requests\CreateCourierRequest;
 use App\Http\Requests\UpdateCourierRequest;
 use App\Http\Resources\CourierResource;
 use App\Models\Courier;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class CourierController extends Controller
 {
@@ -37,6 +40,17 @@ class CourierController extends Controller
 
         $courier->name = $request->get('name');
         $courier->status = $request->get('status');
+        $courier->save();
+
+        return CourierResource::make($courier);
+    }
+
+    public function createCourier(CreateCourierRequest $request): JsonResource
+    {
+        $courier = new Courier();
+        $courier->uuid = Str::uuid();
+        $courier->name = $request->get('name');
+        $courier->status = CourierStatusEnum::NW->value;
         $courier->save();
 
         return CourierResource::make($courier);
