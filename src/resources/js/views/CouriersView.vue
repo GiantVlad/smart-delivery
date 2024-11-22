@@ -110,7 +110,7 @@ const updateCourier = () => {
       name: form.name,
     })
     .then((response) => {
-      couriers.value = couriers.value.map(el => {
+      couriers.map(el => {
         if (el.uuid === response.data.uuid) {
           el.name = response.data.name
           el.status = response.data.status
@@ -128,7 +128,7 @@ const updateCourier = () => {
 onMounted(() => {
   axios.get('/api/couriers')
     .then((response) => {
-      couriers.value = response.data.data
+      couriers.push(...response.data.data)
     })
 })
 
