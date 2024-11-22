@@ -15,30 +15,30 @@ services:
       - smart-l
     depends_on:
       - temporal
-      - mysql
+      #- mysql
     volumes:
       - ./src:/app
       #- ./docker/roadrunner/rr.yaml:/etc/.rr.yaml:ro
 
-  mysql:
-    image: 'mysql/mysql-server:8.0'
-    ports:
-      - '${FORWARD_DB_PORT:-3306}:3306'
-    environment:
-      MYSQL_ROOT_PASSWORD: 'secret76'
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_DATABASE: 'appdb'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'secret76'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 0
-    volumes:
-      - '.mysql:/var/lib/mysql'
-    networks:
-      - smart-l
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-psecret76"]
-      retries: 3
-      timeout: 5s
+#  mysql:
+#    image: 'mysql/mysql-server:8.0'
+#    ports:
+#      - '${FORWARD_DB_PORT:-3306}:3306'
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 'secret76'
+#      MYSQL_ROOT_HOST: "%"
+#      MYSQL_DATABASE: 'appdb'
+#      MYSQL_USER: 'user'
+#      MYSQL_PASSWORD: 'secret76'
+#      MYSQL_ALLOW_EMPTY_PASSWORD: 0
+#    volumes:
+#      - '.mysql:/var/lib/mysql'
+#    networks:
+#      - smart-l
+#    healthcheck:
+#      test: ["CMD", "mysqladmin", "ping", "-psecret76"]
+#      retries: 3
+#      timeout: 5s
 
   opensearch:
     container_name: temporal-opensearch

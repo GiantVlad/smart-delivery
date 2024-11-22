@@ -3,9 +3,15 @@
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Couriers" main>
       </SectionTitleLineWithButton>
-      <CardBoxModal v-model="isModalActive" title="Edit courier">
-        <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-        <p>This is sample modal</p>
+      <CardBoxModal v-model="isModalActive" title="Edit courier" button-label="Update"  @update:modelValue="updateCourier" >
+        <FormField label="Grouped with icons">
+          <FormControl v-model="form.uuid" :icon="mdiAccount" is-disabled/>
+          <FormControl v-model="form.name" :icon="mdiAccount" />
+        </FormField>
+        <FormField label="Status">
+          <FormControl v-model="form.status" :options="statuses" />
+        </FormField>
+        <BaseButton type="button" color="info" label="Save" @click="updateCourier"/>
       </CardBoxModal>
       <CardBox class="mb-6" has-table>
         <!-- Table -->
@@ -68,21 +74,45 @@
 
 <script setup>
 
-import { mdiTableBorder } from '@mdi/js'
+import {mdiAccount, mdiTableBorder} from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "axios";
-import {ref, onMounted} from "vue";
+import {ref, onMounted, reactive} from "vue";
 import CardBoxModal from "@/components/CardBoxModal.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import FormField from "@/components/FormField.vue";
+import FormControl from "@/components/FormControl.vue";
+import {CourierStatuses} from "@/constants/Statuses.js";
 
 const couriers = ref([])
+const statuses = Object.values(CourierStatuses)
 const isModalActive = ref(false)
+const form = reactive({
+  name: null,
+  status: null,
+  uuid: null,
+})
 
 const showModal = (courier) => {
   isModalActive.value = true
+  form.name = courier.name
+  form.uuid = courier.uuid
+  form.status = courier.status
+}
+
+const updateCourier = () => {
+  axios.post('/api/update-courier',
+    {
+      uuid: form.uuid,
+      status: form.status,
+      name: form.name,
+    })
+    .then((response) => {
+      console.log('updated')
+    })
 }
 
 onMounted(() => {

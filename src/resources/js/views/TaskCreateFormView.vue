@@ -24,7 +24,6 @@ const form = reactive({
 })
 
 const submit = () => {
-  console.log(form)
   axios.post('/api/task',
     {
       courierUuid: form.courier,
