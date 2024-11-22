@@ -39,3 +39,7 @@ Route::post('/update-route', [ RouteController::class, 'updateRoute' ]);
 Route::get('/route/{taskUuid}', [ RouteController::class, 'getRoute' ]);
 
 Route::get('/couriers/{statuses?}', [ CourierController::class, 'get' ]);
+
+Route::get('/courier/{uuid}', [ CourierController::class, 'getCourier' ]);
+
+Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);

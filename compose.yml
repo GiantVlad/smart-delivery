@@ -13,6 +13,9 @@ services:
     #working_dir: /app
     networks:
       - smart-l
+    depends_on:
+      - temporal
+      - mysql
     volumes:
       - ./src:/app
       #- ./docker/roadrunner/rr.yaml:/etc/.rr.yaml:ro
@@ -95,6 +98,7 @@ services:
       - 7233:7233
     volumes:
       - ./docker/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
@@ -107,6 +111,7 @@ services:
       - smart-l
     stdin_open: true
     tty: true
+
   temporal-ui:
     container_name: temporal-ui
     depends_on:

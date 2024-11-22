@@ -55,11 +55,6 @@ RUN set -eux; \
     ; \
     apk del .build-deps
 
-# # #
-# remove build deps
-# # #
-#RUN apk del -f .build-dependencies
-
 COPY --from=roadrunner /usr/bin/rr /usr/local/bin/rr
 
 EXPOSE 8000/tcp

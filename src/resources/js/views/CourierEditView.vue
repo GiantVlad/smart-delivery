@@ -3,10 +3,6 @@
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Couriers" main>
       </SectionTitleLineWithButton>
-      <CardBoxModal v-model="isModalActive" title="Edit courier">
-        <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-        <p>This is sample modal</p>
-      </CardBoxModal>
       <CardBox class="mb-6" has-table>
         <!-- Table -->
           <table class="table-auto w-full">
@@ -24,9 +20,6 @@
               </th>
               <th class="p-2 whitespace-nowrap">
                 <div class="font-semibold text-center">Status</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-center">Action</div>
               </th>
               <th class="p-2 whitespace-nowrap">
                 <div class="font-semibold text-center">Date</div>
@@ -52,9 +45,6 @@
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left font-medium text-green-500">{{courier.status}}</div>
               </td>
-              <div class="text-left font-small">
-                <BaseButton type="button" color="success" label="Edit courier" small @click="showModal(courier)"/>
-              </div>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{courier.updated_at}}</div>
               </td>
@@ -75,15 +65,8 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "axios";
 import {ref, onMounted} from "vue";
-import CardBoxModal from "@/components/CardBoxModal.vue";
-import BaseButton from "@/components/BaseButton.vue";
 
-const couriers = ref([])
-const isModalActive = ref(false)
-
-const showModal = (courier) => {
-  isModalActive.value = true
-}
+let couriers = ref([])
 
 onMounted(() => {
   axios.get('/api/couriers')
