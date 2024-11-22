@@ -93,7 +93,7 @@ const submit = (orderUuid) => {
 
 const orderSelector = ref(false)
 const ordersToAdd = ref([])
-const selectedOrdersToAdd = ref(null)
+const selectedOrdersToAdd = ref([])
 const showOrderSelector = () => {
   axios.get('/api/orders-to-assign')
     .then((response) => {
@@ -104,7 +104,7 @@ const showOrderSelector = () => {
 
 const hideOrderSelector = () => {
   ordersToAdd.value = []
-  selectedOrdersToAdd.value = null
+  selectedOrdersToAdd.value = []
   orderSelector.value = false
 }
 
@@ -218,7 +218,7 @@ const addOrdersToTask = () => {
               placeholder="Pick some orders"
               label="label"
               track-by="label"
-              :preselect-first="true"
+              :preselect-first="false"
             >
               <template #selection="{ values, search, isOpen }">
                 <span class="multiselect__single" v-if="values.length" v-show="!isOpen">
