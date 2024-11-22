@@ -110,16 +110,14 @@ const updateCourier = () => {
       name: form.name,
     })
     .then((response) => {
-      const tmp = couriers.map(el => {
+      couriers.map(el => {
         if (el.uuid === response.data.data.uuid) {
           el.name = response.data.data.name
           el.status = response.data.data.status
         }
-        console.log(el)
+
         return el
       })
-      //couriers.length = 0
-      // couriers.push(...tmp)
     })
     .finally(() => {
       form.name = null
