@@ -34,13 +34,13 @@
               <div class="font-semibold text-left">Name</div>
             </th>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-center">Status</div>
+              <div class="font-semibold text-left">Status</div>
             </th>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-center">Action</div>
+              <div class="font-semibold text-left">Action</div>
             </th>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-center">Date</div>
+              <div class="font-semibold text-left">Date</div>
             </th>
           </tr>
           </thead>

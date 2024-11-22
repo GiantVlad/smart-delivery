@@ -9,8 +9,11 @@ use App\Http\Requests\CreateCourierRequest;
 use App\Http\Requests\UpdateCourierRequest;
 use App\Http\Resources\CourierResource;
 use App\Models\Courier;
+use App\Temporal\UpdateCourierStatusWorkflowInterface;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
+use Temporal\Client\WorkflowOptions;
 
 class CourierController extends Controller
 {
@@ -39,8 +42,14 @@ class CourierController extends Controller
         $courier = Courier::whereUuid($request->get('uuid'))->first();
 
         $courier->name = $request->get('name');
-        $courier->status = $request->get('status');
         $courier->save();
+
+        $workflow = $this->workflowClient->newWorkflowStub(
+            UpdateCourierStatusWorkflowInterface::class,
+            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes())
+        );
+
+        $this->workflowClient->start($workflow, $courier->uuid, $request->get('status'));
 
         return CourierResource::make($courier);
     }

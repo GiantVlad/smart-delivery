@@ -6,10 +6,11 @@
       <BaseButtons>
         <BaseButton type="button" color="info" label="Create Order" @click="router.push('/order')"/>
       </BaseButtons>
+      <BaseDivider />
       <NotificationBar color="info" :icon="mdiMonitorCellphone">
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
-      <CardBox class="mb-6" has-table v-if="orders.length > 0">
+      <CardBox class="mb-6 max-w-5xl" has-table v-if="orders.length > 0">
         <!-- Table -->
           <table class="table-auto w-full">
             <!-- Table header -->
@@ -104,6 +105,7 @@ import {ref, onMounted} from "vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import router from "@/router/index.js";
+import BaseDivider from "@/components/BaseDivider.vue";
 
 let orders = ref([])
 

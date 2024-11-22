@@ -6,11 +6,12 @@
       <BaseButtons>
         <BaseButton type="button" color="info" label="Create Task" @click="router.push('/task')"/>
       </BaseButtons>
+      <BaseDivider />
       <NotificationBar color="info" :icon="mdiMonitorCellphone">
         <b>Resdevops ponsive table.</b> Collapses on mobile
       </NotificationBar>
 
-      <CardBox class="mb-6" has-table v-if="tasks.length > 0">
+      <CardBox class="mb-6 max-w-5xl" has-table v-if="tasks.length > 0">
         <!-- Table -->
           <table class="table-auto w-full">
             <!-- Table header -->
@@ -87,6 +88,7 @@ import {ref, onMounted} from "vue";
 import router from "@/router/index.js";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
+import BaseDivider from "@/components/BaseDivider.vue";
 
 let tasks = ref([])
 

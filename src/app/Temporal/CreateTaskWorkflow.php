@@ -16,6 +16,7 @@ use Temporal\Workflow\WorkflowExecution;
 class CreateTaskWorkflow implements CreateTaskWorkflowInterface
 {
     private $createTaskActivity;
+    private $updateCourierStatusActivity;
     private $createRouteActivity;
     private $notifyTaskActivity;
 
