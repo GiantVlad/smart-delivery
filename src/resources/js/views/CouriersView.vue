@@ -112,7 +112,7 @@ const updateCourier = () => {
     .then((response) => {
       couriers.value = couriers.value.map(el => {
         if (el.uuid === response.data.uuid) {
-          el.name = response.data.uuid
+          el.name = response.data.name
           el.status = response.data.status
         }
       })
