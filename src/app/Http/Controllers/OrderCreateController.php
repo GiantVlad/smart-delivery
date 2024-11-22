@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Dto\OrderDto;
+use App\Http\Requests\CreateOrderRequest;
 use App\Http\Resources\OrderCreateFormResource;
 use App\Http\Resources\OrderResource;
 use App\Models\Customer;
@@ -44,7 +45,7 @@ class OrderCreateController extends Controller
         return OrderResource::collection($orders);
     }
 
-    public function createOrder(Request $request)
+    public function createOrder(CreateOrderRequest $request)
     {
         $email = $request->get('customerEmail');
         $unitType = $request->get('unitType');

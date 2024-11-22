@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, reactive, ref, watch} from 'vue'
+import {onMounted, reactive, ref, watch} from 'vue'
 import {mdiBallotOutline, mdiClose} from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
