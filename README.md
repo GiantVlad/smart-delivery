@@ -9,6 +9,8 @@ cp .env.example .env
 
 cp src/.env.example src/.env
 
+cd src && php artisan key:generate && cd ..  
+
 docker compose up -d
 
 docker compose exec roadrunner php artisan migrate
@@ -21,7 +23,7 @@ docker compose exec roadrunner php artisan wf-status-handler:stop <workflow_id>
 
 docker compose exec roadrunner rr -c /etc/rr/.rr.yaml reset
 
-cd src 
+cd src
 npm install
 npm run build
 ```
