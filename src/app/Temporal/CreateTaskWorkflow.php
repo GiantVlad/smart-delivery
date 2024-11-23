@@ -6,6 +6,7 @@ namespace App\Temporal;
 
 
 use App\Dto\CreateTaskDto;
+use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
@@ -24,6 +25,18 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
     {
         $this->createTaskActivity = Workflow::newActivityStub(
             CreateTaskActivityInterface::class,
+            ActivityOptions::new()
+                ->withStartToCloseTimeout(CarbonInterval::seconds(20))
+                ->withRetryOptions(
+                    RetryOptions::new()
+                        ->withInitialInterval(CarbonInterval::seconds(1))
+                        ->withMaximumAttempts(3)
+                        ->withNonRetryableExceptions([\InvalidArgumentException::class])
+                )
+        );
+
+        $this->updateCourierStatusActivity= Workflow::newActivityStub(
+            UpdateCourierStatusActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -81,7 +94,17 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
             $workflowOrderStatusHandler->updateStatus($orderUuid, OrderStatusEnum::ASSIGNED->value);
         }
 
+        $updateCourierStatusPr =  Workflow::async(function () use ($taskDto) {
+            return $this->updateCourierStatusActivity->updateCourierStatus(
+                $taskDto->courierUuid,
+                CourierStatusEnum::OT->value
+            );
+        });
+
         yield $notificationPr;
+
         yield $createRoutePr;
+
+        yield $updateCourierStatusPr;
     }
 }
