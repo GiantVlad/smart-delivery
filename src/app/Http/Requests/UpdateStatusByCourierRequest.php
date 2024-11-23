@@ -8,8 +8,9 @@ use App\Enums\OrderStatusEnum;
 use App\Rules\OrderStatusCanBeChangedRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
-class UnassignOrderRequest extends FormRequest
+class UpdateStatusByCourierRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -24,12 +25,14 @@ class UnassignOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'status' => ['string', new Enum(OrderStatusEnum::class)],
             'orderUuid' => [
                 'bail',
                 'required',
                 'string',
                 'exists:orders,uuid',
-                (new OrderStatusCanBeChangedRule())->setData(['status' => OrderStatusEnum::CANCELED])],
+                (new OrderStatusCanBeChangedRule())->setData(['status' => $this->status]),
+            ],
         ];
     }
 }

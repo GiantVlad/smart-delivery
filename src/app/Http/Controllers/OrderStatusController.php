@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
+use App\Http\Requests\UpdateStatusByCourierRequest;
 use App\Models\Order;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use Illuminate\Http\JsonResponse;
@@ -27,25 +28,16 @@ class OrderStatusController extends Controller
         return response()->json('Updated');
     }
 
-    public function updateStatusByCourier(Request $request): JsonResponse
+    public function updateStatusByCourier(UpdateStatusByCourierRequest $request): JsonResponse
     {
         $orderUuid = $request->get('orderUuid');
         $status = $request->get('status');
-        $order = Order::where('uuid', $orderUuid)->firstOrFail();
-
-        try {
-            $statusEnum = OrderStatusEnum::from($status);
-        } catch (\ValueError $error) {
-            throw new \Exception("Invalid status: $status", 422);
-        }
-
-        if (! in_array($order->status, OrderStatusEnum::courierCanUpdate())) {
-            throw new \Exception("You can't change order status to $status since current status is $order->status", 422);
-        }
+        $order = Order::whereUuid($orderUuid)->first();
 
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
             $this->getWfId(),
+
         );
 
         $workflow->updateStatus($orderUuid, $status);

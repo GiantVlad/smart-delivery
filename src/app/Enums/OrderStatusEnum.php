@@ -11,8 +11,15 @@ enum OrderStatusEnum: string
     case DELIVERED = 'delivered';
     case CANCELED = 'canceled';
 
-    public static function courierCanUpdate(): array
+    public static function canBeChangedTo(self $status): array
     {
-        return [self::ACCEPTED->value, self::ASSIGNED->value, self::COLLECTED->value];
+        return match ($status) {
+            self::NEW => [self::ACCEPTED, self::CANCELED],
+            self::ACCEPTED => [self::ASSIGNED, self::CANCELED],
+            self::CANCELED => [self::ACCEPTED],
+            self::ASSIGNED => [self::COLLECTED, self::CANCELED],
+            self::COLLECTED => [self::DELIVERED, self::CANCELED],
+            default => [],
+        };
     }
 }
