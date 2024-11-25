@@ -24,7 +24,9 @@ class UnassignOrderRequest extends FormRequest
     public function rules(): array
     {
         $canChangeStatusRule = new OrderStatusCanBeChangedRule();
-        $canChangeStatusRule = $canChangeStatusRule->setData(['status' => OrderStatusEnum::CANCELED->value]);
+        $data = [];
+        $data['status'] = OrderStatusEnum::CANCELED->value;
+        $canChangeStatusRule = $canChangeStatusRule->setData($data);
 
         return [
             'orderUuid' => [
