@@ -7,6 +7,7 @@ namespace App\Temporal;
 
 use App\Dto\TaskDto;
 use App\Enums\CourierStatusEnum;
+use App\Notifications\TaskFinishedNotification;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -33,7 +34,7 @@ class TaskFinishWorkflow implements TaskFinishWorkflowInterface
         );
 
         $this->notifyTaskActivity = Workflow::newActivityStub(
-            NotifyTaskCreatedActivityInterface::class,
+            NotifyCourierActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -52,7 +53,11 @@ class TaskFinishWorkflow implements TaskFinishWorkflowInterface
         $updateCourierStatus = Workflow::newChildWorkflowStub(UpdateCourierStatusWorkflowInterface::class);
 
         $notificationPr = Workflow::async(function () use ($taskDto, $taskUuid) {
-            return $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, $taskUuid);
+            return $this->notifyTaskActivity->notifyCourier(
+                $taskDto->courierUuid,
+                $taskUuid,
+                TaskFinishedNotification::class
+            );
         });
 
         yield $updateCourierStatus->update($taskDto->courierUuid, CourierStatusEnum::RD->value);

@@ -6,6 +6,8 @@ namespace App\Temporal;
 
 use App\Dto\AssignOrderDto;
 use App\Dto\OrderDto;
+use App\Notifications\OrderUnaAssignedFromTaskNotification;
+use App\Notifications\OrderUnassignedNotification;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -47,7 +49,7 @@ class UnassignOrderWorkflow implements UnassignOrderWorkflowInterface
         );
 
         $this->notifyCustomerActivity = Workflow::newActivityStub(
-            NotifyOrderCreatedActivityInterface::class,
+            NotifyCustomerActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -59,7 +61,7 @@ class UnassignOrderWorkflow implements UnassignOrderWorkflowInterface
         );
 
         $this->notifyCouirierActivity = Workflow::newActivityStub(
-            NotifyTaskCreatedActivityInterface::class,
+            NotifyCourierActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -84,7 +86,17 @@ class UnassignOrderWorkflow implements UnassignOrderWorkflowInterface
             $orderDto->endPointId
         );
 
-        yield $this->notifyCustomerActivity->notifyOrderCreated($orderDto->customerUuid, $orderDto->uuid);
-        yield $this->notifyCouirierActivity->notifyTaskCreated($assignOrderDto->courierUuid, $assignOrderDto->taskUuid);
+        yield $this->notifyCustomerActivity->notifyCustomer(
+            $orderDto->customerUuid,
+            $orderDto->uuid,
+            OrderUnassignedNotification::class,
+        );
+
+        yield $this->notifyCouirierActivity->notifyCourier(
+            $assignOrderDto->courierUuid,
+            $assignOrderDto->taskUuid,
+            OrderUnaAssignedFromTaskNotification::class,
+            ['orderUuid' => $orderDto->uuid],
+        );
     }
 }

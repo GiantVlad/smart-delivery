@@ -30,7 +30,7 @@ class UpdateRouteWorkflow implements UpdateRouteWorkflowInterface
         );
 
 //        $this->notifyActivity = Workflow::newActivityStub(
-//            NotifyTaskCreatedActivity::class,
+//            NotifyCourierActivity::class,
 //            ActivityOptions::new()
 //                ->withStartToCloseTimeout(CarbonInterval::seconds(20))
 //                ->withRetryOptions(

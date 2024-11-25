@@ -8,6 +8,7 @@ namespace App\Temporal;
 use App\Dto\TaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
+use App\Notifications\TaskCreatedNotification;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -48,7 +49,7 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         );
 
         $this->notifyTaskActivity = Workflow::newActivityStub(
-            NotifyTaskCreatedActivityInterface::class,
+            NotifyCourierActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -78,7 +79,11 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         $taskUuid = yield $taskUuidPromise;
 
         $notificationPr = Workflow::async(function () use ($taskDto, $taskUuid) {
-            return $this->notifyTaskActivity->notifyTaskCreated($taskDto->courierUuid, $taskUuid);
+            return $this->notifyTaskActivity->notifyCourier(
+                $taskDto->courierUuid,
+                $taskUuid,
+                TaskCreatedNotification::class
+            );
         });
 
         $createRoutePr =  Workflow::async(function () use ($taskUuid) {

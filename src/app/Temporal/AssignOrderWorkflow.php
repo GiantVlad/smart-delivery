@@ -6,6 +6,8 @@ namespace App\Temporal;
 
 use App\Dto\AssignOrderDto;
 use App\Dto\OrderDto;
+use App\Notifications\OrderAssignedNotification;
+use App\Notifications\OrderAssignedToTaskNotification;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -47,7 +49,7 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
         );
 
         $this->notifyCustomerActivity = Workflow::newActivityStub(
-            NotifyOrderCreatedActivityInterface::class,
+            NotifyCustomerActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -59,7 +61,7 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
         );
 
         $this->notifyCouirierActivity = Workflow::newActivityStub(
-            NotifyTaskCreatedActivityInterface::class,
+            NotifyCourierActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -79,7 +81,11 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
                 return $this->assignOrderActivity->assignOrder($orderUuid, $assignOrderDto->taskUuid);
             });
             $promises[] = Workflow::async(function () use ($orderUuid, $customerUuid) {
-                return $this->notifyCustomerActivity->notifyOrderCreated($customerUuid, $orderUuid);
+                return $this->notifyCustomerActivity->notifyCustomer(
+                    $customerUuid,
+                    $orderUuid,
+                    OrderAssignedNotification::class,
+                );
             });
         }
 
@@ -90,6 +96,11 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
             }
         }
 
-        yield $this->notifyCouirierActivity->notifyTaskCreated($assignOrderDto->courierUuid, $assignOrderDto->taskUuid);
+        yield $this->notifyCouirierActivity->notifyCourier(
+            $assignOrderDto->courierUuid,
+            $assignOrderDto->taskUuid,
+            OrderAssignedToTaskNotification::class,
+            ['orderUuids' => array_keys($assignOrderDto->orderCustomerUuids)],
+        );
     }
 }

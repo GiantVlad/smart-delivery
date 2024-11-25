@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Temporal;
 
 use App\Dto\OrderDto;
+use App\Notifications\OrderCreatedNotification;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -43,7 +44,7 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
         );
 
         $this->notifyActivity = Workflow::newActivityStub(
-            NotifyOrderCreatedActivity::class,
+            NotifyCustomerActivity::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -63,7 +64,7 @@ class CreateOrderWorkflow implements CreateOrderWorkflowInterface
             return $this->createOrderErpActivity->createOrderInErp($orderUuid);
         });
         $notifyActivityPr = Workflow::async(function () use ($orderDto, $orderUuid) {
-            return $this->notifyActivity->notifyOrderCreated($orderDto->customerUuid, $orderUuid);
+            return $this->notifyActivity->notifyCustomer($orderDto->customerUuid, $orderUuid, OrderCreatedNotification::class);
         });
 
         yield $createOrderErpActivityPr;
