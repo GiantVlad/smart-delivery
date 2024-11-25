@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateStatusByCourierRequest;
 use App\Models\Order;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use App\Temporal\TaskFinishedActivityInterface;
+use App\Temporal\TaskFinishWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class OrderStatusController extends Controller
             && $orderStatusDomain->isOneOrderLeft($task)
         ) {
             $workflow = $this->workflowClient->newWorkflowStub(
-                TaskFinishedActivityInterface::class,
+                TaskFinishWorkflowInterface::class,
                 WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
             );
 
