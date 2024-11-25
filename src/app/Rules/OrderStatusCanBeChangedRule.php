@@ -23,6 +23,7 @@ class OrderStatusCanBeChangedRule implements DataAwareRule, ValidationRule
     public function setData(array $data): static
     {
         $this->data = $data;
+        dd($this->data);
 
         return $this;
     }
