@@ -35,7 +35,6 @@ class OrderStatusCanBeChangedRule implements DataAwareRule, ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $order = Order::whereUuid($value)->first();
-        dd($this->data);
         $canBeChangedTo = OrderStatusEnum::canBeChangedTo(OrderStatusEnum::tryFrom($order->status));
         if (! in_array(OrderStatusEnum::tryFrom($this->data['status']), $canBeChangedTo, true)) {
             $fail("The order with status $order->status can not be changed to " . $this->data['status']);
