@@ -23,17 +23,14 @@ class UnassignOrderRequest extends FormRequest
      */
     public function rules(): array
     {
-        $this->status = OrderStatusEnum::CANCELED->value;
-
         return [
             'orderUuid' => [
                 'bail',
                 'required',
                 'string',
                 'exists:orders,uuid',
-                new OrderStatusCanBeChangedRule(),
+                new OrderStatusCanBeChangedRule(OrderStatusEnum::CANCELED->value),
             ],
-            'status' => ['string']
         ];
     }
 }

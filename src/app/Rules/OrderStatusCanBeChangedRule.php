@@ -13,12 +13,19 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 
 class OrderStatusCanBeChangedRule implements DataAwareRule, ValidationRule
 {
+    private string $status;
+
     /**
      * All of the data under validation.
      *
      * @var array<string, mixed>
      */
     protected $data = [];
+
+    public function __construct(string $status)
+    {
+        $this->status = $status;
+    }
 
     public function setData(array $data): static
     {
@@ -36,8 +43,8 @@ class OrderStatusCanBeChangedRule implements DataAwareRule, ValidationRule
     {
         $order = Order::whereUuid($value)->first();
         $canBeChangedTo = OrderStatusEnum::canBeChangedTo(OrderStatusEnum::tryFrom($order->status));
-        if (! in_array(OrderStatusEnum::tryFrom($this->data['status']), $canBeChangedTo, true)) {
-            $fail("The order with status $order->status can not be changed to " . $this->data['status']);
+        if (! in_array(OrderStatusEnum::tryFrom($this->status), $canBeChangedTo, true)) {
+            $fail("The order with status $order->status can not be changed to " . $this->status);
         }
     }
 }

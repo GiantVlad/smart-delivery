@@ -31,7 +31,7 @@ class UpdateStatusByCourierRequest extends FormRequest
                 'required',
                 'string',
                 'exists:orders,uuid',
-                (new OrderStatusCanBeChangedRule())->setData(['status' => $this->status]),
+                new OrderStatusCanBeChangedRule($this->status),
             ],
         ];
     }
