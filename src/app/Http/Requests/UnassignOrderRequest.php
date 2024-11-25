@@ -29,7 +29,7 @@ class UnassignOrderRequest extends FormRequest
                 'required',
                 'string',
                 'exists:orders,uuid',
-                (new OrderStatusCanBeChangedRule())->setData(['status' => OrderStatusEnum::CANCELED])],
+                (new OrderStatusCanBeChangedRule())->setData(['status' => OrderStatusEnum::CANCELED->value])],
         ];
     }
 }
