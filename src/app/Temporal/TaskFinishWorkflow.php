@@ -13,7 +13,7 @@ use Temporal\Common\RetryOptions;
 use Temporal\Workflow;
 use Temporal\Workflow\WorkflowExecution;
 
-class TaskFinishWorkflow implements CreateTaskWorkflowInterface
+class TaskFinishWorkflow implements TaskFinishWorkflowInterface
 {
     private $taskFinishActivity;
     private $notifyTaskActivity;
@@ -45,7 +45,7 @@ class TaskFinishWorkflow implements CreateTaskWorkflowInterface
         );
     }
 
-    public function create(TaskDto $taskDto): \Generator
+    public function finish(TaskDto $taskDto): \Generator
     {
         $taskUuid = yield $this->taskFinishActivity->finishTask($taskDto);
 
