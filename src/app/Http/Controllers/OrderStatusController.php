@@ -10,7 +10,6 @@ use App\Enums\OrderStatusEnum;
 use App\Http\Requests\UpdateStatusByCourierRequest;
 use App\Models\Order;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
-use App\Temporal\TaskFinishedActivityInterface;
 use App\Temporal\TaskFinishWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;

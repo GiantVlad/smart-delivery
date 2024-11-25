@@ -81,12 +81,11 @@ const submit = (orderUuid) => {
     .then(response => {
       showActionButton.value[form.orderUuid] = true
       orders.value.map(el => {
-        if (el.uuid === form.orderUuid) {
-          el.status = form.status
+        if (el.uuid === orderUuid) {
+          el.status = selectedStatus.value[orderUuid]
         }
       })
       showActionButton.value[orderUuid] = true
-      console.log('Updated')
     })
 }
 
