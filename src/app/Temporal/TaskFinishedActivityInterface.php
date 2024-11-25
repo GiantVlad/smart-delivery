@@ -8,11 +8,11 @@ use App\Dto\TaskDto;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
 
-#[ActivityInterface(prefix: 'CreateTaskActivity.')]
-interface CreateTaskActivityInterface
+#[ActivityInterface(prefix: 'TaskFinishedActivity.')]
+interface TaskFinishedActivityInterface
 {
-    #[ActivityMethod(name: "CreateTask")]
-    public function createTask(
+    #[ActivityMethod(name: "FinishTask")]
+    public function finishTask(
         TaskDto $taskDto
     ): string;
 }

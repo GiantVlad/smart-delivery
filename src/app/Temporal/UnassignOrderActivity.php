@@ -16,7 +16,7 @@ class UnassignOrderActivity implements UnassignOrderActivityInterface
     {
         $order = Order::where('uuid', $orderUuid)->first();
         $order->task_id = null;
-        $order->status = OrderStatusEnum::ACCEPTED->value;
+        $order->status = OrderStatusEnum::CANCELED->value;
         $order->save();
 
         return new OrderDto(

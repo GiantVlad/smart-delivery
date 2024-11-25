@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Dto\CreateTaskDto;
+use App\Dto\TaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Http\Requests\CreateTaskRequest;
@@ -54,7 +54,7 @@ class TaskController extends Controller
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
         );
 
-       $this->workflowClient->start($workflow, new CreateTaskDto($courierUuid, $orderUuids, $this->getWfId()));
+       $this->workflowClient->start($workflow, new TaskDto($courierUuid, $orderUuids, $this->getWfId()));
 
         return response()->json(['data' => true]);
     }

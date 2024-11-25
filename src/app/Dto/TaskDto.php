@@ -6,12 +6,13 @@ namespace App\Dto;
 
 use Spatie\LaravelData\Data;
 
-class CreateTaskDto extends Data
+class TaskDto extends Data
 {
     public function __construct(
         public string $courierUuid,
         public array $orderUuids,
         public string $orderStatusWFId,
+        public ?string $taskUuid = null,
     ) {
     }
 }

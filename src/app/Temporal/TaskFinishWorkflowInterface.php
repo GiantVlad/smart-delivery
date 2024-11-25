@@ -10,8 +10,8 @@ use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
 
 #[WorkflowInterface]
-interface CreateTaskWorkflowInterface
+interface TaskFinishWorkflowInterface
 {
-    #[WorkflowMethod(name: "CreateTaskActivity.Create")]
-    public function create(TaskDto $taskDto);
+    #[WorkflowMethod(name: "TaskFinishActivity.Finish")]
+    public function finish(TaskDto $taskDto);
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Temporal;
 
 
-use App\Dto\CreateTaskDto;
+use App\Dto\TaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
 use Carbon\CarbonInterval;
@@ -72,7 +72,7 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         );
     }
 
-    public function create(CreateTaskDto $taskDto): \Generator
+    public function create(TaskDto $taskDto): \Generator
     {
         $taskUuidPromise = $this->createTaskActivity->createTask($taskDto);
         $taskUuid = yield $taskUuidPromise;

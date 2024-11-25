@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-use App\Dto\CreateTaskDto;
+use App\Dto\TaskDto;
 use App\Enums\TaskStatusEnum;
 use App\Models\Courier;
 use App\Models\Order;
@@ -17,7 +17,7 @@ use Temporal\Exception\IllegalStateException;
 
 class CreateTaskActivity implements CreateTaskActivityInterface
 {
-    public function createTask(CreateTaskDto $taskDto): string
+    public function createTask(TaskDto $taskDto): string
     {
         $courier = Courier::where('uuid', $taskDto->courierUuid)->firstOrFail();
         $orders = Order::whereIn('uuid', $taskDto->orderUuids)->get();
