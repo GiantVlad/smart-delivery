@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import centrifuge from './centrifugo'
+import Centrifugo from './centrifugo'
 import App from './App.vue'
 import router from './router'
 import { useMainStore } from '@/stores/main.js'
@@ -10,7 +10,16 @@ import './css/main.css'
 const pinia = createPinia()
 // app.provide("centrifuge", centrifuge);
 // Create Vue app
-createApp(App).use(router).use(pinia).use(centrifuge).mount('#app')
+createApp(App)
+  .use(router)
+  .use(pinia)
+  .use(
+    Centrifugo,
+    {
+    url: "ws://centrifugo:8010/connection/websocket",
+    token: "your-jwt-token", // Replace with the token received from your server ./centrifugo gentoken -u 123722
+    })
+  .mount('#app')
 
 // Init main store
 const mainStore = useMainStore(pinia)

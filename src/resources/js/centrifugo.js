@@ -1,16 +1,25 @@
-import {Centrifuge} from 'centrifuge';
+import { Centrifuge } from "centrifuge";
 
-const centrifuge = new Centrifuge("ws://centrifugo:8010/connection/websocket");
+export default {
+  install(app, options) {
+    const centrifuge = new Centrifuge(options.url);
 
-// Set up token-based authentication if needed
-centrifuge.setToken("your-jwt-token");
+    if (options.token) {
+      centrifuge.setToken(options.token);
+    }
 
-centrifuge.on("connect", (context) => {
-  console.log("Connected to Centrifugo:", context);
-});
+    centrifuge.on("connect", (context) => {
+      console.log("Connected to Centrifugo:", context);
+    });
 
-centrifuge.on("disconnect", (context) => {
-  console.log("Disconnected from Centrifugo:", context);
-});
+    centrifuge.on("disconnect", (context) => {
+      console.log("Disconnected from Centrifugo:", context);
+    });
 
-export default centrifuge;
+    app.config.globalProperties.$centrifuge = centrifuge;
+
+    app.provide("centrifuge", centrifuge);
+
+    centrifuge.connect();
+  },
+}
