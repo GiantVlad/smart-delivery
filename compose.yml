@@ -125,6 +125,21 @@ services:
     ports:
       - 8080:8080
 
+  centrifugo:
+    container_name: centrifugo
+    image: centrifugo/centrifugo:v5
+    volumes:
+      - .docker/centrifugo/config.json:/centrifugo/config.json
+    command: centrifugo -c config.json
+    ports:
+      - 8010:8000
+    networks:
+      - smart-l
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+
   # use it only on dev env
   mailhog:
     image: mailhog/mailhog
