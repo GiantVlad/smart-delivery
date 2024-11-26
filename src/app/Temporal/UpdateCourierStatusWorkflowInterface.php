@@ -11,6 +11,6 @@ use Temporal\Workflow\WorkflowMethod;
 #[WorkflowInterface]
 interface UpdateCourierStatusWorkflowInterface
 {
-    #[WorkflowMethod(name: "UpdateCourierStatusActivity.update")]
+    #[WorkflowMethod(name: "UpdateCourierStatus.Update")]
     public function update(string $courierUuid, string $status);
 }

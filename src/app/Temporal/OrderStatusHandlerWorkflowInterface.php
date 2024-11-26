@@ -14,6 +14,8 @@ interface OrderStatusHandlerWorkflowInterface
 {
     public const WORKFLOW_STATUS_HANDLER_KEY = 'workflow-status-handler-id';
 
+    public const WORKFLOW_ID = 'workflow-status-handler-v1';
+
     #[WorkflowMethod(name: "OrderStatusHandler.Run")]
     public function run(): Generator;
 

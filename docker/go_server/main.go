@@ -20,21 +20,22 @@ type Response struct {
 
 type Order struct {
 	Uuid string `json:"orderUuid"`
+	Status string `json:"status"`
 }
 
 // Handler for receiving and logging incoming requests
 func receiveHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPost {
-    http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-        return
+    if r.Method != http.MethodPost || r.Method != http.MethodPut {
+        http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+            return
     }
 
     body, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Could not read request body", http.StatusInternalServerError)
-		return
-	}
-	defer r.Body.Close()
+    if err != nil {
+        http.Error(w, "Could not read request body", http.StatusInternalServerError)
+        return
+    }
+    defer r.Body.Close()
 
     var o Order
 	err = json.Unmarshal(body, &o)
@@ -85,7 +86,6 @@ func sendHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/erp", receiveHandler)
-	// http.HandleFunc("/webhook", sendHandler)
 
 	port := "8090"
 	fmt.Printf("Server starting on port %s\n", port)

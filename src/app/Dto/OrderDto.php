@@ -14,6 +14,7 @@ class OrderDto extends Data
         public int $startPointId,
         public int $endPointId,
         public string $uuid = '',
+        public string $status = '',
     ) {
     }
 }

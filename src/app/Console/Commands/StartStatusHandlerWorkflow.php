@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Temporal\OrderForErpObserverWorkflowInterface;
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Console\Command;
 use Temporal\Client\WorkflowClientInterface;
+use Temporal\Client\WorkflowOptions;
 
 class StartStatusHandlerWorkflow extends Command
 {
@@ -30,7 +32,8 @@ class StartStatusHandlerWorkflow extends Command
     {
         try {
             $workflow = $workflowClient->newWorkflowStub(
-                OrderStatusHandlerWorkflowInterface::class
+                OrderStatusHandlerWorkflowInterface::class,
+                WorkflowOptions::new()->withWorkflowId(OrderStatusHandlerWorkflowInterface::WORKFLOW_ID),
             );
 
             $this->info("Starting <comment>OrderStatusHandlerWorkflow</comment>... ");

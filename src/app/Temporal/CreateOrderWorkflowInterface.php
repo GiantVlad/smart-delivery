@@ -11,6 +11,6 @@ use Temporal\Workflow\WorkflowMethod;
 #[WorkflowInterface]
 interface CreateOrderWorkflowInterface
 {
-    #[WorkflowMethod(name: "CreateOrderActivity.create")]
+    #[WorkflowMethod(name: "CreateOrder.Create")]
     public function create(OrderDto $orderDto);
 }

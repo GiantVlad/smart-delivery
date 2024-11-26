@@ -12,6 +12,6 @@ use Temporal\Workflow\WorkflowMethod;
 #[WorkflowInterface]
 interface TaskFinishWorkflowInterface
 {
-    #[WorkflowMethod(name: "TaskFinishActivity.Finish")]
+    #[WorkflowMethod(name: "TaskFinish.Finish")]
     public function finish(TaskDto $taskDto);
 }

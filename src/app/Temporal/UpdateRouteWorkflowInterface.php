@@ -11,6 +11,6 @@ use Temporal\Workflow\WorkflowMethod;
 #[WorkflowInterface]
 interface UpdateRouteWorkflowInterface
 {
-    #[WorkflowMethod(name: "UpdateRouteActivity.update")]
+    #[WorkflowMethod(name: "UpdateRoute.Update")]
     public function update(string $taskUuid, array $points);
 }

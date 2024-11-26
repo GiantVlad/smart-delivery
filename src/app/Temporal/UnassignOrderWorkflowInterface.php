@@ -11,6 +11,6 @@ use Temporal\Workflow\WorkflowMethod;
 #[WorkflowInterface]
 interface UnassignOrderWorkflowInterface
 {
-    #[WorkflowMethod(name: "UnassignOrderActivity.unassign")]
+    #[WorkflowMethod(name: "UnassignOrder.Unassign")]
     public function unassign(AssignOrderDto $assignOrderDto);
 }
