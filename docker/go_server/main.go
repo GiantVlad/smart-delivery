@@ -87,7 +87,7 @@ func sendWebhook(o Order) error {
             return err
         }
     if resp.StatusCode == http.StatusOK {
-        log.Info(string(bodyBytes))
+        log.Println((string(bodyBytes))
     } else {
        return errors.New(string(bodyBytes))
     }
