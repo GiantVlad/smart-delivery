@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"time"
 	"math/rand"
+	"errors"
 )
 
 // Response struct to capture data from the external request
@@ -81,7 +82,16 @@ func sendWebhook(o Order) error {
     }
     defer resp.Body.Close()
 
-    _, err = io.Copy(io.Discard, resp.Body)
+    bodyBytes, err = io.Copy(io.Discard, resp.Body)
+        if err != nil {
+            return err
+        }
+    if resp.StatusCode == http.StatusOK {
+        log.Info(string(bodyBytes))
+    } else {
+       return errors.New(string(bodyBytes))
+    }
+
     return err
 }
 
