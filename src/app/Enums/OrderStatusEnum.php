@@ -10,11 +10,12 @@ enum OrderStatusEnum: string
     case COLLECTED = 'collected';
     case DELIVERED = 'delivered';
     case CANCELED = 'canceled';
+    case DECLINED = 'declined';
 
     public static function canBeChangedTo(self $status): array
     {
         return match ($status) {
-            self::NEW, self::CANCELED => [self::ACCEPTED],
+            self::NEW, self::CANCELED => [self::ACCEPTED, self::DECLINED],
             self::ACCEPTED => [self::ASSIGNED, self::CANCELED],
             self::ASSIGNED => [self::COLLECTED, self::CANCELED],
             self::COLLECTED => [self::DELIVERED, self::CANCELED],

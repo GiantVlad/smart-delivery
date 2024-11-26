@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+	"math/rand"
 )
 
 // Response struct to capture data from the external request
@@ -25,7 +26,7 @@ type Order struct {
 
 // Handler for receiving and logging incoming requests
 func receiveHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPost || r.Method != http.MethodPut {
+    if !(r.Method == http.MethodPost || r.Method == http.MethodPut) {
         http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
             return
     }
@@ -44,6 +45,11 @@ func receiveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
     go func(ord Order) {
+        ord.Status = "accepted"
+        if !randomBoolWithFalseChance() {
+            ord.Status = "declined"
+        }
+
         err := sendWebhook(ord)
         if err != nil {
             log.Println("Failed to send confirmation:", err)
@@ -79,12 +85,19 @@ func sendWebhook(o Order) error {
     return err
 }
 
+func randomBoolWithFalseChance() bool {
+	randomValue := rand.Intn(100)
+
+	return randomValue >= 20
+}
+
 // Handler to send a fake request to a specified URL
 func sendHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
 func main() {
+    rand.Seed(time.Now().UnixNano())
 	http.HandleFunc("/erp", receiveHandler)
 
 	port := "8090"

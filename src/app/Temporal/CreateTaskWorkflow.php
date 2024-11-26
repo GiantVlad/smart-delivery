@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-
 use App\Dto\TaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
@@ -92,7 +91,7 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
 
         $workflowOrderStatusHandler = Workflow::newExternalWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            new WorkflowExecution($taskDto->orderStatusWFId),
+            new WorkflowExecution(OrderStatusHandlerWorkflowInterface::WORKFLOW_ID),
         );
 
         foreach ($taskDto->orderUuids as $orderUuid) {

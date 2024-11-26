@@ -22,13 +22,14 @@ class OrderStatusController extends Controller
     {
         $orderUuid = $request->get('orderUuid');
         Order::where('uuid', $orderUuid)->firstOrFail();
+        $status = $request->get('status');
 
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
             OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
         );
 
-        $workflow->updateStatus($orderUuid, OrderStatusEnum::ACCEPTED->value);
+        $workflow->updateStatus($orderUuid, $status);
 
         return response()->json('Updated');
     }
@@ -40,7 +41,7 @@ class OrderStatusController extends Controller
 
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,
-            $this->getWfId(),
+            OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
         );
 
         $workflow->updateStatus($orderUuid, $status);
@@ -61,7 +62,6 @@ class OrderStatusController extends Controller
             $taskDto = new TaskDto(
                 $task->courier->uuid,
                 [],
-                '',
                 $task->uuid,
             );
 

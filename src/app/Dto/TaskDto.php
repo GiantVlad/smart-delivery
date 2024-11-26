@@ -11,7 +11,6 @@ class TaskDto extends Data
     public function __construct(
         public string $courierUuid,
         public array $orderUuids,
-        public string $orderStatusWFId,
         public ?string $taskUuid = null,
     ) {
     }

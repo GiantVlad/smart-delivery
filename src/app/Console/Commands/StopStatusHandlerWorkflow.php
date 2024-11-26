@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Temporal\OrderStatusHandlerWorkflowInterface;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Console\Command;
 use Temporal\Client\WorkflowClientInterface;
 
@@ -29,25 +28,18 @@ class StopStatusHandlerWorkflow extends Command
     public function handle(WorkflowClientInterface $workflowClient): void
     {
         try {
-            if (! ($wfId =$this->argument('wfId'))) {
-                $wfId = Cache::get(OrderStatusHandlerWorkflowInterface::WORKFLOW_STATUS_HANDLER_KEY);
-            }
-
-            if (! $wfId) {
-                $this->fail("The WORKFLOW ID undefined.");
-            }
             $this->info("Finishing <comment>OrderStatusHandlerWorkflow</comment>... ");
 
             $workflow = $workflowClient->newRunningWorkflowStub(
                 OrderStatusHandlerWorkflowInterface::class,
-                $wfId,
+                OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
             );
             $workflow->exit();
 
             $this->info(
                 sprintf(
                     'Finished: WorkflowID=<fg=magenta>%s</fg=magenta>',
-                    $wfId,
+                    OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
                 )
             );
         } catch (\Throwable $exception) {

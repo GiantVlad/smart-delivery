@@ -32,8 +32,9 @@ class OrderConfirmationRequest extends FormRequest
                 'required',
                 'string',
                 'exists:orders,uuid',
-                new OrderStatusCanBeChangedRule(OrderStatusEnum::ACCEPTED->value),
+                new OrderStatusCanBeChangedRule($this->status),
             ],
+            'status' => ['bail', 'required', 'string', new Enum(CourierStatusEnum::class)],
         ];
     }
 }
