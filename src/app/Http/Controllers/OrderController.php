@@ -72,7 +72,7 @@ class OrderController extends Controller
     {
         $orders = Order::with('startPoint', 'endPoint')
             ->whereNull('task_id')
-            ->whereIn('status', [OrderStatusEnum::ACCEPTED->value, OrderStatusEnum::CANCELED->value])
+            ->whereIn('status', [OrderStatusEnum::ACCEPTED->value])
             ->orderBy('updated_at', 'desc')
             ->get();
 
