@@ -82,7 +82,7 @@ func sendWebhook(o Order) error {
     }
     defer resp.Body.Close()
 
-    bodyBytes, err = io.Copy(io.Discard, resp.Body)
+    bodyBytes, err := io.Copy(io.Discard, resp.Body)
         if err != nil {
             return err
         }
