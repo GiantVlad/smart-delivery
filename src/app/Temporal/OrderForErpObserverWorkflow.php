@@ -31,6 +31,6 @@ class OrderForErpObserverWorkflow implements OrderForErpObserverWorkflowInterfac
 
     public function update(): \Generator
     {
-        yield $this->updateOrderErpActivity->udateOrderInErp();
+        yield $this->updateOrderErpActivity->updateOrderInErp();
     }
 }
