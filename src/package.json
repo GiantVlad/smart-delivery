@@ -8,6 +8,7 @@
     "dependencies": {
         "@mdi/js": "^7.0.96",
         "@vueuse/core": "^10.7.0",
+        "centrifuge": "^5.2.2",
         "chart.js": "^4.4.1",
         "chartjs-adapter-moment": "^1.0.1",
         "flatpickr": "^4.6.13",

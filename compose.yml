@@ -129,7 +129,7 @@ services:
     container_name: centrifugo
     image: centrifugo/centrifugo:v5
     volumes:
-      - .docker/centrifugo/config.json:/centrifugo/config.json
+      - ./docker/centrifugo/config.json:/centrifugo/config.json
     command: centrifugo -c config.json
     ports:
       - 8010:8000
