@@ -39,8 +39,6 @@ class OrderErpObserverWorkflow extends Command
                     ->withWorkflowId(OrderForErpObserverWorkflowInterface::WORKFLOW_ID)
                     // Execute the workflow every 3 minutes
                     ->withCronSchedule('*/3 * * * *')
-                    // Execution timeout limits total time. Cron will stop executing after this timeout.
-                    ->withWorkflowExecutionTimeout(CarbonInterval::minutes(5))
                     // Run timeout limits duration of a single workflow invocation.
                     ->withWorkflowRunTimeout(CarbonInterval::minute())
             );
