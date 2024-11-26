@@ -12,7 +12,5 @@ use Temporal\Activity\ActivityMethod;
 interface UpdateOrderErpActivityInterface
 {
     #[ActivityMethod(name: "UpdateOrderInErp")]
-    public function updateOrderInErp(
-        OrderDto $orderDto,
-    ): string;
+    public function updateOrderInErp(): array;
 }

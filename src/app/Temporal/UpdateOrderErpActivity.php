@@ -6,21 +6,27 @@ namespace App\Temporal;
 
 use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
+use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 
 class UpdateOrderErpActivity implements UpdateOrderErpActivityInterface
 {
-    public function updateOrderInErp(OrderDto $orderDto): string
+    public function updateOrderInErp(): array
     {
-        if (in_array($orderDto->status, [OrderStatusEnum::NEW->value, OrderStatusEnum::CANCELED->value])) {
-            Http::accept('application/json')
-                ->put(
-                    'http://go-server:8090/erp',
-                    ['orderUuid' => $orderDto->uuid, 'status' => $orderDto->status],
-                )
-                ->throw();
+        $updatesOrders = [];
+        $orders = Order::whereIn('status', [OrderStatusEnum::CANCELED->value, OrderStatusEnum::NEW->value])->get();
+        foreach ($orders as $order) {
+            if (in_array($order->status, [OrderStatusEnum::NEW->value, OrderStatusEnum::CANCELED->value])) {
+                Http::accept('application/json')
+                    ->put(
+                        'http://go-server:8090/erp',
+                        ['orderUuid' => $order->uuid, 'status' => $order->status],
+                    )
+                    ->throw();
+                $updatesOrders[] = $order->uuid;
+            }
         }
 
-        return $orderDto->uuid;
+        return $updatesOrders;
     }
 }
