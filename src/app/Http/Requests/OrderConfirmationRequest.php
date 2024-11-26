@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\CourierStatusEnum;
+use App\Enums\OrderStatusEnum;
 use App\Rules\OrderStatusCanBeChangedRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,9 +26,6 @@ class OrderConfirmationRequest extends FormRequest
      */
     public function rules(): array
     {
-        Log::info('OrderConfirmationRequest uuid: ' . $this->orderUuid);
-        Log::info('OrderConfirmationRequest status: ' . $this->status);
-
         return [
             'orderUuid' => [
                 'bail',
@@ -36,7 +34,7 @@ class OrderConfirmationRequest extends FormRequest
                 'exists:orders,uuid',
                 new OrderStatusCanBeChangedRule($this->status),
             ],
-            'status' => ['bail', 'required', 'string', new Enum(CourierStatusEnum::class)],
+            'status' => ['bail', 'required', 'string', new Enum(OrderStatusEnum::class)],
         ];
     }
 }
