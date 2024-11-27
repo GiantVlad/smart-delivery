@@ -16,7 +16,7 @@ createApp(App)
   .use(
     Centrifugo,
     {
-    url: "ws://centrifugo:8010/connection/websocket",
+    url: "wss://delivery.cloud-workflow.com/connection/websocket",
     token: "your-jwt-token", // Replace with the token received from your server ./centrifugo gentoken -u 123722
     })
   .mount('#app')

@@ -5,6 +5,7 @@ export default {
     const centrifuge = new Centrifuge(options.url);
 
     if (options.token) {
+      console.log("Token has been set: " + options.token?.substring(0, 5));
       centrifuge.setToken(options.token);
     }
 
