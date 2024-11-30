@@ -115,10 +115,14 @@ onMounted(() => {
     .then((response) => {
       orders.value = response.data.data
     })
+  if (centrifuge && typeof centrifuge.subscribe === 'function') {
   centrifuge.subscribe('order_status', (ctx) => {
-    console.log('New message:', ctx.data);
+    console.log('New message:', ctx.data)
     // messages.value.push(ctx.data);
-  });
+  })
+  } else {
+    console.error('Centrifuge instance is invalid or subscribe method is missing.')
+  }
 })
 
 </script>

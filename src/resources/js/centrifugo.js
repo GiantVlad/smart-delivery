@@ -12,7 +12,7 @@ export default {
 
     if (options.token) {
       console.log("Token has been set: " + options.token?.substring(0, 5));
-      centrifuge.setToken(options.token);
+      centrifuge.setToken(options.token)
     }
 
     centrifuge.on("connect", (context) => {
@@ -20,12 +20,11 @@ export default {
     });
 
     centrifuge.on("disconnect", (context) => {
-      console.log("Disconnected from Centrifugo:", context);
+      console.log("Disconnected from Centrifugo:", context)
     });
 
-    app.config.globalProperties.$centrifuge = centrifuge;
-
-    app.provide("centrifuge", centrifuge);
+    app.config.globalProperties.$centrifuge = centrifuge
+    app.provide("centrifuge", centrifuge)
 
     centrifuge.connect();
   },
