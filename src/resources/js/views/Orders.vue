@@ -101,19 +101,24 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios";
-import {ref, onMounted} from "vue";
+import {ref, onMounted, inject} from "vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import router from "@/router/index.js";
 import BaseDivider from "@/components/BaseDivider.vue";
 
 let orders = ref([])
+const centrifuge = inject('centrifuge');
 
 onMounted(() => {
   axios.get('/api/orders')
     .then((response) => {
       orders.value = response.data.data
     })
+  centrifuge.subscribe('order_status', (ctx) => {
+    console.log('New message:', ctx.data);
+    // messages.value.push(ctx.data);
+  });
 })
 
 </script>
