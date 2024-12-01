@@ -3,7 +3,7 @@ import { RouterView } from 'vue-router'
 import {inject, onMounted} from "vue"
 
 const centrifuge = inject('centrifuge')
-
+console.log(centrifuge)
 onMounted(() => {
   if (centrifuge) {
     const sub = centrifuge.newSubscription('order_status')

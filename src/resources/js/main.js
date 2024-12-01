@@ -18,11 +18,11 @@ const centrifuge = createCentrifuge({
 // app.provide("centrifuge", centrifuge);
 // Create Vue app
 const app = createApp(App)
+app.provide('centrifuge', centrifuge);
 app.use(router)
   .use(pinia)
   .mount('#app')
 
-app.provide('centrifuge', centrifuge);
 // Init main store
 const mainStore = useMainStore(pinia)
 
