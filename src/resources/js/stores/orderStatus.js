@@ -4,14 +4,14 @@ import { reactive } from 'vue'
 export const useOrderStatusStore = defineStore('orderStatus', () => {
   const order = reactive({})
 
-  function setOrderStatus(payload) {
+  function updateOrderStatus(payload) {
     if (payload.order && payload.status) {
-      order[payload.order].value = payload.status
+      order[payload.order] = payload.status
     }
   }
 
   return {
     order,
-    setOrderStatus,
+    updateOrderStatus,
   }
 })

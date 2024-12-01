@@ -12,7 +12,7 @@ onMounted(() => {
     sub.on('publication', function(ctx) {
       console.log(ctx.data)
       const orderStatusStore = useOrderStatusStore()
-      orderStatusStore.setOrderStatus(ctx.data)
+      orderStatusStore.updateOrderStatus(ctx.data)
     })
 
     sub.subscribe()
