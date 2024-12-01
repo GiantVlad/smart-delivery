@@ -95,7 +95,6 @@ let tasks = ref([])
 onMounted(() => {
   axios.get('/api/tasks')
     .then((response) => {
-      console.log(response.data)
       tasks.value = response.data.data
     })
 })

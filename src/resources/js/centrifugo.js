@@ -15,14 +15,6 @@ export default {
       centrifuge.setToken(options.token)
     }
 
-    // Allocate Subscription to a channel.
-    const sub = centrifuge.newSubscription('order_status');
-
-    // React on `news` channel real-time publications.
-    sub.on('publication', function(ctx) {
-      console.log(ctx.data);
-    });
-
     centrifuge.on("connect", (context) => {
       console.log("Connected to Centrifugo:", context);
     });
@@ -31,15 +23,15 @@ export default {
       console.log("Disconnected from Centrifugo:", context)
     });
 
-    app.config.globalProperties.$centrifuge = centrifuge
-    app.provide("centrifuge", centrifuge)
-
-    // Trigger subscribe process.
-    sub.subscribe();
-
-    // Trigger actual connection establishement.
     centrifuge.connect();
-  },
+
+    const getCentrifuge = () => {
+      return centrifuge
+    }
+
+    app.config.globalProperties.$centrifuge = centrifuge
+    app.provide("centrifuge", getCentrifuge)
+  }
 }
 
 async function getToken() {
