@@ -30,7 +30,7 @@ class OrderStatusController extends Controller
             OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
         );
 
-        $centrifugo->publish('status_order', ['order' => $orderUuid, 'status' => $status]);
+        $centrifugo->publish('order_status', ['order' => $orderUuid, 'status' => $status]);
 
         $workflow->updateStatus($orderUuid, $status);
 
