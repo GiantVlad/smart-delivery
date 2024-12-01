@@ -1,6 +1,7 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import {inject, onMounted} from "vue"
+import { inject, onMounted } from "vue"
+import { useOrderStatusStore } from "@/stores/orderStatus.js";
 
 const centrifuge = inject('centrifuge')
 console.log(centrifuge)
@@ -10,6 +11,8 @@ onMounted(() => {
 
     sub.on('publication', function(ctx) {
       console.log(ctx.data)
+      const orderStatusStore = useOrderStatusStore()
+      orderStatusStore.setOrderStatus(ctx.data)
     })
 
     sub.subscribe()
