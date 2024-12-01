@@ -22,7 +22,7 @@ app.use(router)
   .use(pinia)
   .mount('#app')
 
-app.provide('centrifugo', centrifuge);
+app.provide('centrifuge', centrifuge);
 // Init main store
 const mainStore = useMainStore(pinia)
 
