@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Centrifugo from './centrifugo'
+import { createCentrifuge } from './centrifugo'
 import App from './App.vue'
 import router from './router'
 import { useMainStore } from '@/stores/main.js'
@@ -8,19 +8,21 @@ import './css/main.css'
 
 // Init Pinia
 const pinia = createPinia()
+const centrifuge = createCentrifuge({
+  url: "wss://delivery.cloud-workflow.com/connection/websocket",
+  token: "your-jwt-token",
+});
+
+// Provide Centrifugo globally
+
 // app.provide("centrifuge", centrifuge);
 // Create Vue app
-createApp(App)
+const app = createApp(App)
   .use(router)
   .use(pinia)
-  .use(
-    Centrifugo,
-    {
-    url: "wss://delivery.cloud-workflow.com/connection/websocket",
-    token: "your-jwt-token", // Replace with the token received from your server ./centrifugo gentoken -u 123722
-    })
   .mount('#app')
 
+app.provide('centrifugo', centrifuge);
 // Init main store
 const mainStore = useMainStore(pinia)
 

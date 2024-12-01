@@ -1,7 +1,6 @@
 import {Centrifuge, UnauthorizedError} from "centrifuge";
 
-export default {
-  install(app, options) {
+export function createCentrifuge (options){
     const centrifuge = new Centrifuge(
       options.url,
       {
@@ -25,13 +24,7 @@ export default {
 
     centrifuge.connect();
 
-    const getCentrifuge = () => {
-      return centrifuge
-    }
-
-    app.config.globalProperties.$centrifuge = centrifuge
-    app.provide("centrifuge", getCentrifuge)
-  }
+    return centrifuge
 }
 
 async function getToken() {
