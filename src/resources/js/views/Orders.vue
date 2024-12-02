@@ -62,7 +62,7 @@
                 <div class="text-left">{{order.unitType}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left font-medium text-green-500">{{order.status}}</div>
+                <div class="text-left font-medium text-green-500">{{orderStatusStore[order.uuid]?.status}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{order.customerEmail}}</div>
@@ -100,19 +100,28 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
-import axios from "axios";
-import {ref, onMounted} from "vue";
-import BaseButton from "@/components/BaseButton.vue";
-import BaseButtons from "@/components/BaseButtons.vue";
-import router from "@/router/index.js";
-import BaseDivider from "@/components/BaseDivider.vue";
+import axios from "axios"
+import { ref, onMounted } from "vue"
+import BaseButton from "@/components/BaseButton.vue"
+import BaseButtons from "@/components/BaseButtons.vue"
+import router from "@/router/index.js"
+import BaseDivider from "@/components/BaseDivider.vue"
+import { useOrderStatusStore } from "@/stores/orderStatus.js"
 
 let orders = ref([])
+
+const orderStatusStore = useOrderStatusStore()
 
 onMounted(() => {
   axios.get('/api/orders')
     .then((response) => {
       orders.value = response.data.data
+      for (const order of response.data.data) {
+        orderStatusStore.updateOrderStatus({
+          order: order.uuid,
+          status: order.status,
+        })
+      }
     })
 })
 
