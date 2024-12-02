@@ -61,7 +61,7 @@
               <div class="text-left">{{courier.name}}</div>
             </td>
             <td class="p-2 whitespace-nowrap">
-              <div class="text-left font-medium text-green-500">{{courier.status}}</div>
+              <div class="text-left font-medium text-green-500">{{courierStatuses[courier.uuid]}}</div>
             </td>
             <div class="text-left font-small">
               <BaseButton type="button" color="success" label="Edit courier" small @click="showModal(courier)"/>
@@ -84,19 +84,20 @@
 
 <script setup>
 
-import {mdiAccount, mdiTableBorder} from '@mdi/js'
+import { mdiAccount, mdiTableBorder } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "axios";
-import {ref, onMounted, reactive} from "vue";
-import CardBoxModal from "@/components/CardBoxModal.vue";
-import BaseButton from "@/components/BaseButton.vue";
-import FormField from "@/components/FormField.vue";
-import FormControl from "@/components/FormControl.vue";
-import {CourierStatuses} from "@/constants/Statuses.js";
-import BaseButtons from "@/components/BaseButtons.vue";
+import {ref, onMounted, reactive, computed} from "vue"
+import CardBoxModal from "@/components/CardBoxModal.vue"
+import BaseButton from "@/components/BaseButton.vue"
+import FormField from "@/components/FormField.vue"
+import FormControl from "@/components/FormControl.vue"
+import { CourierStatuses } from "@/constants/Statuses.js"
+import BaseButtons from "@/components/BaseButtons.vue"
+import { useCourierStatusStore } from "@/stores/courierStatus.js"
 
 const couriers = reactive([])
 const statuses = Object.values(CourierStatuses)
@@ -105,6 +106,18 @@ const form = reactive({
   name: null,
   status: null,
   uuid: null,
+})
+
+const courierStatusStore = useCourierStatusStore()
+
+const courierStatuses = computed(() => {
+  const arr = []
+
+  for (const [key, value] of Object.entries(courierStatusStore.couriers)) {
+    arr.push({uuid: key, status: value});
+  }
+
+  return arr
 })
 
 const showModal = (courier) => {
@@ -154,6 +167,12 @@ onMounted(() => {
   axios.get('/api/couriers')
     .then((response) => {
       couriers.push(...response.data.data)
+      for (const courier of response.data.data) {
+        courierStatusStore.updateStatus({
+          uuid: courier.uuid,
+          status: courier.status,
+        })
+      }
     })
 })
 

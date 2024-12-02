@@ -32,6 +32,7 @@ Services:
 - :8075/mailhog Mailhog
 - :8080 Temporal UI
 - :8090 go-server (Mock of an ERP System)
+- :8010 Centrifuge (websockets)
 
 It requires Nginx proxy on the host machine for https
 

@@ -75,7 +75,7 @@ const routes = [
     },
     path: '/couriers',
     name: 'couriers',
-    component: () => import('@/views/CouriersView.vue')
+    component: () => import('@/views/Couriers.vue')
   },
 ]
 

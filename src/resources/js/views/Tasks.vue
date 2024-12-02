@@ -51,7 +51,7 @@
                 </div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left font-medium text-green-500">{{task.status}}</div>
+                <div class="text-left font-medium text-green-500">{{statuses[task.uuid]}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{task.courierName}}</div>
@@ -83,19 +83,37 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
-import axios from "axios";
-import {ref, onMounted} from "vue";
-import router from "@/router/index.js";
-import BaseButton from "@/components/BaseButton.vue";
-import BaseButtons from "@/components/BaseButtons.vue";
-import BaseDivider from "@/components/BaseDivider.vue";
+import axios from "axios"
+import { ref, onMounted, computed } from "vue"
+import router from "@/router/index.js"
+import BaseButton from "@/components/BaseButton.vue"
+import BaseButtons from "@/components/BaseButtons.vue"
+import BaseDivider from "@/components/BaseDivider.vue"
+import {useTaskStatusStore} from "@/stores/taskStatus.js"
 
-let tasks = ref([])
+const tasks = ref([])
+const taskStatusStore = useTaskStatusStore()
+
+const statuses = computed(() => {
+  const arr = []
+
+  for (const [key, value] of Object.entries(taskStatusStore.tasks)) {
+    arr.push({uuid: key, status: value});
+  }
+
+  return arr
+})
 
 onMounted(() => {
   axios.get('/api/tasks')
     .then((response) => {
       tasks.value = response.data.data
+      for (const task of response.data.data) {
+        taskStatusStore.updateStatus({
+          uuid: task.uuid,
+          status: task.status,
+        })
+      }
     })
 })
 
