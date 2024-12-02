@@ -1,7 +1,9 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { inject, onMounted } from "vue"
-import { useOrderStatusStore } from "@/stores/orderStatus.js";
+import { useOrderStatusStore } from "@/stores/orderStatus.js"
+import { useTaskStatusStore } from "@/stores/taskStatus.js"
+import { useCourierStatusStore } from "@/stores/courierStatus.js"
 
 const centrifuge = inject('centrifuge')
 
