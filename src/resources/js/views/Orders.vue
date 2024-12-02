@@ -101,7 +101,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios"
-import {ref, onMounted, reactive} from "vue"
+import { ref, onMounted, reactive } from "vue"
 import BaseButton from "@/components/BaseButton.vue"
 import BaseButtons from "@/components/BaseButtons.vue"
 import router from "@/router/index.js"
@@ -122,7 +122,7 @@ onMounted(() => {
           status: order.status,
         })
       }
-      console.log(orderStatusStore.orders)
+      console.log(ordersStatus)
     })
 })
 
