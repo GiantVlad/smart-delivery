@@ -44,7 +44,6 @@ const formStatusOptions = ['info', 'success', 'danger', 'warning']
 const orderStatusStore = useOrderStatusStore()
 
 watch(orderStatusStore.orders, (orders) => {
-  console.log('new orders: ', orders)
   getTask()
 })
 

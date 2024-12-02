@@ -14,12 +14,11 @@ use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use App\Temporal\TaskFinishWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
-use Opekunov\Centrifugo\Centrifugo;
 use Temporal\Client\WorkflowOptions;
 
 class OrderStatusController extends Controller
 {
-    public function confirmOrder(OrderConfirmationRequest $request, Centrifugo $centrifugo): JsonResponse
+    public function confirmOrder(OrderConfirmationRequest $request): JsonResponse
     {
         $orderUuid = $request->get('orderUuid');
         Order::where('uuid', $orderUuid)->firstOrFail();
@@ -29,8 +28,6 @@ class OrderStatusController extends Controller
             OrderStatusHandlerWorkflowInterface::class,
             OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
         );
-
-        $centrifugo->publish('order_status', ['order' => $orderUuid, 'status' => $status]);
 
         $workflow->updateStatus($orderUuid, $status);
 
