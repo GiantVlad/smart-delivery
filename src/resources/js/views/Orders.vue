@@ -62,7 +62,7 @@
                 <div class="text-left">{{order.unitType}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left font-medium text-green-500">{{ ordersStatus[order.uuid]?.status }}</div>
+                <div class="text-left font-medium text-green-500">{{ statuses.find(el => el.uuid === order.uuid)?.status }}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{order.customerEmail}}</div>
@@ -101,7 +101,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import axios from "axios"
-import { ref, onMounted, reactive } from "vue"
+import {ref, onMounted, reactive, computed} from "vue"
 import BaseButton from "@/components/BaseButton.vue"
 import BaseButtons from "@/components/BaseButtons.vue"
 import router from "@/router/index.js"
@@ -110,7 +110,16 @@ import { useOrderStatusStore } from "@/stores/orderStatus.js"
 
 const orders = ref([])
 const orderStatusStore = useOrderStatusStore()
-const ordersStatus = reactive(orderStatusStore.orders)
+
+const statuses = computed(() => {
+  const arr = []
+
+  for (const [key, value] of Object.entries(orderStatusStore.orders)) {
+    arr.push({uuid: key, status: value});
+  }
+
+  return arr
+})
 
 onMounted(() => {
   axios.get('/api/orders')
@@ -122,7 +131,6 @@ onMounted(() => {
           status: order.status,
         })
       }
-      console.log(ordersStatus)
     })
 })
 
