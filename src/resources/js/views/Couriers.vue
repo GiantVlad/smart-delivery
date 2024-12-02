@@ -62,7 +62,7 @@
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
-                {{ courierStatuses.find(el => el.uuid === order.uuid)?.status }}
+                {{ courierStatuses.find(el => el.uuid === courier.uuid)?.status }}
               </div>
             </td>
             <div class="text-left font-small">
