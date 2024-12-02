@@ -10,11 +10,15 @@ use App\Enums\TaskStatusEnum;
 use App\Models\Courier;
 use App\Models\Task;
 use Illuminate\Support\Facades\DB;
+use Opekunov\Centrifugo\Centrifugo;
 use Temporal\Activity;
 use Temporal\Exception\IllegalStateException;
 
 class TaskFinishActivity implements TaskFinishedActivityInterface
 {
+    public function __construct(private readonly Centrifugo $centrifugo)
+    {
+    }
     public function finishTask(TaskDto $taskDto): string
     {
         $courier = Courier::where('uuid', $taskDto->courierUuid)->firstOrFail();
@@ -26,6 +30,9 @@ class TaskFinishActivity implements TaskFinishedActivityInterface
             $task->status = TaskStatusEnum::FINISHED->value;
             $task->save();
         });
+
+        $this->centrifugo->publish('courier_status', ['uuid' => $courier->uuid, 'status' => $courier->status]);
+        $this->centrifugo->publish('task_status', ['uuid' => $task->uuid, 'status' => $task->status]);
 
         return $task->uuid;
     }
