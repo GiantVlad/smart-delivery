@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive, ref} from 'vue'
+import {onMounted, reactive, ref, watch} from 'vue'
 import { mdiBallotOutline } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
@@ -13,6 +13,7 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import axios from "axios";
 import router from "@/router/index.js";
 import Multiselect from "vue-multiselect";
+import {useOrderStatusStore} from "@/stores/orderStatus.js";
 
 const couriers = ref([])
 
@@ -40,13 +41,24 @@ const formStatusCurrent = ref(0)
 
 const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
-onMounted(() => {
+const orderStatusStore = useOrderStatusStore()
+
+watch(orderStatusStore.orders, (orders) => {
+  console.log('new orders: ', orders)
+  getTask()
+})
+
+const getTask = () => {
   axios.get('/api/task')
     .then((response) => {
       couriers.value = response.data.data.couriers.map(el => ({id: el.uuid, label: el.name}))
       orders.value = response.data.data.orders.map(el => ({id: el.id, label: el.uuid}))
       form.courier = couriers.value[0]
     })
+}
+
+onMounted(() => {
+  getTask()
 })
 
 const formStatusSubmit = () => {

@@ -4,7 +4,7 @@ import { inject, onMounted } from "vue"
 import { useOrderStatusStore } from "@/stores/orderStatus.js";
 
 const centrifuge = inject('centrifuge')
-console.log(centrifuge)
+
 onMounted(() => {
   if (centrifuge) {
     const sub = centrifuge.newSubscription('order_status')
