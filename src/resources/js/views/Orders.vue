@@ -62,7 +62,9 @@
                 <div class="text-left">{{order.unitType}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left font-medium text-green-500">{{ statuses.find(el => el.uuid === order.uuid)?.status }}</div>
+                <div class="text-left font-medium text-green-500">
+                  {{ statuses.find(el => el.uuid === order.uuid)?.status }}
+                </div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{order.customerEmail}}</div>

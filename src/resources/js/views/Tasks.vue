@@ -51,7 +51,9 @@
                 </div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left font-medium text-green-500">{{statuses[task.uuid]}}</div>
+                <div class="text-left font-medium text-green-500">
+                  {{ statuses.find(el => el.uuid === task.uuid)?.status }}
+                </div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{task.courierName}}</div>
@@ -89,7 +91,7 @@ import router from "@/router/index.js"
 import BaseButton from "@/components/BaseButton.vue"
 import BaseButtons from "@/components/BaseButtons.vue"
 import BaseDivider from "@/components/BaseDivider.vue"
-import {useTaskStatusStore} from "@/stores/taskStatus.js"
+import { useTaskStatusStore } from "@/stores/taskStatus.js"
 
 const tasks = ref([])
 const taskStatusStore = useTaskStatusStore()
