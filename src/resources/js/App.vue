@@ -10,7 +10,6 @@ onMounted(() => {
     const sub = centrifuge.newSubscription('order_status')
 
     sub.on('publication', function(ctx) {
-      console.log(ctx.data)
       const orderStatusStore = useOrderStatusStore()
       orderStatusStore.updateOrderStatus(ctx.data)
     })
