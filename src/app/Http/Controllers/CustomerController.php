@@ -28,9 +28,9 @@ class CustomerController extends Controller
     {
         $customers = Customer::query();
         if ($limit) {
-            $customers->limit($limit);
+            $customers = $customers->limit($limit);
         }
-        $customers->get();
+        $customers = $customers->get();
 
         return CustomerResource::collection($customers);
     }
