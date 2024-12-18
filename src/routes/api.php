@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\CourierController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\RouteController;

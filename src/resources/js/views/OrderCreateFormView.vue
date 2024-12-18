@@ -30,6 +30,7 @@ const customerForm = reactive({
   name: null,
   lastName: null,
   email: null,
+  phone: null,
 })
 
 const showModal = () => {
@@ -105,14 +106,17 @@ const createCustomer = () => {
         @update:modelValue="createCustomer"
         has-cancel
       >
-        <FormField label="Grouped with icons">
+        <FormField label="First name">
           <FormControl v-model="customerForm.name" :icon="mdiAccount" />
         </FormField>
-        <FormField label="Grouped with icons">
+        <FormField label="Last name">
           <FormControl v-model="customerForm.lastName" :icon="mdiAccount" />
         </FormField>
-        <FormField label="Grouped with icons">
+        <FormField label="Email">
           <FormControl v-model="customerForm.email" :icon="mdiAccount" />
+        </FormField>
+        <FormField label="Phone">
+          <FormControl v-model="customerForm.phone" :icon="mdiAccount" />
         </FormField>
       </CardBoxModal>
 
