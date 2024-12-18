@@ -48,3 +48,5 @@ Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);
 Route::post('create-courier', [ CourierController::class, 'createCourier' ]);
 
 Route::post('create-customer', [ CustomerController::class, 'createCustomer' ]);
+
+Route::post('customers/{limit?}', [ CustomerController::class, 'get' ]);

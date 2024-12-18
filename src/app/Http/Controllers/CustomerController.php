@@ -23,4 +23,15 @@ class CustomerController extends Controller
 
         return CustomerResource::make($customer);
     }
+
+    public function get(?int $limit): JsonResource
+    {
+        $customers = Customer::query();
+        if ($limit) {
+            $customers->limit($limit);
+        }
+        $customers->get();
+
+        return CustomerResource::collection($customers);
+    }
 }
