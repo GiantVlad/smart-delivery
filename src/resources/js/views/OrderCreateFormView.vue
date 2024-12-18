@@ -85,7 +85,7 @@ const createCustomer = () => {
   axios.post(endpoint, data)
     .then((response) => {
       customers.value.unshift(response.data.data.email)
-      console.log(response.data.data)
+      form.customer = customers.value[0]
     })
     .finally(() => {
       customerForm.name = null

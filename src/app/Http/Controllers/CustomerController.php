@@ -30,7 +30,7 @@ class CustomerController extends Controller
         if ($limit) {
             $customers = $customers->limit($limit);
         }
-        $customers = $customers->get();
+        $customers = $customers->orderBy('id', 'desc')->get();
 
         return CustomerResource::collection($customers);
     }
