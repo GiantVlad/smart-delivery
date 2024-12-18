@@ -1,6 +1,6 @@
 <script setup>
-import {onMounted, reactive, ref} from 'vue'
-import { mdiBallotOutline, mdiAccount, mdiMail } from '@mdi/js'
+import { onMounted, reactive, ref } from 'vue'
+import { mdiBallotOutline, mdiAccount } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import FormField from '@/components/FormField.vue'
@@ -10,14 +10,14 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "axios";
-import router from "@/router/index.js";
+import axios from "axios"
+import router from "@/router/index.js"
+import CardBoxModal from "@/components/CardBoxModal.vue"
 
 const customers = ref([])
-
 const points = ref([])
-
 const unitTypes = ['Small', 'Medium', 'Large']
+const isModalActive = ref(false)
 
 const form = reactive({
   customer: null,
@@ -25,6 +25,16 @@ const form = reactive({
   startAddress: null,
   endAddress: null,
 })
+
+const customerForm = reactive({
+  name: null,
+  lastName: null,
+  email: null,
+})
+
+const showModal = () => {
+  isModalActive.value = true
+}
 
 const submit = () => {
   axios.post('/api/order',
@@ -61,6 +71,26 @@ const formStatusSubmit = () => {
     ? formStatusCurrent.value + 1
     : 0
 }
+
+const createCustomer = () => {
+  const endpoint = '/api/create-customer'
+  const data = {
+    first_name: customerForm.name,
+    last_name: customerForm.lastName,
+    email: customerForm.email,
+  }
+
+  axios.post(endpoint, data)
+    .then((response) => {
+      console.log(response.data.data)
+    })
+    .finally(() => {
+      customerForm.name = null
+      customerForm.lastName = null
+      customerForm.email = null
+    })
+}
+
 </script>
 
 <template>
@@ -68,10 +98,31 @@ const formStatusSubmit = () => {
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Create order" main>
       </SectionTitleLineWithButton>
+      <CardBoxModal
+        v-model="isModalActive"
+        title="Create a customer"
+        button-label="Create"
+        @update:modelValue="createCustomer"
+        has-cancel
+      >
+        <FormField label="Grouped with icons">
+          <FormControl v-model="customerForm.name" :icon="mdiAccount" />
+        </FormField>
+        <FormField label="Grouped with icons">
+          <FormControl v-model="customerForm.lastName" :icon="mdiAccount" />
+        </FormField>
+        <FormField label="Grouped with icons">
+          <FormControl v-model="customerForm.email" :icon="mdiAccount" />
+        </FormField>
+      </CardBoxModal>
+
       <CardBox form @submit.prevent="submit" :is-form="true">
         <FormField label="Customer">
           <FormControl v-model="form.customer" :options="customers" />
         </FormField>
+        <BaseButtons>
+          <BaseButton type="button" color="info" label="Create customer" @click="showModal()"/>
+        </BaseButtons>
 
         <FormField label="Unit type">
           <FormControl v-model="form.type" :options="unitTypes" />
