@@ -58,7 +58,7 @@ const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
 onMounted(async () => {
   const response = await axios.get('/api/customers')
-  customers.value = response.data.data.points.map(el => el.email)
+  customers.value = response.data.data.map(el => el.email)
   await axios.get('/api/order')
     .then((response) => {
       points.value = response.data.data.points.map(el => ({id: el.id, label: el.address}))
