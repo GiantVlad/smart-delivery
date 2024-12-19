@@ -16,6 +16,7 @@ class Courier extends Model
         'uuid',
         'status',
         'name',
+        'phone'
     ];
 
     protected $hidden = [];

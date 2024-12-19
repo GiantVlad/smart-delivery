@@ -80,6 +80,7 @@ const createCustomer = () => {
     first_name: customerForm.name,
     last_name: customerForm.lastName,
     email: customerForm.email,
+    phone: customerForm.phone,
   }
 
   axios.post(endpoint, data)
@@ -91,6 +92,7 @@ const createCustomer = () => {
       customerForm.name = null
       customerForm.lastName = null
       customerForm.email = null
+      customerForm.phone = null
     })
 }
 

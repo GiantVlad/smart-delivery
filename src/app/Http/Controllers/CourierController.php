@@ -41,7 +41,12 @@ class CourierController extends Controller
     {
         $courier = Courier::whereUuid($request->get('uuid'))->first();
 
-        $courier->name = $request->get('name');
+        if ($request->get('name')) {
+            $courier->name = $request->get('name');
+        }
+        if ($request->get('phone')) {
+            $courier->phone = $request->get('phone');
+        }
         $courier->save();
 
         $workflow = $this->workflowClient->newWorkflowStub(
@@ -59,6 +64,7 @@ class CourierController extends Controller
         $courier = new Courier();
         $courier->uuid = Str::uuid();
         $courier->name = $request->get('name');
+        $courier->phone = $request->get('phone');
         $courier->status = CourierStatusEnum::NW->value;
         $courier->save();
 

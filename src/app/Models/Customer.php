@@ -17,6 +17,7 @@ class Customer extends Model
         'email',
         'uuid',
         'last_name',
+        'phone',
     ];
 
     protected $hidden = [];

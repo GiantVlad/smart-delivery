@@ -10,9 +10,12 @@
         @update:modelValue="updateCourier"
         has-cancel
       >
-        <FormField label="Grouped with icons">
+        <FormField label="Name">
           <FormControl v-if="form.uuid" v-model="form.uuid" :icon="mdiAccount" is-disabled/>
           <FormControl v-model="form.name" :icon="mdiAccount" />
+        </FormField>
+        <FormField label="Phone">
+          <FormControl v-model="form.phone" :icon="mdiAccount" />
         </FormField>
         <FormField label="Status" v-if="form.uuid" >
           <FormControl v-model="form.status" :options="statuses" />
@@ -108,6 +111,7 @@ const form = reactive({
   name: null,
   status: null,
   uuid: null,
+  phone: null,
 })
 
 const courierStatusStore = useCourierStatusStore()
@@ -127,12 +131,14 @@ const showModal = (courier) => {
   form.name = courier?.name
   form.uuid = courier?.uuid
   form.status = courier?.status
+  form.phone = courier?.phone
 }
 
 const updateCourier = () => {
   const endpoint = form.uuid ? '/api/update-courier' : '/api/create-courier'
   const data = {
     name: form.name,
+    phone: form.phone,
   }
 
   if (form.uuid) {
@@ -146,6 +152,7 @@ const updateCourier = () => {
         couriers.map(el => {
           if (el.uuid === response.data.data.uuid) {
             el.name = response.data.data.name
+            el.name = response.data.data.phone
             el.status = response.data.data.status
           }
 
@@ -162,6 +169,7 @@ const updateCourier = () => {
       form.name = null
       form.uuid = null
       form.status = null
+      form.phone = null
     })
 }
 

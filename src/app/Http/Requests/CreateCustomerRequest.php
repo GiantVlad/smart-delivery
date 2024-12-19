@@ -25,6 +25,7 @@ class CreateCustomerRequest extends FormRequest
             'first_name' => 'bail|required|string|min:2|max:100',
             'last_name' => 'bail|required|string|min:2|max:100',
             'email' => 'bail|required|email|min:3|max:100',
+            'phone' => 'required|numeric|min:8|max:11',
         ];
     }
 }

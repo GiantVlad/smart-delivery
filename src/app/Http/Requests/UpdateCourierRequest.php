@@ -26,6 +26,7 @@ class UpdateCourierRequest extends FormRequest
         return [
             'uuid' => 'bail|required|string|exists:couriers,uuid',
             'name' => 'bail|string|min:3|max:100',
+            'phone' => 'bail|numeric|min:8|max:11',
             'status' => ['string', new Enum(CourierStatusEnum::class)],
         ];
     }

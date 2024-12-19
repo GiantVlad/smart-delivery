@@ -20,6 +20,7 @@ class CustomerResource extends JsonResource
             'uuid' => $this->uuid,
             'email' => $this->email,
             'name' => $this->name,
+            'phone' => $this->phone,
             'last_name' => $this->last_name,
         ];
     }

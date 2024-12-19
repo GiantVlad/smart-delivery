@@ -21,6 +21,7 @@ class CourierResource extends JsonResource
             'uuid' => $this->uuid,
             'status' => $this->status,
             'name' => $this->name,
+            'phone' => $this->phone,
             'updated_at' => $this->updated_at,
         ];
     }

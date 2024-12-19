@@ -19,6 +19,7 @@ class CustomerController extends Controller
         $customer->name = $request->get('first_name');
         $customer->last_name = $request->get('last_name');
         $customer->email = $request->get('email');
+        $customer->phone = $request->get('phone');
         $customer->save();
 
         return CustomerResource::make($customer);

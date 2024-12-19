@@ -25,6 +25,7 @@ class CreateCourierRequest extends FormRequest
     {
         return [
             'name' => 'bail|required|string|min:3|max:100',
+            'phone' => 'required|numeric|min:8|max:11',
         ];
     }
 }
