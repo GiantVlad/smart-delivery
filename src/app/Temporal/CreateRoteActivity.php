@@ -42,6 +42,15 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         $from = $from->unique();
         $destinations = $destinations->unique();
 
+        $from->map(function ($fromItem) use ($destinations) {
+            $matchingItem = $destinations->first(static fn ($el) => $el->id === $fromItem->id, false);
+            if ($matchingItem) {
+                $fromItem->type = RoutePointTypeEnum::INTERMEDIATE->value;
+            }
+
+            return $fromItem;
+        });
+
         $destinations->map(function ($destination) use ($from) {
             $matchingItem = $from->first(static fn ($el) => $el->id === $destination->id, false);
             if ($matchingItem) {
@@ -51,16 +60,31 @@ class CreateRoteActivity implements CreateRouteActivityInterface
             return $destination;
         });
 
+        $destinations = $destinations->sort(function ($destination) use ($from) {
+            $matchingItem = $from->first(static fn ($el) => $el->id === $destination->id, false);
+
+            return $matchingItem ? -1 : 1;
+        });
+
+        $from = $from->filter(function ($fromItem) use ($destinations) {
+            $matchingItem = $destinations->first(static fn ($el) => $el->id === $fromItem->id, false);
+
+            return !$matchingItem;
+        });
+
+        /** @var Collection $points */
         $points = $from->concat($destinations)->unique();
 
         DB::transaction(static function () use ($task, $points) {
-            foreach ($points as $idx => $point) {
+            $idx = 0;
+            foreach ($points as $point) {
                 $route = new Route();
                 $route->sequence = $idx;
                 $route->task_id = $task->id;
                 $route->point_id = $point->id;
                 $route->point_type = $point->type;
                 $route->save();
+                $idx++;
             }
         });
 
