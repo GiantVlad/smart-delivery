@@ -27,7 +27,7 @@ class CreateOrderRequest extends FormRequest
             'customerEmail' => 'required|email',
             'unitType' => 'required|string|min:3|max:20',
             'startAddressId' => 'required|numeric|exists:points,id',
-            'endAddressId' => 'required|numeric|different:startPointId|exists:points,id',
+            'endAddressId' => 'required|numeric|different:startAddressId|exists:points,id',
         ];
     }
 }
