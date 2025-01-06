@@ -9,7 +9,7 @@ import {
   mdiLogout,
   mdiThemeLightDark,
   mdiGithub,
-  mdiReact
+  mdiReact, mdiLogin
 } from '@mdi/js'
 
 export default [
@@ -57,6 +57,12 @@ export default [
         icon: mdiLogout,
         label: 'Log Out',
         isLogout: true
+      },
+      {
+        icon: mdiLogin,
+        label: 'Login',
+        isLogin: true,
+        to: '/login'
       }
     ]
   },
@@ -72,11 +78,5 @@ export default [
     isDesktopNoLabel: true,
     href: 'https://github.com/justboil/admin-one-vue-tailwind',
     target: '_blank'
-  },
-  {
-    icon: mdiLogout,
-    label: 'Log out',
-    isDesktopNoLabel: true,
-    isLogout: true
   }
 ]

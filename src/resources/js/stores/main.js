@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 export const useMainStore = defineStore('main', () => {
-  const userName = ref('John Doe')
-  const userEmail = ref('doe.doe.doe@example.com')
+  const userName = ref('')
+  const userEmail = ref('')
 
   const userAvatar = computed(
     () =>
