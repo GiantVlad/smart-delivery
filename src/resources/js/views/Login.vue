@@ -16,7 +16,7 @@ import CardBoxModal from "@/components/CardBoxModal.vue"
 
 const form = reactive({
   email: null,
-  password: unitTypes[1],
+  password: null,
 })
 
 const submit = () => {
@@ -60,7 +60,7 @@ const formStatusSubmit = () => {
         <FormField label="Email">
           <FormControl v-model="form.email"/>
         </FormField>
-        <FormField label="Unit type">
+        <FormField label="Password">
           <FormControl v-model="form.password"/>
         </FormField>
         <BaseDivider />
