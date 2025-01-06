@@ -94,7 +94,7 @@ import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "axios";
+import axios from "@/lib/axios.js"
 import {ref, onMounted, reactive, computed} from "vue"
 import CardBoxModal from "@/components/CardBoxModal.vue"
 import BaseButton from "@/components/BaseButton.vue"

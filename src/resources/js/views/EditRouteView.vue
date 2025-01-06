@@ -118,7 +118,7 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import axios from "axios";
+import axios from "@/lib/axios.js"
 import {ref, onMounted, watch, reactive} from "vue";
 import FormControl from "@/components/FormControl.vue";
 import FormField from "@/components/FormField.vue";

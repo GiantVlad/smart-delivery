@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\CentrifugoController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
@@ -50,3 +51,6 @@ Route::post('create-courier', [ CourierController::class, 'createCourier' ]);
 Route::post('create-customer', [ CustomerController::class, 'createCustomer' ]);
 
 Route::get('customers/{limit?}', [ CustomerController::class, 'get' ]);
+
+Route::get('/centrifugo/connection-token', [CentrifugoController::class, 'getConnectionToken']);
+Route::post('/centrifugo/subscription-token', [CentrifugoController::class, 'getSubscriptionToken']);

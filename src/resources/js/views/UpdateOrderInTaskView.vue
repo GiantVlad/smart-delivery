@@ -10,7 +10,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "axios";
+import axios from "@/lib/axios.js";
 import {OrderStatuses} from "@/constants/Statuses.js";
 import NotificationBar from "@/components/NotificationBar.vue";
 import Multiselect from "vue-multiselect";
