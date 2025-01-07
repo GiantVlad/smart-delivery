@@ -15,6 +15,7 @@
         "nyholm/psr7": "^1.8",
         "opekunov/laravel-centrifugo-broadcaster": "^2.2",
         "spatie/laravel-data": "^4.11",
+        "spatie/laravel-permission": "^6.10",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.5.1",
         "spiral/tokenizer": "^3.14",

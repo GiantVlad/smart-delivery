@@ -53,6 +53,11 @@ export default [
     icon: mdiTruckDelivery
   },
   {
+    to: '/users',
+    label: 'Couriers',
+    icon: mdiTruckDelivery
+  },
+  {
     to: '/login',
     label: 'Login',
     icon: mdiLock
