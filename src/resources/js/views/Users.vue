@@ -10,8 +10,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "@/lib/axios.js"
-import router from "@/router/index.js"
+import axios from '@/lib/axios.js'
 
 const form = reactive({
   name: null,
@@ -31,7 +30,9 @@ const submit = () => {
       password_confirmation: form.password_conf,
     })
     .then((response) => {
-      router.push({ path: 'tasks' })
+      axios.get('/api/users').then((response) => {
+        users.value = response.data.data
+      });
     }).catch((e) => {console.log(e)})
 }
 
