@@ -80,7 +80,7 @@ const formStatusSubmit = () => {
           </BaseButtons>
         </template>
       </CardBox>
-      <CardBox class="mb-6 max-w-5xl" has-table v-if="orders.length > 0">
+      <CardBox class="mb-6 max-w-5xl" has-table v-if="users.length > 0">
         <!-- Table -->
         <table class="table-auto w-full">
           <!-- Table header -->
