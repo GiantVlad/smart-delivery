@@ -8,7 +8,7 @@ import {
   mdiTelevisionGuide,
   mdiResponsive,
   mdiPalette,
-  mdiRoutes, mdiTruckDelivery
+  mdiRoutes, mdiTruckDelivery, mdiNaturePeople
 } from '@mdi/js'
 
 export default [
@@ -54,8 +54,8 @@ export default [
   },
   {
     to: '/users',
-    label: 'Couriers',
-    icon: mdiTruckDelivery
+    label: 'Users',
+    icon: mdiNaturePeople
   },
   {
     to: '/login',
