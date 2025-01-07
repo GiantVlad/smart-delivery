@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Temporal\UpdateCourierStatusWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
 
