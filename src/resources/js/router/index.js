@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Style from '@/views/StyleView.vue'
 import Home from '@/views/HomeView.vue'
 import Login from "@/views/Login.vue";
+import Users from "@/views/Users.vue";
 
 const routes = [
   {
@@ -19,6 +20,14 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    meta: {
+      title: 'Users'
+    },
+    path: '/users',
+    name: 'users',
+    component: Users
   },
   {
     // Document title tag

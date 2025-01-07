@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CentrifugoController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CustomerController;
@@ -12,7 +13,11 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderCreateController;
 
-Route::get('login', [ AuthController::class, 'login' ])->name('api.login');
+Route::post('login', [ AuthController::class, 'login' ])->name('api.login');
+
+Route::post('register', [ AuthController::class, 'register' ])->name('api.register');
+
+Route::get('users', [ UserController::class, 'list' ])->name('api.users');
 
 Route::get('/order', [ OrderCreateController::class, 'getOrderForm' ]);
 
