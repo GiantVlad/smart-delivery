@@ -14,6 +14,7 @@ import axios from "@/lib/axios.js"
 import router from "@/router/index.js"
 
 const form = reactive({
+  name: null,
   email: null,
   password: null,
   password_conf: null,
@@ -24,6 +25,7 @@ const users = ref([])
 const submit = () => {
   axios.post('/api/register',
     {
+      name: form.name,
       email: form.email,
       password: form.password,
       password_confirmation: form.password_conf,
