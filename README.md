@@ -7,11 +7,11 @@ php-8.3, Laravel-11, Octane, Roadrunner-2024, Temporal PHP SDK, VueJs-3
 ```sh
 cp .env.example .env
 
-cp src/.env.example src/.env
-
-cd src && php artisan key:generate && cd ..  
+cp src/.env.example src/.env  
 
 docker compose up -d
+
+docker compose exec roadrunner php artisan key:generate
 
 docker compose exec roadrunner php artisan migrate
 

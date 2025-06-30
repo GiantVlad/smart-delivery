@@ -1,4 +1,4 @@
-import {Centrifuge, UnauthorizedError} from "centrifuge";
+import {Centrifuge, UnauthorizedError} from "centrifuge"
 
 export function createCentrifuge (options){
     const centrifuge = new Centrifuge(

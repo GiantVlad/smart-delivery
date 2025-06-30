@@ -24,11 +24,14 @@ export const useMainStore = defineStore('main', () => {
     }
   }
 
+  const isAuthenticated = userEmail.value && userName.value
+
   return {
     userName,
     userEmail,
     userAvatar,
     isFieldFocusRegistered,
     setUser,
+    isAuthenticated,
   }
 })

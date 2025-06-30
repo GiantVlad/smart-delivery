@@ -57,9 +57,4 @@ export default [
     label: 'Users',
     icon: mdiNaturePeople
   },
-  {
-    to: '/login',
-    label: 'Login',
-    icon: mdiLock
-  },
 ]

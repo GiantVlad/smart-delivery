@@ -56,12 +56,12 @@ export default [
       {
         icon: mdiLogout,
         label: 'Log Out',
-        isLogout: true
+        isCurrentUser: true
       },
       {
         icon: mdiLogin,
         label: 'Login',
-        isLogin: true,
+        isCurrentUser: false,
         to: '/login'
       }
     ]

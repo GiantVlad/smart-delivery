@@ -1,13 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Style from '@/views/StyleView.vue'
 import Home from '@/views/HomeView.vue'
-import Login from "@/views/Login.vue";
-import Users from "@/views/Users.vue";
+import Login from '@/views/LoginView.vue'
+import Users from '@/views/Users.vue'
+import { useMainStore } from "@/stores/main.js"
 
 const routes = [
   {
     meta: {
-      title: 'Select style'
+      title: 'Select style',
     },
     path: '/',
     name: 'style',
@@ -23,7 +24,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Users'
+      title: 'Users',
+      requiresAuth: true
     },
     path: '/users',
     name: 'users',
@@ -104,5 +106,22 @@ const router = createRouter({
     return savedPosition || { top: 0 }
   }
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    const mainStore = useMainStore()
+    if (mainStore.isAuthenticated) {
+      // User is authenticated, proceed to the route
+      next()
+    } else {
+      // User is not authenticated, redirect to login
+      next('/login')
+    }
+  } else {
+    // Non-protected route, allow access
+    next();
+  }
+})
+
 
 export default router

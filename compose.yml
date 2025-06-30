@@ -1,44 +1,44 @@
 services:
   roadrunner:
     build:
-      dockerfile: ./docker/roadrunner/Dockerfile
+      dockerfile: ./docker/roadrunner/DockerfileRR
       context: ./
       #args:
       #  RR_VERSION: ${RR_VERSION}
       #  PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION}
-    ports:
-      - 8000:8000
+#    ports:
+#      - 8000:8000
     #environment:
     #  RR_VERSION: ${RR_VERSION}
     #working_dir: /app
-    networks:
-      - smart-l
-    depends_on:
-      - temporal
-      #- mysql
-    volumes:
-      - ./src:/app
-      #- ./docker/roadrunner/rr.yaml:/etc/.rr.yaml:ro
-
-#  mysql:
-#    image: 'mysql/mysql-server:8.0'
-#    ports:
-#      - '${FORWARD_DB_PORT:-3306}:3306'
-#    environment:
-#      MYSQL_ROOT_PASSWORD: 'secret76'
-#      MYSQL_ROOT_HOST: "%"
-#      MYSQL_DATABASE: 'appdb'
-#      MYSQL_USER: 'user'
-#      MYSQL_PASSWORD: 'secret76'
-#      MYSQL_ALLOW_EMPTY_PASSWORD: 0
-#    volumes:
-#      - '.mysql:/var/lib/mysql'
 #    networks:
 #      - smart-l
-#    healthcheck:
-#      test: ["CMD", "mysqladmin", "ping", "-psecret76"]
-#      retries: 3
-#      timeout: 5s
+#    depends_on:
+#      - temporal
+      #- mysql
+#    volumes:
+#      - ./src:/app
+      #- ./docker/roadrunner/rr.yaml:/etc/.rr.yaml:ro
+
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'secret76'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: 'appdb'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'secret76'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 0
+    volumes:
+      - '../.mysql:/var/lib/mysql'
+    networks:
+      - smart-l
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-psecret76"]
+      retries: 3
+      timeout: 5s
 
   opensearch:
     container_name: temporal-opensearch

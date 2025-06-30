@@ -29,7 +29,7 @@ class AuthController extends Controller
                 $token = $user->createToken(
                     'spa-token', ['*'], now()->addWeek()
                 )->plainTextToken;
-                $response = ['token' => $token];
+                $response = ['data' => ['token' => $token, 'name' => $user->name, 'email' => $user->email]];
 
                 return response($response, 200);
             } else {
@@ -59,7 +59,7 @@ class AuthController extends Controller
         $token = $user->createToken(
             'spa-token', ['*'], now()->addWeek()
         )->plainTextToken;
-        $response = ['token' => $token];
+        $response = ['data' => ['token' => $token, 'name' => $user->name, 'email' => $user->email]];
 
         return response($response, 200);
     }
