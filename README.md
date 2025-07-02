@@ -34,7 +34,12 @@ Services:
 - :8090 go-server (Mock of an ERP System)
 - :8010 Centrifuge (websockets)
 
-It requires Nginx proxy on the host machine for https
+It requires Nginx proxy on the host machine for https, see docker/nginx/app.conf example 
+
+To create an image with roadrunner php and grpc: 
+```
+docker build -t  gaintvlad/php-grpc-rrunner:v2025.1.2 -f docker/roadrunner/DockerfileRR .
+```
 
 ### Orders
 ![orders](https://drive.google.com/uc?id=1ne4dWNmYl61FYtOHXWiXIuQRGeaFGnam)

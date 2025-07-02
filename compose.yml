@@ -1,23 +1,23 @@
 services:
   roadrunner:
     build:
-      dockerfile: ./docker/roadrunner/DockerfileRR
+      dockerfile: ./docker/roadrunner/Dockerfile
       context: ./
       #args:
       #  RR_VERSION: ${RR_VERSION}
       #  PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION}
-#    ports:
-#      - 8000:8000
+    ports:
+      - 8000:8000
     #environment:
     #  RR_VERSION: ${RR_VERSION}
-    #working_dir: /app
-#    networks:
-#      - smart-l
-#    depends_on:
-#      - temporal
-      #- mysql
-#    volumes:
-#      - ./src:/app
+    working_dir: /app
+    networks:
+      - smart-l
+    depends_on:
+      - temporal
+      - mysql
+    volumes:
+      - ./src:/app
       #- ./docker/roadrunner/rr.yaml:/etc/.rr.yaml:ro
 
   mysql:
