@@ -23,6 +23,7 @@ docker compose exec roadrunner php artisan wf-status-handler:stop <workflow_id>
 
 docker compose exec roadrunner rr -c /etc/rr/.rr.yaml reset
 
+sudo apt install npm
 cd src
 npm install
 npm run build
