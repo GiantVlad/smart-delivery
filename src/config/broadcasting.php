@@ -80,7 +80,7 @@ return [
         'centrifugo' => [
             'driver' => 'centrifugo',
             'secret'  => env('CENTRIFUGO_SECRET'),
-            'apikey'  => env('CENTRIFUGO_APIKEY'),
+            'apikey'  => env('CENTRIFUGO_API_KEY'),
             'api_path' => env('CENTRIFUGO_API_PATH', '/api'), // Centrifugo api endpoint (default '/api')
             'url'     => env('CENTRIFUGO_URL', 'http://centrefugo:8010'), // centrifugo api url
             'verify'  => env('CENTRIFUGO_VERIFY', false), // Verify host ssl if centrifugo uses this

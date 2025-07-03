@@ -6,9 +6,8 @@ namespace App\Temporal;
 
 use App\Facades\CentrifugoFacade;
 use App\Models\Courier;
-use Temporal\Activity;
-use Temporal\Client\WorkflowOptions;
-use Temporal\Exception\IllegalStateException;
+use Illuminate\Support\Facades\Log;
+use Opekunov\Centrifugo\Exceptions\CentrifugoException;
 
 class UpdateCourierStatusActivity implements UpdateCourierStatusActivityInterface
 {
@@ -17,8 +16,11 @@ class UpdateCourierStatusActivity implements UpdateCourierStatusActivityInterfac
         $courier = Courier::where('uuid', $courierUuid)->first();
         $courier->status = $status;
         $courier->save();
-
-        CentrifugoFacade::publish('courier_status', ['uuid' => $courierUuid, 'status' => $status]);
+        try {
+            CentrifugoFacade::publish('courier_status', ['uuid' => $courierUuid, 'status' => $status]);
+        } catch (CentrifugoException $e) {
+            Log::error($e);
+        }
 
         return $status;
     }

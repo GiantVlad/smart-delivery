@@ -11,8 +11,8 @@ use App\Facades\CentrifugoFacade;
 use App\Models\Courier;
 use App\Models\Task;
 use Illuminate\Support\Facades\DB;
-use Temporal\Activity;
-use Temporal\Exception\IllegalStateException;
+use Illuminate\Support\Facades\Log;
+use Opekunov\Centrifugo\Exceptions\CentrifugoException;
 
 class TaskFinishActivity implements TaskFinishedActivityInterface
 {
@@ -27,9 +27,12 @@ class TaskFinishActivity implements TaskFinishedActivityInterface
             $task->status = TaskStatusEnum::FINISHED->value;
             $task->save();
         });
-
-        CentrifugoFacade::publish('courier_status', ['uuid' => $courier->uuid, 'status' => $courier->status]);
-        CentrifugoFacade::publish('task_status', ['uuid' => $task->uuid, 'status' => $task->status]);
+        try {
+            CentrifugoFacade::publish('courier_status', ['uuid' => $courier->uuid, 'status' => $courier->status]);
+            CentrifugoFacade::publish('task_status', ['uuid' => $task->uuid, 'status' => $task->status]);
+        } catch (CentrifugoException $e) {
+            Log::error($e);
+        }
 
         return $task->uuid;
     }
