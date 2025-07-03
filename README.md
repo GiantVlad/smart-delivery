@@ -2,13 +2,15 @@
 
 [Demo](https://delivery.cloud-workflow.com)
 
-php-8.3, Laravel-11, Octane, Roadrunner-2024, Temporal PHP SDK, VueJs-3
+php-8.3, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
 
 ```sh
 cp .env.example .env
 
-cp src/.env.example src/.env  
-
+cp src/.env.example src/.env 
+``` 
+Change your real passwords, keys and other credentials for example centrifugo config
+```
 docker compose up -d
 
 docker compose exec roadrunner php artisan key:generate
@@ -19,8 +21,6 @@ docker compose exec roadrunner php artisan db:seed
 
 docker compose exec roadrunner php artisan wf-status-handler:start
 
-docker compose exec roadrunner php artisan wf-status-handler:stop <workflow_id>
-
 docker compose exec roadrunner rr -c /etc/rr/.rr.yaml reset
 
 sudo apt install npm
@@ -28,6 +28,12 @@ cd src
 npm install
 npm run build
 ```
+
+to stop status handler:
+```
+docker compose exec roadrunner php artisan wf-status-handler:stop <workflow_id>
+```
+
 Services:
 - :80 the main app
 - :8075/mailhog Mailhog
