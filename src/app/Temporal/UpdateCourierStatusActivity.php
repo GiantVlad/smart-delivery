@@ -18,7 +18,7 @@ class UpdateCourierStatusActivity implements UpdateCourierStatusActivityInterfac
         $courier->save();
         try {
             CentrifugoFacade::publish('courier_status', ['uuid' => $courierUuid, 'status' => $status]);
-        } catch (CentrifugoException $e) {
+        } catch (\Throwable $e) {
             Log::error($e);
         }
 

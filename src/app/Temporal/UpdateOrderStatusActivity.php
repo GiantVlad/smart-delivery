@@ -22,9 +22,10 @@ class UpdateOrderStatusActivity implements UpdateOrderStatusActivityInterface
             $order->task_id = null;
         }
         $order->save();
+
         try {
             CentrifugoFacade::publish('order_status', ['order' => $orderUuid, 'status' => $status]);
-        } catch (CentrifugoException $e) {
+        } catch (\Throwable $e) {
             Log::error($e);
         }
 

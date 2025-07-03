@@ -30,7 +30,7 @@ class TaskFinishActivity implements TaskFinishedActivityInterface
         try {
             CentrifugoFacade::publish('courier_status', ['uuid' => $courier->uuid, 'status' => $courier->status]);
             CentrifugoFacade::publish('task_status', ['uuid' => $task->uuid, 'status' => $task->status]);
-        } catch (CentrifugoException $e) {
+        } catch (\Throwable $e) {
             Log::error($e);
         }
 
