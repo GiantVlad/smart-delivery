@@ -7,7 +7,6 @@ namespace App\Temporal;
 use App\Facades\CentrifugoFacade;
 use App\Models\Courier;
 use Illuminate\Support\Facades\Log;
-use Opekunov\Centrifugo\Exceptions\CentrifugoException;
 
 class UpdateCourierStatusActivity implements UpdateCourierStatusActivityInterface
 {

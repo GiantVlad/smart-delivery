@@ -8,9 +8,6 @@ use App\Enums\OrderStatusEnum;
 use App\Facades\CentrifugoFacade;
 use App\Models\Order;
 use Illuminate\Support\Facades\Log;
-use Opekunov\Centrifugo\Exceptions\CentrifugoException;
-use Temporal\Activity;
-use Temporal\Exception\IllegalStateException;
 
 class UpdateOrderStatusActivity implements UpdateOrderStatusActivityInterface
 {

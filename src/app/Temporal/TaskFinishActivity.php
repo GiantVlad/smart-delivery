@@ -12,7 +12,6 @@ use App\Models\Courier;
 use App\Models\Task;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Opekunov\Centrifugo\Exceptions\CentrifugoException;
 
 class TaskFinishActivity implements TaskFinishedActivityInterface
 {
