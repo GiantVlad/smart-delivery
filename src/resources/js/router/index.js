@@ -6,14 +6,14 @@ import Users from '@/views/Users.vue'
 import { useMainStore } from "@/stores/main.js"
 
 const routes = [
-  {
-    meta: {
-      title: 'Select style',
-    },
-    path: '/',
-    name: 'style',
-    component: Style
-  },
+  // {
+  //   meta: {
+  //     title: 'Select style',
+  //   },
+  //   path: '/',
+  //   name: 'style',
+  //   component: Style
+  // },
   {
     meta: {
       title: 'Login'
@@ -37,7 +37,7 @@ const routes = [
     meta: {
       title: 'Dashboard'
     },
-    path: '/dashboard',
+    path: '/',
     name: 'dashboard',
     component: Home
   },

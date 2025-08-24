@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Temporal;
 
 use Spiral\Tokenizer\ClassesInterface;
@@ -10,6 +12,13 @@ use Utils\Command;
 class DeclarationLocator
 {
     private ClassesInterface $classLocator;
+
+    public function __construct(string $directory)
+    {
+        $this->classLocator = new ClassLocator(
+            (new Finder())->in($directory)->name('*.php')
+        );
+    }
 
     /**
      * @return  \Generator
@@ -30,9 +39,12 @@ class DeclarationLocator
      */
     public function getActivityTypes(): \Generator
     {
+        $registered = [];
         foreach ($this->getAvailableDeclarations() as $class) {
-            if ($this->endsWith($class->getName(), 'Activity')) {
-                yield $class->getName();
+            $className = $class->getName();
+            if ($this->endsWith($className, 'Activity') && !in_array($className, $registered)) {
+                $registered[] = $className;
+                yield $className;
             }
         }
     }
@@ -44,9 +56,12 @@ class DeclarationLocator
      */
     public function getWorkflowTypes(): \Generator
     {
+        $registered = [];
         foreach ($this->getAvailableDeclarations() as $class) {
-            if ($this->endsWith($class->getName(), 'Workflow')) {
-                yield $class->getName();
+            $className = $class->getName();
+            if ($this->endsWith($className, 'Workflow') && !in_array($className, $registered)) {
+                $registered[] = $className;
+                yield $className;
             }
         }
     }
@@ -85,13 +100,6 @@ class DeclarationLocator
      */
     public static function create(string $dir): self
     {
-        $locator = new self();
-        $locator->classLocator = new ClassLocator(
-            Finder::create()->files()->in($dir)
-        );
-
-        return $locator;
+        return new self($dir);
     }
-
-
 }
