@@ -12,6 +12,6 @@ use Temporal\Workflow\WorkflowMethod;
 #[WorkflowInterface]
 interface CreateTaskWorkflowInterface
 {
-    #[WorkflowMethod(name: "CreateTask.Create")]
-    public function create(TaskDto $taskDto);
+    //#[WorkflowMethod(name: "CreateTask.Create")]
+    //public function create(TaskDto $taskDto);
 }

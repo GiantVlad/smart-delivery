@@ -23,10 +23,10 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'customerEmail' => $this->whenLoaded('customer') ? $this->customer->email : '',
             'taskCourierName' => $this->task->courier->name ?? 'Undefined',
-            'startPointAddress' => $this->startPoint->address,
-            'endPointAddress' => $this->endPoint->address,
-            'startPointId' => $this->startPoint->id,
-            'endPointId' => $this->endPoint->id,
+            'startPointAddress' => $this->startPoint?->address,
+            'endPointAddress' => $this->endPoint?->address,
+            'startPointId' => $this->startPoint?->id,
+            'endPointId' => $this->endPoint?->id,
             'updated_at' => $this->updated_at,
         ];
     }

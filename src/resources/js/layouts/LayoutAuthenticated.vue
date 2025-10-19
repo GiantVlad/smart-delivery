@@ -74,7 +74,7 @@ const menuClick = (event, item) => {
       />
       <slot />
       <FooterBar>
-        Smart Delivery uladsadkou@gmail.com
+        Smart Delivery hofirma@gmail.com
       </FooterBar>
     </div>
   </div>
