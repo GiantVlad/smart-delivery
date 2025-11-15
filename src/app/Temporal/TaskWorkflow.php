@@ -14,7 +14,7 @@ use Temporal\Common\RetryOptions;
 use Temporal\Workflow;
 use Temporal\Workflow\WorkflowExecution;
 
-class TaskWorkflow implements CreateTaskWorkflowInterface
+class TaskWorkflow implements TaskWorkflowInterface
 {
     private $createTaskActivity;
     private $updateCourierStatusActivity;

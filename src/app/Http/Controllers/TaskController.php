@@ -13,7 +13,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\Courier;
 use App\Models\Order;
 use App\Models\Task;
-use App\Temporal\CreateTaskWorkflowInterface;
+use App\Temporal\TaskWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -50,7 +50,7 @@ class TaskController extends Controller
         $orderUuids = $request->get('orderUuids');
 
         $workflow = $this->workflowClient->newWorkflowStub(
-            CreateTaskWorkflowInterface::class,
+            TaskWorkflowInterface::class,
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
         );
 
