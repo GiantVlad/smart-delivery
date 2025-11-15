@@ -18,7 +18,7 @@ class UpdateOrderErpActivity implements UpdateOrderErpActivityInterface
         foreach ($orders as $order) {
             if (in_array($order->status, [OrderStatusEnum::NEW->value, OrderStatusEnum::CANCELED->value])) {
                 Http::accept('application/json')
-                    ->put(
+                    ->post(
                         'http://go-server:8090/erp',
                         ['orderUuid' => $order->uuid, 'status' => $order->status],
                     )

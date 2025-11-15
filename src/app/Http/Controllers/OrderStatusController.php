@@ -14,6 +14,7 @@ use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use App\Temporal\TaskFinishWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Temporal\Client\WorkflowOptions;
 
 class OrderStatusController extends Controller
@@ -23,6 +24,7 @@ class OrderStatusController extends Controller
         $orderUuid = $request->get('orderUuid');
         Order::where('uuid', $orderUuid)->firstOrFail();
         $status = $request->get('status');
+        Log::info("Order $orderUuid status updated: $status");
 
         $workflow = $this->workflowClient->newRunningWorkflowStub(
             OrderStatusHandlerWorkflowInterface::class,

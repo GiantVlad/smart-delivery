@@ -27,7 +27,7 @@ type Order struct {
 
 // Handler for receiving and logging incoming requests
 func receiveHandler(w http.ResponseWriter, r *http.Request) {
-    if !(r.Method == http.MethodPost || r.Method == http.MethodPut) {
+    if r.Method != http.MethodPost {
         http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
             return
     }

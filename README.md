@@ -43,10 +43,12 @@ Services:
 
 It requires Nginx proxy on the host machine for https, see docker/nginx/app.conf example 
 
-To create an image with roadrunner php and grpc: 
+To create a docker image with roadrunner php and grpc: 
 ```
 docker build -t  gaintvlad/php-grpc-rrunner:v2025.1.2 -f docker/roadrunner/DockerfileRR .
 ```
+
+There is a Golang mock erp in the docker/go_server folder.
 
 ### Orders
 ![orders](https://drive.google.com/uc?id=1ne4dWNmYl61FYtOHXWiXIuQRGeaFGnam)

@@ -72,7 +72,7 @@ class CreateTaskWorkflow implements CreateTaskWorkflowInterface
         );
     }
 
-    public function create(TaskDto $taskDto): \Generator
+    public function createTask(TaskDto $taskDto): \Generator
     {
         $taskUuidPromise = $this->createTaskActivity->createTask($taskDto);
         $taskUuid = yield $taskUuidPromise;
