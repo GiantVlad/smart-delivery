@@ -58,6 +58,8 @@ Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);
 
 Route::get('/working-hours/{courier_id}', [ WorkingTimeController::class, 'getCourierWorkingHours' ]);
 
+Route::post('/working-hours/{id}', [ WorkingTimeController::class, 'update' ]);
+
 Route::prefix('slots')->group(function () {
     Route::get('/', [ SlotController::class, 'getSlots' ]);
     Route::post('/generate-default', [ SlotController::class, 'generateDefault' ]);

@@ -31,30 +31,30 @@
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">
-                <input 
-                  type="time" 
-                  v-model="weekday.from" 
+                <input
+                  type="time"
+                  v-model="weekday.from"
                   class="w-24 p-1 border rounded dark:bg-gray-700 dark:border-gray-600"
                 />
               </div>
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">
-                <input 
-                  type="time" 
-                  v-model="weekday.to" 
+                <input
+                  type="time"
+                  v-model="weekday.to"
                   class="w-24 p-1 border rounded dark:bg-gray-700 dark:border-gray-600"
                 />
               </div>
             </td>
             <div class="text-left font-small">
-              <BaseButton 
-                type="button" 
-                color="success" 
-                label="Save" 
-                small 
-                :disabled="!hasChanges(weekday)"
-                :class="{ 'opacity-50 cursor-not-allowed': !hasChanges(weekday) }"
+              <BaseButton
+                type="button"
+                color="success"
+                :label="saving[weekday.id] ? 'Saving...' : 'Save'"
+                small
+                :disabled="!hasChanges(weekday) || saving[weekday.id]"
+                :class="{ 'opacity-50 cursor-not-allowed': !hasChanges(weekday) || saving[weekday.id] }"
                 @click="save(weekday)"
               />
             </div>
@@ -82,6 +82,7 @@ const courierId = route.params.courierId
 
 const weekdays = reactive([])
 const initialValues = ref({})
+const saving = reactive({})
 
 const hasChanges = (weekday) => {
   const initial = initialValues.value[weekday.id]
@@ -90,36 +91,45 @@ const hasChanges = (weekday) => {
 }
 
 const form = reactive({
+  id: null,
   courier_id: courierId,
   day: null,
   from: null,
   to: null,
 })
 
-const save = (weekday) => {
-  form.courier_id = courierId
-  form.day = weekday.day
+const save = async (weekday) => {
+  form.id = weekday.id
   form.from = weekday.from
   form.to = weekday.to
+  
+  saving[weekday.id] = true
 
-  axios.post(`/api/working-hours/${courierId}`, form)
-    .then((response) => {
-        weekdays.map(el => {
-          if (el.courier_id === response.data.data.courier_id) {
-            el.day = response.data.data.day
-            el.from = response.data.data.from
-            el.to = response.data.data.to
-          }
-
-          return el
-        })
-    })
-    .finally(() => {
-      form.courier_id = courierId
-      form.day = null
-      form.from = null
-      form.to = null
-    })
+  try {
+    const response = await axios.post(`/api/working-hours/${form.id}`, form)
+    
+    // Update the weekday in the weekdays array
+    const updatedWeekday = response.data.data
+    const index = weekdays.findIndex(w => w.id === updatedWeekday.id)
+    if (index !== -1) {
+      weekdays[index].from = formatTimeForInput(updatedWeekday.from)
+      weekdays[index].to = formatTimeForInput(updatedWeekday.to)
+      
+      // Update initial values to match the saved state
+      initialValues.value[weekday.id] = {
+        from: weekdays[index].from,
+        to: weekdays[index].to
+      }
+    }
+  } catch (error) {
+    console.error('Error saving working hours:', error)
+  } finally {
+    form.id = null
+    form.day = null
+    form.from = null
+    form.to = null
+    saving[weekday.id] = false
+  }
 }
 
 const formatTimeForInput = (timeString) => {
