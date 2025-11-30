@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('holidays', function (Blueprint $table) {
+        Schema::create('courier_holidays', function (Blueprint $table) {
             $table->id();
-            $table->date('day');
+            $table->date('date_from');
+            $table->date('date_to');
             $table->foreignId('courier_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('holidays');
+        Schema::dropIfExists('courier_holidays');
     }
 };

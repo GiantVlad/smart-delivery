@@ -2,7 +2,61 @@
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Courier's working hours" main>
+        <BaseButton
+          color="info"
+          label="Add Working Hours"
+          @click="showAddForm = !showAddForm"
+        />
       </SectionTitleLineWithButton>
+
+      <!-- Add New Working Hours Form -->
+      <CardBox v-if="showAddForm" class="mb-6 p-6">
+        <h3 class="text-lg font-medium mb-4">Add New Working Hours</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Day</label>
+            <select v-model="newWorkingHours.day" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+              <option v-for="day in availableDays" :key="day" :value="day">
+                {{ day.charAt(0).toUpperCase() + day.slice(1) }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">From</label>
+            <input
+              type="time"
+              v-model="newWorkingHours.from"
+              class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">To</label>
+            <input
+              type="time"
+              v-model="newWorkingHours.to"
+              class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+              :min="newWorkingHours.from"
+              required
+            />
+          </div>
+          <div class="flex space-x-2">
+            <BaseButton
+              color="success"
+              label="Save"
+              :disabled="isSaving"
+              :class="{ 'opacity-50 cursor-not-allowed': isSaving }"
+              @click="createWorkingHours"
+            />
+            <BaseButton
+              color="danger"
+              outline
+              label="Cancel"
+              @click="showAddForm = false"
+            />
+          </div>
+        </div>
+      </CardBox>
       <CardBox class="mb-6" has-table>
         <!-- Table -->
         <table class="table-auto w-full">
@@ -73,7 +127,7 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "@/lib/axios.js"
-import { onMounted, reactive, ref, watch } from "vue"
+import { computed, onMounted, reactive, ref } from "vue"
 import { useRoute } from 'vue-router'
 import BaseButton from "@/components/BaseButton.vue"
 
@@ -83,6 +137,21 @@ const courierId = route.params.courierId
 const weekdays = reactive([])
 const initialValues = ref({})
 const saving = reactive({})
+const showAddForm = ref(false)
+const isSaving = ref(false)
+
+const newWorkingHours = reactive({
+  day: 'monday',
+  from: '09:00',
+  to: '18:00'
+})
+
+// Get available days that aren't already in the weekdays list
+const availableDays = computed(() => {
+  const usedDays = weekdays.map(w => w.day.toLowerCase())
+  return ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    .filter(day => !usedDays.includes(day))
+})
 
 const hasChanges = (weekday) => {
   const initial = initialValues.value[weekday.id]
@@ -102,19 +171,19 @@ const save = async (weekday) => {
   form.id = weekday.id
   form.from = weekday.from
   form.to = weekday.to
-  
+
   saving[weekday.id] = true
 
   try {
     const response = await axios.post(`/api/working-hours/${form.id}`, form)
-    
+
     // Update the weekday in the weekdays array
     const updatedWeekday = response.data.data
     const index = weekdays.findIndex(w => w.id === updatedWeekday.id)
     if (index !== -1) {
       weekdays[index].from = formatTimeForInput(updatedWeekday.from)
       weekdays[index].to = formatTimeForInput(updatedWeekday.to)
-      
+
       // Update initial values to match the saved state
       initialValues.value[weekday.id] = {
         from: weekdays[index].from,
@@ -123,12 +192,58 @@ const save = async (weekday) => {
     }
   } catch (error) {
     console.error('Error saving working hours:', error)
+    const errorMessage = error.response?.data?.message || 'Failed to update working hours'
   } finally {
     form.id = null
     form.day = null
     form.from = null
     form.to = null
     saving[weekday.id] = false
+  }
+}
+
+const createWorkingHours = async () => {
+  if (!newWorkingHours.day || !newWorkingHours.from || !newWorkingHours.to) {
+    console.error('Please fill in all fields')
+    return
+  }
+
+  if (newWorkingHours.from >= newWorkingHours.to) {
+    console.error('End time must be after start time')
+    return
+  }
+
+  isSaving.value = true
+
+  try {
+    const response = await axios.post('/api/working-hours', {
+      courier_id: courierId,
+      ...newWorkingHours
+    })
+
+    const newEntry = response.data.data
+    newEntry.from = formatTimeForInput(newEntry.from)
+    newEntry.to = formatTimeForInput(newEntry.to)
+
+    weekdays.push(newEntry)
+    initialValues.value[newEntry.id] = {
+      from: newEntry.from,
+      to: newEntry.to
+    }
+
+    // Reset form
+    newWorkingHours.day = availableDays.value[0] || 'monday'
+    newWorkingHours.from = '09:00'
+    newWorkingHours.to = '18:00'
+
+    showAddForm.value = false
+
+  } catch (error) {
+    console.error('Error creating working hours:', error)
+    const errorMessage = error.response?.data?.message || 'Failed to create working hours'
+    console.error(errorMessage)
+  } finally {
+    isSaving.value = false
   }
 }
 
@@ -160,6 +275,7 @@ onMounted(() => {
     })
     .catch(error => {
       console.error('Error fetching working hours:', error)
+      console.error('Failed to load working hours')
     })
 })
 

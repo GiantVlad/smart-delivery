@@ -60,6 +60,8 @@ Route::get('/working-hours/{courier_id}', [ WorkingTimeController::class, 'getCo
 
 Route::post('/working-hours/{id}', [ WorkingTimeController::class, 'update' ]);
 
+Route::post('/working-hours', [ WorkingTimeController::class, 'create' ]);
+
 Route::prefix('slots')->group(function () {
     Route::get('/', [ SlotController::class, 'getSlots' ]);
     Route::post('/generate-default', [ SlotController::class, 'generateDefault' ]);
