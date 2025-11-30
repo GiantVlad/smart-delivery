@@ -68,8 +68,16 @@
                 {{ courierStatuses.find(el => el.uuid === courier.uuid)?.status }}
               </div>
             </td>
-            <div class="text-left font-small">
-              <BaseButton type="button" color="success" label="Edit courier" small @click="showModal(courier)"/>
+            <div class="text-left font-small flex space-x-2">
+              <BaseButton type="button" color="success" label="Edit courier" small @click="showModal(courier)" />
+              <BaseButton
+                type="button"
+                :icon="mdiClockOutline"
+                color="info"
+                small
+                title="Working Hours"
+                @click="router.push({ name: 'courier-working-hours', params: { courierId: courier.id } })"
+              />
             </div>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left">{{courier.updated_at}}</div>
@@ -88,22 +96,23 @@
 </template>
 
 <script setup>
-
-import { mdiAccount, mdiTableBorder } from '@mdi/js'
+import { mdiTableBorder, mdiAccount, mdiClockOutline } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import axios from "@/lib/axios.js"
-import {ref, onMounted, reactive, computed} from "vue"
-import CardBoxModal from "@/components/CardBoxModal.vue"
-import BaseButton from "@/components/BaseButton.vue"
+import {computed, onMounted, reactive, ref} from "vue"
+import { useRouter } from 'vue-router'
 import FormField from "@/components/FormField.vue"
 import FormControl from "@/components/FormControl.vue"
+import BaseButton from "@/components/BaseButton.vue"
+import CardBoxModal from "@/components/CardBoxModal.vue"
 import { CourierStatuses } from "@/constants/Statuses.js"
 import BaseButtons from "@/components/BaseButtons.vue"
 import { useCourierStatusStore } from "@/stores/courierStatus.js"
 
+const router = useRouter()
 const couriers = reactive([])
 const statuses = Object.values(CourierStatuses)
 const isModalActive = ref(false)

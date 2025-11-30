@@ -12,6 +12,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\SlotController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkingTimeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderCreateController;
 
@@ -54,6 +55,8 @@ Route::get('/couriers/{statuses?}', [ CourierController::class, 'get' ]);
 Route::get('/courier/{uuid}', [ CourierController::class, 'getCourier' ]);
 
 Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);
+
+Route::get('/working-hours/{courier_id}', [ WorkingTimeController::class, 'getCourierWorkingHours' ]);
 
 Route::prefix('slots')->group(function () {
     Route::get('/', [ SlotController::class, 'getSlots' ]);

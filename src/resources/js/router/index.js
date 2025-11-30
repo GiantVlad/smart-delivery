@@ -97,6 +97,16 @@ const routes = [
     name: 'couriers',
     component: () => import('@/views/Couriers.vue')
   },
+  {
+    meta: {
+      title: 'Courier\'s working hours',
+      //requiresAuth: true
+    },
+    path: '/courier-working-hours/:courierId(\\d+)',
+    name: 'courier-working-hours',
+    component: () => import('@/views/CourierWorkingHours.vue'),
+    props: true
+  },
 ]
 
 const router = createRouter({
