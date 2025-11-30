@@ -28,6 +28,8 @@ class CreateOrderRequest extends FormRequest
             'unitType' => 'required|string|min:3|max:20',
             'startAddressId' => 'required|numeric|exists:points,id',
             'endAddressId' => 'required|numeric|different:startAddressId|exists:points,id',
+            'slotId' => 'required|integer|exists:slots,id',
+            'date' => 'required|date|after:yesterday',
         ];
     }
 }

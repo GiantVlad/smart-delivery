@@ -27,6 +27,9 @@ class OrderResource extends JsonResource
             'endPointAddress' => $this->endPoint?->address,
             'startPointId' => $this->startPoint?->id,
             'endPointId' => $this->endPoint?->id,
+            'date' => $this->date,
+            'from' => $this->from,
+            'to' => $this->to,
             'updated_at' => $this->updated_at,
         ];
     }

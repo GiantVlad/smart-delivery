@@ -11,8 +11,10 @@ use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Point;
+use App\Models\Slot;
 use App\Models\Task;
 use App\Temporal\CreateOrderWorkflowInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -51,6 +53,7 @@ class OrderCreateController extends Controller
         $unitType = $request->get('unitType');
         $startPointId = $request->get('startAddressId');
         $endPointId = $request->get('endAddressId');
+        $slot = Slot::findOrFail((int)$request->get('slotId'));
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateOrderWorkflowInterface::class,
@@ -64,6 +67,9 @@ class OrderCreateController extends Controller
             unitType: $unitType,
             startPointId: $startPointId,
             endPointId: $endPointId,
+            from: $slot->from,
+            to: $slot->to,
+            date:  Carbon::parse($slot->date ?? $request->get('date')),
         );
 
         $this->workflowClient->start($workflow, $orderDTO);

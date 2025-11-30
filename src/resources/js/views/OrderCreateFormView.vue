@@ -13,17 +13,57 @@ import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.
 import axios from "@/lib/axios.js"
 import router from "@/router/index.js"
 import CardBoxModal from "@/components/CardBoxModal.vue"
+import DatePicker from '@/components/DatePicker.vue'
 
 const customers = ref([])
 const points = ref([])
 const unitTypes = ['Small', 'Medium', 'Large']
 const isModalActive = ref(false)
+const selectedDate = ref('');
+const timeSlots = ref([]);
+
+const dateOptions = {
+  minDate: 'today',
+  maxDate: (() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 30); // 30 days from now
+    return date;
+  })(),
+};
+
+const handleDateChange = async (selectedDates, dateStr) => {
+  form.slotId = null; // Reset selected slot when date changes
+  if (!dateStr) {
+    timeSlots.value = []
+    return
+  }
+  //isLoading.value = true;
+  try {
+    const response = await axios.get(`/api/slots/available/${dateStr}`)
+    timeSlots.value = response.data.data || []
+    form.date = dateStr
+  } catch (error) {
+    console.error('Error fetching time slots:', error)
+    timeSlots.value = []
+  } finally {
+    //isLoading.value = false;
+  }
+}
+
+
+const selectTimeSlot = (slot) => {
+  form.slotId = slot.id;
+  // Emit an event or update a parent component if needed
+  // emit('slot-selected', slot);
+}
 
 const form = reactive({
   customer: null,
   type: unitTypes[1],
   startAddress: null,
   endAddress: null,
+  slotId: null,
+  date: null,
 })
 
 const customerForm = reactive({
@@ -43,7 +83,9 @@ const submit = () => {
       customerEmail: form.customer,
       unitType: form.type,
       startAddressId: form.startAddress,
-      endAddressId: form.endAddress
+      endAddressId: form.endAddress,
+      slotId: form.slotId,
+      date: form.date,
     })
     .then((response) => {
       router.push({ path: 'orders' })
@@ -142,6 +184,37 @@ const createCustomer = () => {
 
         <FormField label="Destination">
           <FormControl v-model="form.endAddress" :options="points" />
+        </FormField>
+
+        <DatePicker
+          v-model="selectedDate"
+          label="Pickup Date"
+          placeholder="Choose a date"
+          :options="dateOptions"
+          @on-change="handleDateChange"
+        />
+        <p v-if="selectedDate" class="mt-2 text-gray-600">
+          Selected: {{ selectedDate }}
+        </p>
+
+        <FormField v-if="timeSlots.length > 0" label="Available Time Slots" help="Select a time slot for delivery">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
+            <div
+              v-for="slot in timeSlots"
+              :key="slot.id"
+              @click="selectTimeSlot(slot)"
+              class="border rounded-lg p-4 cursor-pointer transition-colors"
+              :class="{
+          'border-blue-500 bg-blue-50 dark:bg-blue-900/20': form.slotId === slot.id,
+          'border-gray-200 hover:border-blue-300 dark:border-gray-600 dark:hover:border-blue-600': form.slotId !== slot.id
+        }"
+            >
+              <div class="font-medium">{{ slot.from }} - {{ slot.to }}</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">
+                Available: {{ slot.available }} of {{ slot.capacity }}
+              </div>
+            </div>
+          </div>
         </FormField>
 
         <BaseDivider />

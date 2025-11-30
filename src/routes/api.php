@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\RouteController;
+use App\Http\Controllers\SlotController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,14 @@ Route::get('/couriers/{statuses?}', [ CourierController::class, 'get' ]);
 Route::get('/courier/{uuid}', [ CourierController::class, 'getCourier' ]);
 
 Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);
+
+Route::prefix('slots')->group(function () {
+    Route::get('/', [ SlotController::class, 'getSlots' ]);
+    Route::post('/generate-default', [ SlotController::class, 'generateDefault' ]);
+    Route::post('/create-for-day', [ SlotController::class, 'createForDay' ]);
+    Route::post('/edit-capacity', [ SlotController::class, 'updateCapacity' ]);
+    Route::get('/available/{date}', [ SlotController::class, 'getAvailableByDate' ]);
+});
 
 Route::post('create-courier', [ CourierController::class, 'createCourier' ]);
 

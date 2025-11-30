@@ -38,10 +38,22 @@
                 <div class="font-semibold text-left">Pick up</div>
               </th>
               <th class="p-2 whitespace-nowrap">
+                <div class="font-semibold text-center">Pickup Date</div>
+              </th>
+              <th class="p-2 whitespace-nowrap">
+                <div class="font-semibold text-center">Pickup Time</div>
+              </th>
+              <th class="p-2 whitespace-nowrap">
+                <div class="font-semibold text-center">Pickup Date</div>
+              </th>
+              <th class="p-2 whitespace-nowrap">
                 <div class="font-semibold text-center">Destination</div>
               </th>
               <th class="p-2 whitespace-nowrap">
                 <div class="font-semibold text-center">Date</div>
+              </th>
+              <th class="p-2 whitespace-nowrap">
+                <div class="font-semibold text-center">Action</div>
               </th>
             </tr>
             </thead>
@@ -74,6 +86,15 @@
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{order.startPointAddress}}</div>
+              </td>
+              <td class="p-2 whitespace-nowrap">
+                <div class="text-center">{{ order.date || 'N/A' }}</div>
+              </td>
+              <td class="p-2 whitespace-nowrap">
+                <div class="text-center">{{ `${order.from} : ${order.to}`}}</div>
+              </td>
+              <td class="p-2 whitespace-nowrap">
+                <div class="text-center">{{ order.to }}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{order.endPointAddress}}</div>
