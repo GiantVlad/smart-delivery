@@ -62,6 +62,12 @@ Route::post('/working-hours/{id}', [ WorkingTimeController::class, 'update' ]);
 
 Route::post('/working-hours', [ WorkingTimeController::class, 'create' ]);
 
+Route::get('/courier-holidays/{courier_id}', [ WorkingTimeController::class, 'getCourierHolidays' ]);
+
+Route::post('/courier-holidays', [ WorkingTimeController::class, 'addCourierHolidays' ]);
+
+Route::post('/courier-holidays-delete', [ WorkingTimeController::class, 'removeCourierHolidays' ]);
+
 Route::prefix('slots')->group(function () {
     Route::get('/', [ SlotController::class, 'getSlots' ]);
     Route::post('/generate-default', [ SlotController::class, 'generateDefault' ]);

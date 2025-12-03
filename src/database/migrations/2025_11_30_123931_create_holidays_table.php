@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('courier_holidays', function (Blueprint $table) {
             $table->id();
-            $table->date('date_from');
-            $table->date('date_to');
+            $table->date('date');
+            $table->unsignedInteger('reason_code')->default(0);
             $table->foreignId('courier_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
+            $table->unique(['courier_id', 'date']);
         });
     }
 

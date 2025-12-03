@@ -59,7 +59,8 @@
       </CardBox>
       <CardBox class="mb-6" has-table>
         <!-- Table -->
-        <table class="table-auto w-full">
+        <div class="max-h-96 overflow-y-auto">
+          <table class="table-auto w-full">
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
@@ -115,13 +116,138 @@
           </tr>
           </tbody>
         </table>
+      </div>
+      </CardBox>
+
+      <!-- Holidays Section -->
+      <SectionTitleLineWithButton :icon="mdiCalendar" title="Holidays" class="mt-12">
+        <BaseButton
+          color="info"
+          label="Add Holiday"
+          @click="showHolidayModal = true"
+        />
+      </SectionTitleLineWithButton>
+
+      <CardBox class="mb-6" has-table>
+        <div v-if="loadingHolidays" class="flex justify-center py-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+
+        <div v-else class="overflow-x-auto max-h-96">
+          <table class="min-w-full bg-white dark:bg-gray-800">
+            <colgroup>
+              <col class="w-1/3">
+              <col class="w-1/3">
+              <col class="w-1/3">
+            </colgroup>
+            <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
+              <tr>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-left">Date</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-left">Reason</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-right">Actions</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
+              <tr v-for="holiday in holidays" :key="holiday.id" class="border-t dark:border-gray-700">
+                <td class="p-3 whitespace-nowrap">
+                  <div class="text-left">{{ formatDate(holiday.date) }}</div>
+                </td>
+                <td class="p-3 whitespace-nowrap">
+                  <div class="text-left">{{ getReasonText(holiday.reason_code) }}</div>
+                </td>
+                <td class="p-3 whitespace-nowrap text-right">
+                  <button
+                    @click="deleteHoliday(holiday.id)"
+                    class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                    :disabled="deletingHoliday === holiday.id"
+                  >
+                    <span v-if="deletingHoliday === holiday.id">Deleting...</span>
+                    <span v-else>Delete</span>
+                  </button>
+                </td>
+              </tr>
+              <tr v-if="holidays.length === 0" class="border-t dark:border-gray-700">
+                <td colspan="3" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                  No holidays found
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </CardBox>
+
+      <!-- Add Holiday Modal -->
+      <CardBox v-if="showHolidayModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6 mx-4">
+          <h2 class="text-xl font-semibold mb-4 dark:text-white">Add Holiday</h2>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">From Date</label>
+              <input
+                type="date"
+                v-model="holidayForm.date_from"
+                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                required
+              />
+              <p v-if="errors.date_from" class="text-red-500 text-xs mt-1">{{ errors.date_from[0] }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">To Date</label>
+              <input
+                type="date"
+                v-model="holidayForm.date_to"
+                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                :min="holidayForm.date_from"
+                required
+              />
+              <p v-if="errors.date_to" class="text-red-500 text-xs mt-1">{{ errors.date_to[0] }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reason</label>
+              <select
+                v-model="holidayForm.reason_code"
+                class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                required
+              >
+                <option v-for="reason in holidayReasons" :key="reason.value" :value="reason.value">
+                  {{ reason.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex justify-end space-x-3 mt-6">
+            <BaseButton
+              color="danger"
+              outline
+              label="Cancel"
+              @click="showHolidayModal = false"
+              :disabled="isAddingHoliday"
+            />
+            <BaseButton
+              color="success"
+              :label="isAddingHoliday ? 'Saving...' : 'Save'"
+              @click="addHoliday"
+              :disabled="isAddingHoliday"
+            />
+          </div>
+        </div>
       </CardBox>
     </SectionMain>
   </LayoutAuthenticated>
 </template>
 
 <script setup>
-import { mdiTableBorder } from '@mdi/js'
+import { mdiTableBorder, mdiCalendar } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
@@ -139,6 +265,27 @@ const initialValues = ref({})
 const saving = reactive({})
 const showAddForm = ref(false)
 const isSaving = ref(false)
+const loadingHolidays = ref(false)
+const isAddingHoliday = ref(false)
+const deletingHoliday = ref(null)
+const showHolidayModal = ref(false)
+const holidays = ref([])
+
+const holidayForm = reactive({
+  courier_id: courierId,
+  date_from: '',
+  date_to: '',
+  reason_code: 0,
+});
+
+const holidayReasons = [
+  { value: 0, label: 'Vacation' },
+  { value: 1, label: 'Sick Leave' },
+  { value: 2, label: 'Day Off' },
+  { value: 3, label: 'Public Holiday' },
+];
+
+const errors = ref({})
 
 const newWorkingHours = reactive({
   day: 'monday',
@@ -258,7 +405,89 @@ const formatTimeForInput = (timeString) => {
   return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`
 }
 
+const fetchHolidays = async () => {
+  loadingHolidays.value = true
+  try {
+    const response = await axios.get(`/api/courier-holidays/${courierId}`)
+    holidays.value = response.data.data
+  } catch (error) {
+    console.error('Error fetching holidays:', error)
+  } finally {
+    loadingHolidays.value = false
+  }
+}
+
+const addHoliday = async () => {
+  isAddingHoliday.value = true
+  errors.value = {}
+
+  try {
+    const response = await axios.post('/api/courier-holidays', holidayForm)
+    holidays.value = response.data.data
+    showHolidayModal.value = false
+
+    // Reset form
+    holidayForm.date_from = ''
+    holidayForm.date_to = ''
+    holidayForm.reason_code = 0
+  } catch (error) {
+    if (error.response?.status === 422) {
+      errors.value = error.response.data.errors || {}
+    } else {
+      console.error('Error adding holiday:', error)
+    }
+  } finally {
+    isAddingHoliday.value = false
+  }
+}
+
+const deleteHoliday = async (id) => {
+  if (!confirm('Are you sure you want to delete this holiday?')) return
+
+  deletingHoliday.value = id
+
+  try {
+    const holiday = holidays.value.find(h => h.id === id)
+    if (!holiday) return
+
+    // Format date as YYYY-MM-DD
+    const formatDate = (dateString) => {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toISOString().split('T')[0];
+    };
+
+    await axios.post('/api/courier-holidays-delete', {
+      courier_id: courierId,
+      date_from: formatDate(holiday.date),
+      date_to: formatDate(holiday.date)
+    })
+
+    holidays.value = holidays.value.filter(h => h.id !== id)
+  } catch (error) {
+    console.error('Error deleting holiday:', error)
+  } finally {
+    deletingHoliday.value = null
+  }
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+const getReasonText = (code) => {
+  const reason = holidayReasons.find(r => r.value === code);
+  return reason ? reason.label : 'Unknown';
+};
+
 onMounted(() => {
+  // Load working hours
   axios.get(`/api/working-hours/${courierId}`)
     .then((response) => {
       const data = response.data.data.map(item => ({
@@ -275,8 +504,10 @@ onMounted(() => {
     })
     .catch(error => {
       console.error('Error fetching working hours:', error)
-      console.error('Failed to load working hours')
     })
+
+  // Load holidays
+  fetchHolidays()
 })
 
 </script>
