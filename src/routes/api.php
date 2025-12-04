@@ -60,6 +60,8 @@ Route::get('/working-hours/{courier_id}', [ WorkingTimeController::class, 'getCo
 
 Route::post('/working-hours/{id}', [ WorkingTimeController::class, 'update' ]);
 
+Route::post('/working-hours-delete/{id}', [ WorkingTimeController::class, 'delete' ]);
+
 Route::post('/working-hours', [ WorkingTimeController::class, 'create' ]);
 
 Route::get('/courier-holidays/{courier_id}', [ WorkingTimeController::class, 'getCourierHolidays' ]);

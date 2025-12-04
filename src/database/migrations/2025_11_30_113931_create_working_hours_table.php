@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('working_hours', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('courier_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('courier_id')->nullable()->constrained()->cascadeOnDelete();
             $table->enum('day', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
             $table->string('from')->default('8:00');
             $table->string('to')->default('12:00');

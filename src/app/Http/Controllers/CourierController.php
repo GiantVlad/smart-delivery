@@ -9,9 +9,11 @@ use App\Http\Requests\CreateCourierRequest;
 use App\Http\Requests\UpdateCourierRequest;
 use App\Http\Resources\CourierResource;
 use App\Models\Courier;
+use App\Models\WorkingHour;
 use App\Temporal\UpdateCourierStatusWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
 
@@ -61,13 +63,27 @@ class CourierController extends Controller
 
     public function createCourier(CreateCourierRequest $request): JsonResource
     {
-        $courier = new Courier();
-        $courier->uuid = Str::uuid();
-        $courier->name = $request->get('name');
-        $courier->phone = $request->get('phone');
-        $courier->status = CourierStatusEnum::NW->value;
-        $courier->save();
+        return DB::transaction(function () use ($request) {
+            $courier = new Courier();
+            $courier->uuid = Str::uuid();
+            $courier->name = $request->get('name');
+            $courier->phone = $request->get('phone');
+            $courier->status = CourierStatusEnum::NW->value;
+            $courier->save();
 
-        return CourierResource::make($courier);
+            $workingHours = WorkingHour::whereNull('courier_id')->get();
+            WorkingHour::insert($workingHours->map(function ($workingHour) use ($courier) {
+                return [
+                    'courier_id' => $courier->id,
+                    'day' => $workingHour->day,
+                    'from' => $workingHour->from,
+                    'to' => $workingHour->to,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            })->toArray());
+
+            return CourierResource::make($courier);
+        });
     }
 }

@@ -23,6 +23,13 @@ class WorkingTimeController extends Controller
         return WorkingHoursResource::collection($data);
     }
 
+    public function getCompanyWorkingHours(): JsonResource
+    {
+        $data = WorkingHour::whereNull('courier_id')->get();
+
+        return WorkingHoursResource::collection($data);
+    }
+
     public function update(int $id, UpdateWorkingHoursRequest $request): JsonResource
     {
         $wh = WorkingHour::findOrFail($id);
@@ -32,6 +39,14 @@ class WorkingTimeController extends Controller
         $wh->save();
 
         return WorkingHoursResource::make($wh);
+    }
+
+    public function delete(int $id): JsonResponse
+    {
+        $wh = WorkingHour::findOrFail($id);
+        $wh->delete();
+
+        return response()->json([], 204);
     }
 
     public function create(CreateWorkingHoursRequest $request): JsonResource

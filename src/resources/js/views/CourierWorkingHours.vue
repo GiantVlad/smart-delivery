@@ -112,6 +112,15 @@
                 :class="{ 'opacity-50 cursor-not-allowed': !hasChanges(weekday) || saving[weekday.id] }"
                 @click="save(weekday)"
               />
+              <span class="mx-2"></span>
+              <button
+                @click="removeWorkingHours(weekday.id)"
+                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                :disabled="isSaving"
+              >
+                <span v-if="isSaving">Deleting...</span>
+                <span v-else>Delete</span>
+              </button>
             </div>
           </tr>
           </tbody>
@@ -349,6 +358,28 @@ const save = async (weekday) => {
   }
 }
 
+const removeWorkingHours = async (id) => {
+  // Add confirmation dialog
+  if (!confirm('Are you sure you want to delete this?')) return
+
+  isSaving[id] = true
+
+  try {
+    await axios.post(`/api/working-hours-delete/${id}`)
+
+    const index = weekdays.findIndex(w => w.id === id)
+    if (index !== -1) {
+      weekdays.splice(index, 1)
+      delete initialValues.value[id]
+    }
+  } catch (error) {F
+    console.error('Error deleting working hours:', error)
+    const errorMessage = error.response?.data?.message || 'Failed to delete working hours'
+  } finally {
+    isSaving[id] = false
+  }
+}
+
 const createWorkingHours = async () => {
   if (!newWorkingHours.day || !newWorkingHours.from || !newWorkingHours.to) {
     console.error('Please fill in all fields')
@@ -361,7 +392,6 @@ const createWorkingHours = async () => {
   }
 
   isSaving.value = true
-
   try {
     const response = await axios.post('/api/working-hours', {
       courier_id: courierId,
