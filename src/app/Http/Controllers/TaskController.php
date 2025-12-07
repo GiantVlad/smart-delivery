@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domain\CourierManager;
 use App\Dto\TaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
@@ -16,20 +17,28 @@ use App\Models\Task;
 use App\Temporal\TaskWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Temporal\Client\WorkflowOptions;
 use Carbon\CarbonInterval;
 
 class TaskController extends Controller
 {
-    public function createTaskForm()
+    public function createTaskForm(string $date, CourierManager $courierManager)
     {
+        $date = Carbon::parse($date);
         $dto = new class {
             public Collection $orders;
             public Collection $couriers;
         };
-        $dto->orders = Order::where('status', OrderStatusEnum::ACCEPTED->value)->orderBy('id', 'desc')->get();
-        $dto->couriers = Courier::where('status', CourierStatusEnum::RD->value)->get();
+
+        $dto->orders = Order::where('status', OrderStatusEnum::ACCEPTED->value)
+            ->whereDate('date', $date)
+            ->with(['startPoint', 'endPoint'])
+            ->orderBy('from')
+            ->get();
+
+        $dto->couriers = $courierManager->getFreeCouriersForDay($date);
 
         return TaskCreateFormResource::make($dto);
     }

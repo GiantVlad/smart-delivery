@@ -38,7 +38,7 @@ Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder' ]);
 
 Route::get('/tasks', [ TaskController::class, 'getTasks' ]);
 
-Route::get('/task', [ TaskController::class, 'createTaskForm' ]);
+Route::get('/task-form/{date}', [ TaskController::class, 'createTaskForm' ]);
 
 Route::post('/task', [ TaskController::class, 'createTask' ]);
 

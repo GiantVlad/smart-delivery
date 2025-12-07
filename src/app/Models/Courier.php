@@ -25,4 +25,14 @@ class Courier extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function holidays()
+    {
+        return $this->hasMany(CourierHoliday::class);
+    }
+
+    public function workingHours()
+    {
+        return $this->hasMany(WorkingHour::class);
+    }
 }
