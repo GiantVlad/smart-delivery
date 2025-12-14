@@ -8,7 +8,15 @@ http:
       exec_ttl: 30s
   static:
     dir: /app/public
-  middleware: [ "static" ]
+  middleware: [ 'static', 'headers' ]
+
+headers:
+    request:
+      - Cookie
+      - X-XSRF-TOKEN
+      - X-Forwarded-Proto
+      - X-Forwarded-For
+      - X-Forwarded-Host
 
 server:
   command: "php /app/vendor/bin/roadrunner-worker"

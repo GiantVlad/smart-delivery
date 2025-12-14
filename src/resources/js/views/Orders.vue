@@ -145,6 +145,9 @@ const statuses = computed(() => {
 })
 
 onMounted(() => {
+  axios.defaults.baseURL = 'http://localhost:8000';
+  axios.defaults.withCredentials = true;
+  axios.defaults.withXSRFToken = true;
   axios.get('/api/orders')
     .then((response) => {
       orders.value = response.data.data

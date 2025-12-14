@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Temporal\UpdateCourierStatusWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
@@ -23,22 +24,17 @@ class AuthController extends Controller
 {
     public function login(AuthLoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
-        if ($user) {
-            if (Hash::check($request->password, $user->password)) {
-                $token = $user->createToken(
-                    'spa-token', ['*'], now()->addWeek()
-                )->plainTextToken;
-                $response = ['data' => ['token' => $token, 'name' => $user->name, 'email' => $user->email]];
+        $credentials = $request->validated();
 
-                return response($response, 200);
-            } else {
-                $response = ["message" => "Password mismatch"];
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-                return response($response, 422);
-            }
+            $response = ['data' => ['email' => $credentials['email'], 'name' =>  Auth::user()?->name]];
+
+            return response($response, 200);
+
         } else {
-            $response = ["message" =>'User does not exist'];
+            $response = ["message" => "Password mismatch"];
 
             return response($response, 422);
         }

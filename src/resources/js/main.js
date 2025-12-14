@@ -8,17 +8,23 @@ import './css/main.css'
 
 // Init Pinia
 const pinia = createPinia()
-const centrifuge = createCentrifuge({
-  url: "wss://delivery.cloud-workflow.com/connection/websocket",
-  token: "your-jwt-token",
-});
 
-// Provide Centrifugo globally
-
-// app.provide("centrifuge", centrifuge);
 // Create Vue app
 const app = createApp(App)
-app.provide('centrifuge', centrifuge);
+
+// Create and provide Centrifugo instance
+// const centrifugo = createCentrifuge({
+//   url: process.env.VITE_CENTRIFUGO_WS_URL || 'ws://localhost:8010/connection/websocket',
+//   token: process.env.VITE_CENTRIFUGO_TOKEN || ''
+// });
+
+// Make centrifugo available in the app
+// app.config.globalProperties.$centrifugo = centrifugo;
+// app.provide('centrifuge', centrifugo);
+
+// Use Pinia
+app.use(pinia)
+//app.provide('centrifuge', centrifuge);
 app.use(router)
   .use(pinia)
   .mount('#app')

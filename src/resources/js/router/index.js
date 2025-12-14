@@ -16,7 +16,8 @@ const routes = [
   // },
   {
     meta: {
-      title: 'Login'
+      title: 'Login',
+      requiresAuth: false // Explicitly set to false for login
     },
     path: '/login',
     name: 'login',
@@ -25,7 +26,7 @@ const routes = [
   {
     meta: {
       title: 'Users',
-      requiresAuth: true
+      requiresAuth: true,
     },
     path: '/users',
     name: 'users',
@@ -35,7 +36,7 @@ const routes = [
     // Document title tag
     // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
     meta: {
-      title: 'Dashboard'
+      title: 'Dashboard',
     },
     path: '/',
     name: 'dashboard',
@@ -43,7 +44,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Orders'
+      title: 'Orders',
+      requiresAuth: true,
     },
     path: '/orders',
     name: 'orders',
@@ -51,7 +53,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Create order'
+      title: 'Create order',
+      requiresAuth: true,
     },
     path: '/order',
     name: 'order-create',
@@ -59,7 +62,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Tasks'
+      title: 'Tasks',
+      requiresAuth: true,
     },
     path: '/tasks',
     name: 'tasks',
@@ -67,7 +71,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Create task'
+      title: 'Create task',
+      requiresAuth: true,
     },
     path: '/task',
     name: 'task-create',
@@ -75,7 +80,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Update order in task'
+      title: 'Update order in task',
+      requiresAuth: true,
     },
     path: '/update-order-in-task',
     name: 'update-order-in-task',
@@ -83,7 +89,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Edit route'
+      title: 'Edit route',
+      requiresAuth: true,
     },
     path: '/edit-route',
     name: 'edit-route',
@@ -91,7 +98,8 @@ const routes = [
   },
   {
     meta: {
-      title: 'Couriers'
+      title: 'Couriers',
+      requiresAuth: true,
     },
     path: '/couriers',
     name: 'couriers',
@@ -100,7 +108,7 @@ const routes = [
   {
     meta: {
       title: 'Courier\'s working hours',
-      //requiresAuth: true
+      requiresAuth: true
     },
     path: '/courier-working-hours/:courierId(\\d+)',
     name: 'courier-working-hours',

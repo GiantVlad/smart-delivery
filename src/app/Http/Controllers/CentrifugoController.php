@@ -9,17 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CentrifugoController extends Controller
 {
-    /**
-     * Generate a connection token for the current user.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getConnectionToken()
     {
-        $userId = Auth::user()->id; // Assume you're using Laravel's auth
-        $info = ['name' => Auth::user()->name];
+        $userId = Auth::user()?->id;
+        $info = ['name' => Auth::user()?->name];
 
-        $token = $this->centrifugo->generateConnectionToken($userId, 0, $info);
+        $token = $userId ? $this->centrifugo->generateConnectionToken($userId, 0, $info) : '';
 
         return response()->json(['token' => $token]);
     }

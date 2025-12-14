@@ -141,7 +141,7 @@ const addOrdersToTask = () => {
           </template>
           {{error}}
         </NotificationBar>
-        <table class="table-auto w-full" v-if="selectedTask !== null">
+        <table class="table-auto w-full" v-if="selectedTask !== null" style="table-layout: fixed;">
           <!-- Table header -->
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
@@ -155,7 +155,7 @@ const addOrdersToTask = () => {
               <div class="font-semibold text-center">Status</div>
             </th>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-center">Action</div>
+              <div class="font-semibold text-center">Status Action</div>
             </th>
             <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-left">Pick up</div>
@@ -163,23 +163,24 @@ const addOrdersToTask = () => {
             <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-center">Destination</div>
             </th>
+            <th class="p-2 whitespace-nowrap">
+              <div class="font-semibold text-center">Assign Action</div>
+            </th>
             </tr>
           </thead>
           <!-- Table body -->
           <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
           <tr v-for="order in orders" :key="order.id">
-            <td class="p-2 whitespace-nowrap">
-              <div class="items-center">
-                <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div>
-                <div class="text-left">{{order.startPointAddress}}</div>
-                <div class="text-left">{{order.endPointAddress}}</div>
+            <td class="p-2">
+              <div class="items-left font-medium break-words text-gray-800 dark:text-gray-100">
+                #{{order.id}} <br/> {{order.startPointAddress}} <br/> {{order.endPointAddress}}
               </div>
             </td>
-            <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{order.unitType}}</div>
+            <td class="p-2">
+              <div class="break-words">{{order.unitType}}</div>
             </td>
-            <td class="p-2 whitespace-nowrap">
-              <div class="text-left font-medium text-green-500">{{order.status}}</div>
+            <td class="p-2">
+              <div class="break-words font-medium text-green-500">{{order.status}}</div>
             </td>
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
@@ -190,15 +191,15 @@ const addOrdersToTask = () => {
                 </div>
               </div>
             </td>
-            <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{order.startPointAddress}}</div>
+            <td class="p-2">
+              <div class="break-words">{{order.startPointAddress}}</div>
             </td>
-            <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{order.endPointAddress}}</div>
+            <td class="p-2">
+              <div class="break-words">{{order.endPointAddress}}</div>
             </td>
-            <td class="p-2 whitespace-nowrap">
-              <div class="text-left font-medium text-green-500">
-                <BaseButton type="button" color="success" label="Unassign order" small @click="unassignOrder(order)"/>
+            <td class="p-2">
+              <div class="font-medium text-green-500">
+                <BaseButton type="button" color="success" label="Unassign order" small @click="unassignOrder(order)" class="whitespace-nowrap"/>
               </div>
             </td>
           </tr>

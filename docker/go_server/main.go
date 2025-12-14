@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
     "encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -59,7 +58,7 @@ func receiveHandler(w http.ResponseWriter, r *http.Request) {
         }
     }(o)
 
-    fmt.Printf("Received request: %s\n", o.Uuid)
+    log.Printf("Received request: %s\n", o.Uuid)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Received your request."))
@@ -73,8 +72,10 @@ func sendWebhook(o Order) error {
         return err
     }
     jsonData, err := json.Marshal(o)
-    // delay
-    time.Sleep(120 * time.Second)
+
+    // delay before accepting order
+    const delay = 120 * time.Second
+    time.Sleep(delay)
 
     resp, err := client.Post(targetURL, "application/json", bytes.NewBuffer(jsonData))
     if err != nil {
@@ -111,6 +112,6 @@ func main() {
 	http.HandleFunc("/erp", receiveHandler)
 
 	port := "8090"
-	fmt.Printf("Server starting on port %s\n", port)
+	log.Println("Server started on port", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

@@ -20,69 +20,71 @@ Route::post('login', [ AuthController::class, 'login' ])->name('api.login');
 
 Route::post('register', [ AuthController::class, 'register' ])->name('api.register');
 
-Route::get('users', [ UserController::class, 'list' ])->name('api.users');
-
-Route::get('/order', [ OrderCreateController::class, 'getOrderForm' ]);
-
-Route::post('/order', [ OrderCreateController::class, 'createOrder' ]);
-
-Route::post('update-order-status-in-task', [ OrderStatusController::class, 'updateStatusByCourier' ]);
-
-Route::get('/orders', [ OrderController::class, 'getOrders' ]);
-
-Route::get('/orders-to-assign', [ OrderController::class, 'getOrdersToAssign' ]);
-
-Route::get('/orders-by-task/{taskUuid}', [ OrderCreateController::class, 'getOrdersByTask' ]);
-
 Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder' ]);
 
-Route::get('/tasks', [ TaskController::class, 'getTasks' ]);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('users', [ UserController::class, 'list' ])->name('api.users');
 
-Route::get('/task-form/{date}', [ TaskController::class, 'createTaskForm' ]);
+    Route::get('/order', [ OrderCreateController::class, 'getOrderForm' ]);
 
-Route::post('/task', [ TaskController::class, 'createTask' ]);
+    Route::post('/order', [ OrderCreateController::class, 'createOrder' ]);
 
-Route::post('/unassign-order', [ OrderController::class, 'unassignOrder' ]);
+    Route::post('update-order-status-in-task', [ OrderStatusController::class, 'updateStatusByCourier' ]);
 
-Route::post('/add-orders-to-task', [ OrderController::class, 'addOrdersToTask' ]);
+    Route::get('/orders', [ OrderController::class, 'getOrders' ]);
 
-Route::post('/update-route', [ RouteController::class, 'updateRoute' ]);
+    Route::get('/orders-to-assign', [ OrderController::class, 'getOrdersToAssign' ]);
 
-Route::get('/route/{taskUuid}', [ RouteController::class, 'getRoute' ]);
+    Route::get('/orders-by-task/{taskUuid}', [ OrderCreateController::class, 'getOrdersByTask' ]);
 
-Route::get('/couriers/{statuses?}', [ CourierController::class, 'get' ]);
+    Route::get('/tasks', [ TaskController::class, 'getTasks' ]);
 
-Route::get('/courier/{uuid}', [ CourierController::class, 'getCourier' ]);
+    Route::get('/task-form/{date}', [ TaskController::class, 'createTaskForm' ]);
 
-Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);
+    Route::post('/task', [ TaskController::class, 'createTask' ]);
 
-Route::get('/working-hours/{courier_id}', [ WorkingTimeController::class, 'getCourierWorkingHours' ]);
+    Route::post('/unassign-order', [ OrderController::class, 'unassignOrder' ]);
 
-Route::post('/working-hours/{id}', [ WorkingTimeController::class, 'update' ]);
+    Route::post('/add-orders-to-task', [ OrderController::class, 'addOrdersToTask' ]);
 
-Route::post('/working-hours-delete/{id}', [ WorkingTimeController::class, 'delete' ]);
+    Route::post('/update-route', [ RouteController::class, 'updateRoute' ]);
 
-Route::post('/working-hours', [ WorkingTimeController::class, 'create' ]);
+    Route::get('/route/{taskUuid}', [ RouteController::class, 'getRoute' ]);
 
-Route::get('/courier-holidays/{courier_id}', [ WorkingTimeController::class, 'getCourierHolidays' ]);
+    Route::get('/couriers/{statuses?}', [ CourierController::class, 'get' ]);
 
-Route::post('/courier-holidays', [ WorkingTimeController::class, 'addCourierHolidays' ]);
+    Route::get('/courier/{uuid}', [ CourierController::class, 'getCourier' ]);
 
-Route::post('/courier-holidays-delete', [ WorkingTimeController::class, 'removeCourierHolidays' ]);
+    Route::post('/update-courier', [ CourierController::class, 'updateCourier' ]);
 
-Route::prefix('slots')->group(function () {
-    Route::get('/', [ SlotController::class, 'getSlots' ]);
-    Route::post('/generate-default', [ SlotController::class, 'generateDefault' ]);
-    Route::post('/create-for-day', [ SlotController::class, 'createForDay' ]);
-    Route::post('/edit-capacity', [ SlotController::class, 'updateCapacity' ]);
-    Route::get('/available/{date}', [ SlotController::class, 'getAvailableByDate' ]);
+    Route::get('/working-hours/{courier_id}', [ WorkingTimeController::class, 'getCourierWorkingHours' ]);
+
+    Route::post('/working-hours/{id}', [ WorkingTimeController::class, 'update' ]);
+
+    Route::post('/working-hours-delete/{id}', [ WorkingTimeController::class, 'delete' ]);
+
+    Route::post('/working-hours', [ WorkingTimeController::class, 'create' ]);
+
+    Route::get('/courier-holidays/{courier_id}', [ WorkingTimeController::class, 'getCourierHolidays' ]);
+
+    Route::post('/courier-holidays', [ WorkingTimeController::class, 'addCourierHolidays' ]);
+
+    Route::post('/courier-holidays-delete', [ WorkingTimeController::class, 'removeCourierHolidays' ]);
+
+    Route::prefix('slots')->group(function () {
+        Route::get('/', [ SlotController::class, 'getSlots' ]);
+        Route::post('/generate-default', [ SlotController::class, 'generateDefault' ]);
+        Route::post('/create-for-day', [ SlotController::class, 'createForDay' ]);
+        Route::post('/edit-capacity', [ SlotController::class, 'updateCapacity' ]);
+        Route::get('/available/{date}', [ SlotController::class, 'getAvailableByDate' ]);
+    });
+
+    Route::post('create-courier', [ CourierController::class, 'createCourier' ]);
+
+    Route::post('create-customer', [ CustomerController::class, 'createCustomer' ]);
+
+    Route::get('customers/{limit?}', [ CustomerController::class, 'get' ]);
 });
-
-Route::post('create-courier', [ CourierController::class, 'createCourier' ]);
-
-Route::post('create-customer', [ CustomerController::class, 'createCustomer' ]);
-
-Route::get('customers/{limit?}', [ CustomerController::class, 'get' ]);
 
 Route::get('/centrifugo/connection-token', [CentrifugoController::class, 'getConnectionToken']);
 Route::post('/centrifugo/subscription-token', [CentrifugoController::class, 'getSubscriptionToken']);

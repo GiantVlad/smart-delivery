@@ -14,8 +14,8 @@ services:
     networks:
       - smart-l
     depends_on:
-      - temporal
-      - mysql
+      temporal:
+        condition: service_healthy
     volumes:
       - ./src:/app
       #- ./docker/roadrunner/rr.yaml:/etc/.rr.yaml:ro
@@ -96,6 +96,12 @@ services:
       - smart-l
     ports:
       - 7233:7233
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "temporal:7233", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     volumes:
       - ./docker/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
 

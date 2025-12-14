@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive} from 'vue'
+import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import SectionFullScreen from '@/components/SectionFullScreen.vue'
@@ -11,6 +11,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import axios from "@/lib/axios.js";
+import { useMainStore } from "@/stores/main.js";
 
 const form = reactive({
   email: null,
@@ -19,17 +20,33 @@ const form = reactive({
 })
 
 const router = useRouter()
+const mainStore = useMainStore()
 
 const submit = () => {
-  axios.post('/api/login',
-    {
-      email: form.email,
-      password: form.password,
-    })
-    .then((response) => {
-      mainStore.setUser({name: response.data.data.name, email: response.data.data.email})
-      router.push({ path: 'tasks' })
-    }).catch((e) => {console.log(e)})
+  axios.post('/api/login', {
+    email: form.email,
+    password: form.password,
+  })
+  .then((response) => {
+    if (response.data && response.data.data) {
+      mainStore.setUser({
+        name: response.data.data.name,
+        email: response.data.data.email
+      })
+
+      const redirectPath = router.currentRoute.value.query.redirect || '/orders'
+      router.push(redirectPath)
+    } else {
+      console.error('Invalid response format:', response)
+    }
+  })
+  .catch((error) => {
+    console.error('Login error:', error)
+    if (error.response) {
+      console.error('Response data:', error.response.data)
+      console.error('Response status:', error.response.status)
+    }
+  })
 }
 
 onMounted(async () => {
