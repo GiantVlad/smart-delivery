@@ -1,6 +1,6 @@
-FROM ghcr.io/roadrunner-server/roadrunner:2025.1.2 as roadrunner
+FROM ghcr.io/roadrunner-server/roadrunner:2025.1.6 as roadrunner
 
-FROM php:8.3-alpine
+FROM php:8.4-alpine
 
 # https://github.com/mlocati/docker-php-extension-installer
 # https://github.com/docker-library/docs/tree/0fbef0e8b8c403f581b794030f9180a68935af9d/php#how-to-install-more-php-extensions
@@ -12,9 +12,12 @@ RUN apk add --update --no-cache autoconf libzip-dev libcurl-dev; \
     docker-php-ext-install -j$(nproc) curl json pdo pdo_mysql openssl bcmath curl json mbstring tokenizer xml mysqli; \
     apk del gcc g++ ;\
     rm -rf /var/cache/apk/*
-# openssl
-# bcmath curl json mbstring tokenizer xml pdo
-RUN docker-php-ext-enable mysqli pdo_mysql
+
+RUN apk add --no-cache \
+        $PHPIZE_DEPS \
+        mariadb-dev \
+    && docker-php-ext-install mysqli pdo_mysql \
+    && apk del $PHPIZE_DEPS
 
 # # #
 # Install grpc extension

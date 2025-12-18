@@ -1,4 +1,4 @@
-FROM gaintvlad/php-grpc-rrunner:v2025.1.2
+FROM gaintvlad/php84-grpc-rrunner:v2025.1.6
 
 EXPOSE 8000/tcp
 
