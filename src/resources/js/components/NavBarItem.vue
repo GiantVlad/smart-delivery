@@ -3,6 +3,7 @@ import { mdiChevronUp, mdiChevronDown } from '@mdi/js'
 import { RouterLink } from 'vue-router'
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useMainStore } from '@/stores/main.js'
+const mainStore = useMainStore()
 import BaseIcon from '@/components/BaseIcon.vue'
 import UserAvatarCurrentUser from '@/components/UserAvatarCurrentUser.vue'
 import NavBarMenuList from '@/components/NavBarMenuList.vue'
@@ -44,9 +45,13 @@ const componentClass = computed(() => {
   return base
 })
 
-const itemLabel = computed(() =>
-  props.item.isCurrentUser ? useMainStore().userName : props.item.label
-)
+const itemLabel = computed(() => {
+  if (props.item.isCurrentUser) return mainStore.userName
+  if (props.item.label === 'Login' || props.item.label === 'Logout') {
+    return mainStore.isAuthenticated ? 'Logout' : 'Login'
+  }
+  return props.item.label
+})
 
 const isDropdownActive = ref(false)
 

@@ -6,6 +6,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 class OrderResource extends JsonResource
 {
@@ -30,7 +31,7 @@ class OrderResource extends JsonResource
             'date' => $this->date,
             'from' => $this->from,
             'to' => $this->to,
-            'updated_at' => $this->updated_at,
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }
 }

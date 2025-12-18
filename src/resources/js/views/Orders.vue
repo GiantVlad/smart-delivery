@@ -10,9 +10,9 @@
       <NotificationBar color="info" :icon="mdiMonitorCellphone">
         <b>Responsive table.</b> Collapses on mobile
       </NotificationBar>
-      <CardBox class="mb-6 max-w-5xl" has-table v-if="orders.length > 0">
+      <CardBox has-table v-if="orders.length > 0">
         <!-- Table -->
-          <table class="table-auto w-full">
+          <table class="table-auto w-full" style="table-layout: fixed;">
             <!-- Table header -->
             <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
             <tr>
@@ -44,16 +44,10 @@
                 <div class="font-semibold text-center">Pickup Time</div>
               </th>
               <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-center">Pickup Date</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
                 <div class="font-semibold text-center">Destination</div>
               </th>
               <th class="p-2 whitespace-nowrap">
                 <div class="font-semibold text-center">Date</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-center">Action</div>
               </th>
             </tr>
             </thead>
@@ -65,9 +59,9 @@
                   <div class="font-medium text-gray-800 dark:text-gray-100">{{ order.id }}</div>
                 </div>
               </td>
-              <td class="p-2 whitespace-nowrap">
+              <td class="p-2">
                 <div class="flex items-center">
-                  <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div>
+                  <div class="break-words font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div>
                 </div>
               </td>
               <td class="p-2 whitespace-nowrap">
@@ -78,14 +72,14 @@
                   {{ statuses.find(el => el.uuid === order.uuid)?.status }}
                 </div>
               </td>
-              <td class="p-2 whitespace-nowrap">
-                <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{order.customerEmail}}</div>
+              <td class="p-2">
+                <div class="break-words text-left font-medium text-gray-800 dark:text-gray-100">{{order.customerEmail}}</div>
               </td>
-              <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{order.taskCourierName}}</div>
+              <td class="p-2">
+                <div class="text-left break-words">{{order.taskCourierName || 'N/A'}}</div>
               </td>
-              <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{order.startPointAddress}}</div>
+              <td class="p-2">
+                <div class="text-left break-words">{{order.startPointAddress}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
                 <div class="text-center">{{ order.date || 'N/A' }}</div>
@@ -93,14 +87,11 @@
               <td class="p-2 whitespace-nowrap">
                 <div class="text-center">{{ `${order.from} : ${order.to}`}}</div>
               </td>
-              <td class="p-2 whitespace-nowrap">
-                <div class="text-center">{{ order.to }}</div>
+              <td class="p-2">
+                <div class="text-left break-words">{{order.endPointAddress}}</div>
               </td>
-              <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{order.endPointAddress}}</div>
-              </td>
-              <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{order.updated_at}}</div>
+              <td class="p-2">
+                <div class="text-left break-words">{{order.updated_at}}</div>
               </td>
             </tr>
             </tbody>
