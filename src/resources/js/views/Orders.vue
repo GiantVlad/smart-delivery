@@ -114,7 +114,7 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
-import axios from "@/lib/axios.js"
+import http from "@/lib/axios.js"
 import {ref, onMounted, reactive, computed} from "vue"
 import BaseButton from "@/components/BaseButton.vue"
 import BaseButtons from "@/components/BaseButtons.vue"
@@ -136,10 +136,10 @@ const statuses = computed(() => {
 })
 
 onMounted(() => {
-  axios.defaults.baseURL = 'http://localhost:8000';
-  axios.defaults.withCredentials = true;
-  axios.defaults.withXSRFToken = true;
-  axios.get('/api/orders')
+  http.defaults.baseURL = 'http://localhost:8000';
+  http.defaults.withCredentials = true;
+  http.defaults.withXSRFToken = true;
+  http.get('/api/orders')
     .then((response) => {
       orders.value = response.data.data
       for (const order of response.data.data) {

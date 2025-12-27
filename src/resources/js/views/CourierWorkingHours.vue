@@ -261,7 +261,7 @@ import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "@/lib/axios.js"
+import http from "@/lib/axios.js"
 import { computed, onMounted, reactive, ref } from "vue"
 import { useRoute } from 'vue-router'
 import BaseButton from "@/components/BaseButton.vue"
@@ -331,7 +331,7 @@ const save = async (weekday) => {
   saving[weekday.id] = true
 
   try {
-    const response = await axios.post(`/api/working-hours/${form.id}`, form)
+    const response = await http.post(`/api/working-hours/${form.id}`, form)
 
     // Update the weekday in the weekdays array
     const updatedWeekday = response.data.data
@@ -365,7 +365,7 @@ const removeWorkingHours = async (id) => {
   isSaving[id] = true
 
   try {
-    await axios.post(`/api/working-hours-delete/${id}`)
+    await http.post(`/api/working-hours-delete/${id}`)
 
     const index = weekdays.findIndex(w => w.id === id)
     if (index !== -1) {
@@ -393,7 +393,7 @@ const createWorkingHours = async () => {
 
   isSaving.value = true
   try {
-    const response = await axios.post('/api/working-hours', {
+    const response = await http.post('/api/working-hours', {
       courier_id: courierId,
       ...newWorkingHours
     })
@@ -438,7 +438,7 @@ const formatTimeForInput = (timeString) => {
 const fetchHolidays = async () => {
   loadingHolidays.value = true
   try {
-    const response = await axios.get(`/api/courier-holidays/${courierId}`)
+    const response = await http.get(`/api/courier-holidays/${courierId}`)
     holidays.value = response.data.data
   } catch (error) {
     console.error('Error fetching holidays:', error)
@@ -452,7 +452,7 @@ const addHoliday = async () => {
   errors.value = {}
 
   try {
-    const response = await axios.post('/api/courier-holidays', holidayForm)
+    const response = await http.post('/api/courier-holidays', holidayForm)
     holidays.value = response.data.data
     showHolidayModal.value = false
 
@@ -487,7 +487,7 @@ const deleteHoliday = async (id) => {
       return date.toISOString().split('T')[0];
     };
 
-    await axios.post('/api/courier-holidays-delete', {
+    await http.post('/api/courier-holidays-delete', {
       courier_id: courierId,
       date_from: formatDate(holiday.date),
       date_to: formatDate(holiday.date)
@@ -518,7 +518,7 @@ const getReasonText = (code) => {
 
 onMounted(() => {
   // Load working hours
-  axios.get(`/api/working-hours/${courierId}`)
+  http.get(`/api/working-hours/${courierId}`)
     .then((response) => {
       const data = response.data.data.map(item => ({
         ...item,

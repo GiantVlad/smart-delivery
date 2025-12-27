@@ -10,7 +10,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "@/lib/axios.js";
+import http from "@/lib/axios.js";
 import router from "@/router/index.js";
 import Multiselect from "vue-multiselect";
 import {useOrderStatusStore} from "@/stores/orderStatus.js";
@@ -36,7 +36,7 @@ const validateForm = () => {
 const submit = () => {
   if (!validateForm()) return
 
-  axios.post('/api/task',
+  http.post('/api/task',
     {
       date: form.date,
       courierUuid: form.courier?.id,
@@ -64,7 +64,7 @@ watch(orderStatusStore.orders, (orders) => {
 })
 
 const getTask = () => {
-  axios.get(`/api/task-form/${form.date}`)
+  http.get(`/api/task-form/${form.date}`)
     .then((response) => {
       couriers.value = response.data.data.couriers.map(el => ({id: el.uuid, label: el.name}))
       // Map the orders to include all necessary fields for the table

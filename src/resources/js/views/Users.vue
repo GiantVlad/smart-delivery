@@ -10,7 +10,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from '@/lib/axios.js'
+import http from '@/lib/axios.js'
 
 const form = reactive({
   name: null,
@@ -22,7 +22,7 @@ const form = reactive({
 const users = ref([])
 
 const submit = () => {
-  axios.post('/api/register',
+  http.post('/api/register',
     {
       name: form.name,
       email: form.email,
@@ -30,7 +30,7 @@ const submit = () => {
       password_confirmation: form.password_conf,
     })
     .then((response) => {
-      axios.get('/api/users').then((response) => {
+      http.get('/api/users').then((response) => {
         users.value = response.data.data
       });
     }).catch((e) => {console.log(e)})
@@ -43,7 +43,7 @@ const formStatusCurrent = ref(0)
 const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
 onMounted(async () => {
-  axios.get('/api/users').then((response) => {
+  http.get('/api/users').then((response) => {
     users.value = response.data.data
   });
 })

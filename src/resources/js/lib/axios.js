@@ -1,6 +1,8 @@
 import axiosLib from "axios";
+import { useMainStore } from "@/stores/main";
+import { useRouter } from "vue-router";
 
-const axios = axiosLib.create({
+const http = axiosLib.create({
   // baseURL: "http://localhost:8000",
   timeout: 60000,
   withCredentials: true,
@@ -11,4 +13,30 @@ const axios = axiosLib.create({
   }
 });
 
-export default axios;
+// Add a response interceptor
+http.interceptors.response.use(
+  response => response,
+  error => {
+    const router = useRouter();
+    const mainStore = useMainStore();
+
+    if (error.response?.status === 401) {
+      // Clear user data from the store
+      mainStore.clearStore();
+
+      const currentRoute = router.currentRoute.value;
+      if (!currentRoute || currentRoute.name !== 'login') {
+        router.push({
+          name: 'login',
+          query: {
+            redirect: currentRoute?.fullPath || '/'
+          }
+        });
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default http;

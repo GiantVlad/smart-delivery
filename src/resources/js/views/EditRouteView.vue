@@ -118,7 +118,7 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import axios from "@/lib/axios.js"
+import http from "@/lib/axios.js"
 import {ref, onMounted, watch, reactive} from "vue";
 import FormControl from "@/components/FormControl.vue";
 import FormField from "@/components/FormField.vue";
@@ -134,7 +134,7 @@ const points = ref([])
 const error = ref(null)
 
 onMounted(() => {
-  axios.get('/api/tasks')
+  http.get('/api/tasks')
     .then((response) => {
       tasks.value = response.data.data.map(el => ({id: el.uuid, label: el.uuid + ': ' + el.courierName}))
     })
@@ -153,7 +153,7 @@ let orderStartPoints = []
 let orderEndPoints = []
 
 const getOrders = () => {
-  axios.get('/api/orders-by-task/' + selectedTask.value)
+  http.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
       orderStartPoints = orderEndPoints = orders.value = response.data.data
       orderStartPoints = orderStartPoints.map(el => el.startPointId)
@@ -162,7 +162,7 @@ const getOrders = () => {
 }
 
 const getRoute = () => {
-  axios.get('/api/route/' + selectedTask.value)
+  http.get('/api/route/' + selectedTask.value)
     .then((response) => {
       points.value = response.data.data
     })
@@ -189,7 +189,7 @@ const form = reactive({
 })
 
 const submit = () => {
-  axios.post('/api/update-route',
+  http.post('/api/update-route',
     {
       taskUuid: form.taskUuid,
       points: [...new Set(points.value.map(el => el.pointId))]

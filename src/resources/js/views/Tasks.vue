@@ -85,7 +85,7 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
-import axios from "@/lib/axios.js"
+import http from "@/lib/axios.js"
 import { ref, onMounted, computed } from "vue"
 import router from "@/router/index.js"
 import BaseButton from "@/components/BaseButton.vue"
@@ -107,7 +107,7 @@ const statuses = computed(() => {
 })
 
 onMounted(() => {
-  axios.get('/api/tasks')
+  http.get('/api/tasks')
     .then((response) => {
       tasks.value = response.data.data
       for (const task of response.data.data) {
@@ -120,4 +120,3 @@ onMounted(() => {
 })
 
 </script>
-

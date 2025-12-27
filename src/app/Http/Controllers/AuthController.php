@@ -14,9 +14,11 @@ use App\Models\Courier;
 use App\Models\User;
 use App\Temporal\UpdateCourierStatusWorkflowInterface;
 use Carbon\CarbonInterval;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
 
@@ -40,9 +42,28 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(): JsonResource
+    public function logout(): JsonResponse
     {
-        return response()->json();
+        try {
+            // Revoke the current user's token
+            if (auth()->check()) {
+                auth()->user()->currentAccessToken()?->delete();
+            }
+
+            // Clear session data
+            auth()->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+
+            return response()->json([
+                'message' => 'Successfully logged out'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Logout error: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error during logout'
+            ], 500);
+        }
     }
 
     public function register(AuthRegisterRequest $request)

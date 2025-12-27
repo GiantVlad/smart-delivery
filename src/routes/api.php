@@ -18,6 +18,8 @@ use App\Http\Controllers\OrderCreateController;
 
 Route::post('login', [ AuthController::class, 'login' ])->name('api.login');
 
+Route::post('logout', [ AuthController::class, 'logout' ])->name('api.logout');
+
 Route::post('register', [ AuthController::class, 'register' ])->name('api.register');
 
 Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder' ]);

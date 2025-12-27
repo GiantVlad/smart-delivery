@@ -101,7 +101,7 @@ import SectionMain from '@/components/SectionMain.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "@/lib/axios.js"
+import http from "@/lib/axios.js"
 import {computed, onMounted, reactive, ref} from "vue"
 import { useRouter } from 'vue-router'
 import FormField from "@/components/FormField.vue"
@@ -155,7 +155,7 @@ const updateCourier = () => {
     data.status = form.status
   }
 
-  axios.post(endpoint, data)
+  http.post(endpoint, data)
     .then((response) => {
       if (form.uuid) {
         couriers.map(el => {
@@ -168,7 +168,7 @@ const updateCourier = () => {
           return el
         })
       } else {
-        axios.get('/api/couriers')
+        http.get('/api/couriers')
           .then((response) => {
             couriers.push(...response.data.data)
           })
@@ -183,7 +183,7 @@ const updateCourier = () => {
 }
 
 onMounted(() => {
-  axios.get('/api/couriers')
+  http.get('/api/couriers')
     .then((response) => {
       couriers.push(...response.data.data)
       for (const courier of response.data.data) {

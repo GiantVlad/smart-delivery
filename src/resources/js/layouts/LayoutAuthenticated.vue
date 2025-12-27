@@ -12,6 +12,7 @@ import NavBarItemPlain from '@/components/NavBarItemPlain.vue'
 import AsideMenu from '@/components/AsideMenu.vue'
 import FooterBar from '@/components/FooterBar.vue'
 import {useMainStore} from "@/stores/main.js";
+import http from "@/lib/axios.js";
 
 const layoutAsidePadding = 'xl:pl-60'
 
@@ -34,6 +35,7 @@ const menuClick = (event, item) => {
 
   if (item.isLogout) {
     mainStore.clearStore()
+    http.post('/api/logout', {})
     router.push('/')
   }
 }

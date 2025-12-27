@@ -10,7 +10,7 @@ import FormControl from '@/components/FormControl.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
-import axios from "@/lib/axios.js";
+import http from "@/lib/axios.js";
 import { useMainStore } from "@/stores/main.js";
 
 const form = reactive({
@@ -23,7 +23,7 @@ const router = useRouter()
 const mainStore = useMainStore()
 
 const submit = () => {
-  axios.post('/api/login', {
+  http.post('/api/login', {
     email: form.email,
     password: form.password,
   })
@@ -50,7 +50,7 @@ const submit = () => {
 }
 
 onMounted(async () => {
-  axios.get('/sanctum/csrf-cookie').then(response => {
+  http.get('/sanctum/csrf-cookie').then(response => {
     console.log(response)
   });
 })

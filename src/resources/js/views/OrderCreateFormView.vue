@@ -10,7 +10,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "@/lib/axios.js"
+import http from "@/lib/axios.js"
 import router from "@/router/index.js"
 import CardBoxModal from "@/components/CardBoxModal.vue"
 import DatePicker from '@/components/DatePicker.vue'
@@ -39,7 +39,7 @@ const handleDateChange = async (selectedDates, dateStr) => {
   }
   //isLoading.value = true;
   try {
-    const response = await axios.get(`/api/slots/available/${dateStr}`)
+    const response = await http.get(`/api/slots/available/${dateStr}`)
     timeSlots.value = response.data.data || []
     form.date = dateStr
   } catch (error) {
@@ -78,7 +78,7 @@ const showModal = () => {
 }
 
 const submit = () => {
-  axios.post('/api/order',
+  http.post('/api/order',
     {
       customerEmail: form.customer,
       unitType: form.type,
@@ -99,9 +99,9 @@ const formStatusCurrent = ref(0)
 const formStatusOptions = ['info', 'success', 'danger', 'warning']
 
 onMounted(async () => {
-  const response = await axios.get('/api/customers')
+  const response = await http.get('/api/customers')
   customers.value = response.data.data.map(el => el.email)
-  await axios.get('/api/order')
+  await http.get('/api/order')
     .then((response) => {
       points.value = response.data.data.points.map(el => ({id: el.id, label: el.address}))
       form.customer = customers.value[0]
@@ -125,7 +125,7 @@ const createCustomer = () => {
     phone: customerForm.phone,
   }
 
-  axios.post(endpoint, data)
+  http.post(endpoint, data)
     .then((response) => {
       customers.value.unshift(response.data.data.email)
       form.customer = customers.value[0]

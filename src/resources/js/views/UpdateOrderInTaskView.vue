@@ -10,7 +10,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
-import axios from "@/lib/axios.js";
+import http from "@/lib/axios.js";
 import {OrderStatuses} from "@/constants/Statuses.js";
 import NotificationBar from "@/components/NotificationBar.vue";
 import Multiselect from "vue-multiselect";
@@ -37,7 +37,7 @@ const onUpdateStatus = (order) => {
 }
 
 onMounted(() => {
-  axios.get('/api/tasks')
+  http.get('/api/tasks')
     .then((response) => {
       tasks.value = response.data.data.map(el => ({id: el.uuid, label: el.uuid + ': ' + el.courierName}))
     })
@@ -50,7 +50,7 @@ watch(selectedTask, async (newTask, oldTask) => {
 })
 
 const getOrders = () => {
-  axios.get('/api/orders-by-task/' + selectedTask.value)
+  http.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
       for (const order of response.data.data) {
         showActionButton.value[order.uuid] = true
@@ -62,7 +62,7 @@ const getOrders = () => {
 }
 
 const unassignOrder = (order) => {
-  axios.post('/api/unassign-order', {
+  http.post('/api/unassign-order', {
     orderUuid: order.uuid,
   })
     .then(response => {
@@ -73,7 +73,7 @@ const unassignOrder = (order) => {
 }
 
 const submit = (orderUuid) => {
-  axios.post('/api/update-order-status-in-task',
+  http.post('/api/update-order-status-in-task',
     {
       status: selectedStatus.value[orderUuid],
       orderUuid: orderUuid,
@@ -93,7 +93,7 @@ const orderSelector = ref(false)
 const ordersToAdd = ref([])
 const selectedOrdersToAdd = ref([])
 const showOrderSelector = () => {
-  axios.get('/api/orders-to-assign')
+  http.get('/api/orders-to-assign')
     .then((response) => {
       ordersToAdd.value = response.data.data.map(el => ({id: el.id, label: el.uuid}))
       orderSelector.value = true
@@ -109,7 +109,7 @@ const hideOrderSelector = () => {
 const dismiss = () => error.value = ''
 
 const addOrdersToTask = () => {
-  axios.post('/api/add-orders-to-task', {
+  http.post('/api/add-orders-to-task', {
     taskUuid: selectedTask.value,
     orderUuids: selectedOrdersToAdd.value.map(el => el.label)
   })
