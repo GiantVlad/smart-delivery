@@ -22,7 +22,14 @@ Route::post('register', [ AuthController::class, 'register' ])->name('api.regist
 
 Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder' ]);
 
+// Public routes
 Route::middleware('auth:sanctum')->group(function () {
+    // Centrifugo endpoints
+    Route::get('/centrifugo/connection-token', [ CentrifugoController::class, 'getConnectionToken' ])
+        ->name('centrifugo.connection-token');
+    Route::get('/centrifugo/subscription-token', [ CentrifugoController::class, 'getSubscriptionToken' ])
+        ->name('centrifugo.subscription-token');
+    // User management
     Route::get('users', [ UserController::class, 'list' ])->name('api.users');
 
     Route::get('/order', [ OrderCreateController::class, 'getOrderForm' ]);

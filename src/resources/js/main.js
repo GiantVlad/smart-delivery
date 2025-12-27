@@ -5,6 +5,11 @@ import App from './App.vue'
 import router from './router'
 import { useMainStore } from '@/stores/main.js'
 import './css/main.css'
+// Dark mode
+// Uncomment, if you'd like to restore persisted darkMode setting, or use `prefers-color-scheme: dark`. Make sure to uncomment localStorage block in src/stores/darkMode.js
+import { useDarkModeStore } from './stores/darkMode'
+import CentrifugoPlugin from "@/plugins/centrifugo.js"
+
 
 // Init Pinia
 const pinia = createPinia()
@@ -23,18 +28,17 @@ const app = createApp(App)
 // app.provide('centrifuge', centrifugo);
 
 // Use Pinia
-app.use(pinia)
 //app.provide('centrifuge', centrifuge);
 app.use(router)
   .use(pinia)
+  .use(CentrifugoPlugin, {
+    url: import.meta.env.VITE_CENTRIFUGO_WS_URL
+      || 'ws://localhost:8010/connection/websocket',
+  })
   .mount('#app')
 
 // Init main store
 const mainStore = useMainStore(pinia)
-
-// Dark mode
-// Uncomment, if you'd like to restore persisted darkMode setting, or use `prefers-color-scheme: dark`. Make sure to uncomment localStorage block in src/stores/darkMode.js
-import { useDarkModeStore } from './stores/darkMode'
 
 const darkModeStore = useDarkModeStore(pinia)
 

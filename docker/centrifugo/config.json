@@ -3,8 +3,11 @@
   "admin_password": "d44dd9be-28b5-45fe-93f1-7048a726e106",
   "admin_secret": "d76bc110-45e3-4b26-aede-c791ed4bdfdb",
   "api_key": "10dbef51-68a1-4850-b577-08eaccb7c110",
-  "allowed_origins": [],
   "admin": true,
   "allow_subscribe_for_client": true,
-  "allow_connection_token_auth": true
+  "allow_connection_token_auth": true,
+  "websocket": true,
+  "allowed_origins": [
+    "http://localhost:8000"
+  ]
 }
