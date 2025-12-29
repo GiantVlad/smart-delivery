@@ -1,0 +1,1 @@
+const e={NEW:"new",ACCEPTED:"accepted",ASSIGNED:"assigned",COLLECTED:"collected",DELIVERED:"delivered",CANCELED:"canceled"},E={READY:"ready",ON_TASK:"on_task",ON_HOLD:"on_hold",NOT_WORKING:"not_working"};export{E as C,e as O};
