@@ -39,7 +39,7 @@ const submit = () => {
   http.post('/api/task',
     {
       date: form.date,
-      courierUuid: form.courier?.id,
+      courierUuid: form.courier.uuid,
       orderUuids: form.orders.map(el => el.label),
     })
     .then((response) => {
