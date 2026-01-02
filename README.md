@@ -1,8 +1,9 @@
 # Smart Delivery Service
 
 [Demo](https://delivery.cloud-workflow.com)
+admin@cloud-workflow.com:secret123
 
-php-8.3, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
+php-8.4, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
 
 ```sh
 cp .env.example .env
