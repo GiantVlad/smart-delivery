@@ -39,8 +39,8 @@ const submit = () => {
   http.post('/api/task',
     {
       date: form.date,
-      courierUuid: form.courier.uuid,
-      orderUuids: form.orders.map(el => el.label),
+      courierUuid: form.courier?.id || null,
+      orderUuids: Array.from(form.selectedOrders).map(el => el.label),
     })
     .then((response) => {
       router.push({ path: 'tasks' })
@@ -130,7 +130,11 @@ const formStatusSubmit = () => {
         <BaseDivider />
 
         <FormField label="Couriers">
-          <FormControl v-model="form.courier" :options="couriers"/>
+          <FormControl
+            v-model="form.courier"
+            :options="couriers"
+            :option-label="el => el.label"
+            :option-value="el => el.id"/>
         </FormField>
 
         <FormField label="Orders">

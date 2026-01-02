@@ -1,1 +1,0 @@
-import{A as t,x as s,b as o,s as r}from"./main-Bc7IcVbN.js";const n={},a={class:"text-center py-24 text-gray-500 dark:text-slate-400"};function c(p,e){return o(),s("div",a,[...e[0]||(e[0]=[r("p",null,"Nothing's here…",-1)])])}const _=t(n,[["render",c]]);export{_ as C};
