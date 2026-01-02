@@ -3,11 +3,12 @@ import { useMainStore } from "@/stores/main";
 import { useRouter } from "vue-router";
 
 const http = axiosLib.create({
-  // baseURL: "http://localhost:8000",
+  baseURL: "https://delivery.cloud-workflow.com",
   timeout: 60000,
   withCredentials: true,
   xsrfCookieName: "XSRF-TOKEN",
   xsrfHeaderName: "X-XSRF-TOKEN",
+  withXSRFToken: true,
   headers: {
     Accept: "application/json"
   }

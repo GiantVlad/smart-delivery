@@ -2,7 +2,7 @@
 
 [Demo](https://delivery.cloud-workflow.com)
 
-php-8.3, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
+php-8.4, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
 
 ```sh
 cp .env.example .env
@@ -10,6 +10,28 @@ cp .env.example .env
 cp src/.env.example src/.env 
 ``` 
 Change your real passwords, keys and other credentials for example centrifugo config
+To install dependencies for first time run:
+```sh
+cd src
+sudo docker run --rm \
+    -v $(pwd):/app \
+    -w /app \
+    composer:2 \
+    composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-sockets
+```
+
+In production environment use nginx in front of roadrunner. To obtain SSL certificates run:
+```
+docker compose run --rm certbot certonly \
+  --webroot \
+  --webroot-path=/var/www/certbot \
+  --email hofirma@gmail.com \
+  --agree-tos \
+  --no-eff-email \
+  -d delivery.cloud-workflow.com \
+  -d www.delivery.cloud-workflow.com
+```
+
 ```
 docker compose up -d
 

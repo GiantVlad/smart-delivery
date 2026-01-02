@@ -8,6 +8,6 @@
   "allow_connection_token_auth": true,
   "websocket": true,
   "allowed_origins": [
-    "http://localhost:8000"
+    "https://delivery.cloud-workflow.com"
   ]
 }

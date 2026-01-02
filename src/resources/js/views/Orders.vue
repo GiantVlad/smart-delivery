@@ -136,9 +136,6 @@ const statuses = computed(() => {
 })
 
 onMounted(() => {
-  http.defaults.baseURL = 'http://localhost:8000';
-  http.defaults.withCredentials = true;
-  http.defaults.withXSRFToken = true;
   http.get('/api/orders')
     .then((response) => {
       orders.value = response.data.data
