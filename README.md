@@ -6,8 +6,8 @@ php-8.4, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
 
 ```sh
 cp .env.example .env
-
 cp src/.env.example src/.env 
+cp docker/centrifugo/config.json.example docker/centrifugo/config.json
 ``` 
 Change your real passwords, keys and other credentials for example centrifugo config
 To install dependencies for first time run:
@@ -50,6 +50,14 @@ cd src
 npm install
 npm run build
 ```
+Populate default slots in the DB, for example:
+id|from |to   |capacity|available
+1 |8:00 |12:00|10      |10
+2 |12:00|16:00|15      |15
+3 |16:00|20:00|8       |8
+4 |20:00|23:59|4       |4
+
+
 
 to stop status handler:
 ```

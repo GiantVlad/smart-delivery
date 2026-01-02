@@ -5,8 +5,6 @@
   "api_key": "10dbef51-68a1-4850-b577-08eaccb7c110",
   "admin": true,
   "allow_subscribe_for_client": true,
-  "allow_connection_token_auth": true,
-  "websocket": true,
   "allowed_origins": [
     "https://delivery.cloud-workflow.com"
   ]
