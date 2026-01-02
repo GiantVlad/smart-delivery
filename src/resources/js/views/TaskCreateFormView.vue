@@ -12,7 +12,6 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import http from "@/lib/axios.js";
 import router from "@/router/index.js";
-import Multiselect from "vue-multiselect";
 import {useOrderStatusStore} from "@/stores/orderStatus.js";
 
 const couriers = ref([])
@@ -39,7 +38,7 @@ const submit = () => {
   http.post('/api/task',
     {
       date: form.date,
-      courierUuid: form.courier.uuid,
+      courierUuid: form.courier,
       orderUuids: form.orders.map(el => el.label),
     })
     .then((response) => {
@@ -130,7 +129,11 @@ const formStatusSubmit = () => {
         <BaseDivider />
 
         <FormField label="Couriers">
-          <FormControl v-model="form.courier" :options="couriers"/>
+          <FormControl
+            v-model="form.courier"
+            :options="couriers"
+            value-prop="id"
+          />
         </FormField>
 
         <FormField label="Orders">
