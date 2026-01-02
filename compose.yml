@@ -13,6 +13,7 @@ services:
       - smart-l
     depends_on:
       - roadrunner
+      - centrifugo
 
   certbot:
     image: certbot/certbot
@@ -156,7 +157,7 @@ services:
     container_name: centrifugo
     image: centrifugo/centrifugo:v5
     volumes:
-      - ./docker/centrifugo/config.json.example:/centrifugo/config.json.example
+      - ./docker/centrifugo/config.json:/centrifugo/config.json
     command: centrifugo -c config.json.example
     ports:
       - 8010:8000
