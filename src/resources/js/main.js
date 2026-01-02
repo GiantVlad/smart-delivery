@@ -33,7 +33,7 @@ app.use(router)
   .use(pinia)
   .use(CentrifugoPlugin, {
     url: import.meta.env.VITE_CENTRIFUGO_WS_URL
-      || 'ws://localhost:8010/connection/websocket',
+      || 'wss://delivery.cloud-workflow.com/connection/websocket',
   })
   .mount('#app')
 
