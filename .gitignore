@@ -7,7 +7,7 @@ vendor
 .env.prod
 .env.testing
 *.log
-
+certbot/*
 /.phpunit.result.cache
 .mysql
 ssl/*
