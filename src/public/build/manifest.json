@@ -1,13 +1,13 @@
 {
-  "_CardBoxComponentEmpty-D3MwJ40j.js": {
-    "file": "assets/CardBoxComponentEmpty-D3MwJ40j.js",
+  "_CardBoxComponentEmpty-B0oGoOfW.js": {
+    "file": "assets/CardBoxComponentEmpty-B0oGoOfW.js",
     "name": "CardBoxComponentEmpty",
     "imports": [
       "resources/js/main.js"
     ]
   },
-  "_CardBoxModal-D6nuNGwa.js": {
-    "file": "assets/CardBoxModal-D6nuNGwa.js",
+  "_CardBoxModal-glc4SFCl.js": {
+    "file": "assets/CardBoxModal-glc4SFCl.js",
     "name": "CardBoxModal",
     "imports": [
       "resources/js/main.js"
@@ -17,8 +17,8 @@
     "file": "assets/Statuses-BSKbIDnF.js",
     "name": "Statuses"
   },
-  "_vue-multiselect.esm-BobPWcYh.js": {
-    "file": "assets/vue-multiselect.esm-BobPWcYh.js",
+  "_vue-multiselect.esm-BZXF-xii.js": {
+    "file": "assets/vue-multiselect.esm-BZXF-xii.js",
     "name": "vue-multiselect.esm",
     "imports": [
       "resources/js/main.js"
@@ -34,7 +34,7 @@
     ]
   },
   "resources/js/main.js": {
-    "file": "assets/main-C4FrbGDd.js",
+    "file": "assets/main-qkurcB6_.js",
     "name": "main",
     "src": "resources/js/main.js",
     "isEntry": true,
@@ -53,7 +53,7 @@
     ]
   },
   "resources/js/views/CourierWorkingHours.vue": {
-    "file": "assets/CourierWorkingHours-DbguvDcV.js",
+    "file": "assets/CourierWorkingHours-DNnjvIGO.js",
     "name": "CourierWorkingHours",
     "src": "resources/js/views/CourierWorkingHours.vue",
     "isDynamicEntry": true,
@@ -62,18 +62,18 @@
     ]
   },
   "resources/js/views/Couriers.vue": {
-    "file": "assets/Couriers-RrshxJ-e.js",
+    "file": "assets/Couriers-CcK8eUhG.js",
     "name": "Couriers",
     "src": "resources/js/views/Couriers.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_CardBoxModal-D6nuNGwa.js",
+      "_CardBoxModal-glc4SFCl.js",
       "_Statuses-BSKbIDnF.js"
     ]
   },
   "resources/js/views/EditRouteView.vue": {
-    "file": "assets/EditRouteView-BQqWiiPy.js",
+    "file": "assets/EditRouteView-pv6ewf4G.js",
     "name": "EditRouteView",
     "src": "resources/js/views/EditRouteView.vue",
     "isDynamicEntry": true,
@@ -82,60 +82,60 @@
     ]
   },
   "resources/js/views/OrderCreateFormView.vue": {
-    "file": "assets/OrderCreateFormView-CP0uGY3v.js",
+    "file": "assets/OrderCreateFormView-B4WlzHUC.js",
     "name": "OrderCreateFormView",
     "src": "resources/js/views/OrderCreateFormView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_CardBoxModal-D6nuNGwa.js"
+      "_CardBoxModal-glc4SFCl.js"
     ],
     "css": [
       "assets/OrderCreateFormView-BsjuKcJZ.css"
     ]
   },
   "resources/js/views/Orders.vue": {
-    "file": "assets/Orders-DNAdqKJT.js",
+    "file": "assets/Orders-BliweQqS.js",
     "name": "Orders",
     "src": "resources/js/views/Orders.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_CardBoxComponentEmpty-D3MwJ40j.js"
+      "_CardBoxComponentEmpty-B0oGoOfW.js"
     ]
   },
   "resources/js/views/TaskCreateFormView.vue": {
-    "file": "assets/TaskCreateFormView-D-D_Y3Z1.js",
+    "file": "assets/TaskCreateFormView-ezCx-YMt.js",
     "name": "TaskCreateFormView",
     "src": "resources/js/views/TaskCreateFormView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_vue-multiselect.esm-BobPWcYh.js"
+      "_vue-multiselect.esm-BZXF-xii.js"
     ],
     "css": [
       "assets/TaskCreateFormView-DIn9qltL.css"
     ]
   },
   "resources/js/views/Tasks.vue": {
-    "file": "assets/Tasks-BOyeFdYC.js",
+    "file": "assets/Tasks-D6qQSNug.js",
     "name": "Tasks",
     "src": "resources/js/views/Tasks.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_CardBoxComponentEmpty-D3MwJ40j.js"
+      "_CardBoxComponentEmpty-B0oGoOfW.js"
     ]
   },
   "resources/js/views/UpdateOrderInTaskView.vue": {
-    "file": "assets/UpdateOrderInTaskView-DYPCMlUk.js",
+    "file": "assets/UpdateOrderInTaskView-Dj2xnVVy.js",
     "name": "UpdateOrderInTaskView",
     "src": "resources/js/views/UpdateOrderInTaskView.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
       "_Statuses-BSKbIDnF.js",
-      "_vue-multiselect.esm-BobPWcYh.js"
+      "_vue-multiselect.esm-BZXF-xii.js"
     ],
     "css": [
       "assets/TaskCreateFormView-DIn9qltL.css"

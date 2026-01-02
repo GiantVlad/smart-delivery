@@ -32,8 +32,7 @@ const app = createApp(App)
 app.use(router)
   .use(pinia)
   .use(CentrifugoPlugin, {
-    url: import.meta.env.VITE_CENTRIFUGO_WS_URL
-      || 'wss://delivery.cloud-workflow.com/connection/websocket',
+    url: 'wss://delivery.cloud-workflow.com/connection/websocket',
   })
   .mount('#app')
 
