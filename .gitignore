@@ -12,3 +12,4 @@ vendor
 .mysql
 ssl/*
 src/appdb
+src/bootstrap/cache

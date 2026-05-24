@@ -63,7 +63,7 @@ id|from |to   |capacity|available
 
 to stop status handler:
 ```
-docker compose exec roadrunner php artisan wf-status-handler:stop <workflow_id>
+docker compose exec roadrunner php artisan wf-status-handler:stop workflow-status-handler-v1
 ```
 
 Services:

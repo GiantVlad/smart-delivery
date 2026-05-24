@@ -9,54 +9,80 @@
 
 declare(strict_types=1);
 
+// Include Composer's autoloader
+require __DIR__ . '/vendor/autoload.php';
+
 use App\Temporal\DeclarationLocator;
 use Laravel\Octane\ApplicationFactory;
 use Temporal\Interceptor\SimplePipelineProvider;
-// use Temporal\OpenTelemetry\Interceptor\OpenTelemetryActivityInboundInterceptor;
-// use Temporal\OpenTelemetry\Interceptor\OpenTelemetryWorkflowOutboundRequestInterceptor;
-// use Temporal\SampleUtils\TracerFactory;
 use Temporal\WorkerFactory;
-// use Temporal\FileProcessing;
 
-ini_set('display_errors', 'stderr');
-include "vendor/autoload.php";
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+ini_set('log_errors', '1');
+ini_set('error_log', 'php://stderr');
 
-// finds all available workflows, activity types and commands in a given directory
-$declarations = DeclarationLocator::create(__DIR__ . '/app/Temporal/');
+// Log startup
+error_log("Starting Temporal worker...");
 
-// factory initiates and runs task queue specific activity and workflow workers
-$factory = WorkerFactory::create();
+try {
+    // finds all available workflows, activity types and commands in a given directory
+    $declarations = new DeclarationLocator(__DIR__ . '/app/Temporal/');
 
-// OpenTelemetry tracer
-// $tracer = TracerFactory::create('interceptors-sample-worker');
+    // Convert generators to arrays to avoid multiple iterations
+    $workflowTypes = iterator_to_array($declarations->getWorkflowTypes());
+    $activityTypes = iterator_to_array($declarations->getActivityTypes());
 
-// Worker that listens on a task queue and hosts both workflow and activity implementations.
-$worker = $factory->newWorker(interceptorProvider: new SimplePipelineProvider([
-    //new OpenTelemetryActivityInboundInterceptor($tracer),
-    //new OpenTelemetryWorkflowOutboundRequestInterceptor($tracer)
-]));
+    error_log("Found " . count($workflowTypes) . " workflow types");
+    error_log("Found " . count($activityTypes) . " activity types");
 
-foreach ($declarations->getWorkflowTypes() as $workflowType) {
-    // Workflows are stateful. So you need a type to create instances.
-    $worker->registerWorkflowTypes($workflowType);
+    // factory initiates and runs task queue specific activity and workflow workers
+    $factory = WorkerFactory::create();
+    $worker = $factory->newWorker(interceptorProvider: new SimplePipelineProvider([]));
+
+    // Register workflows
+    $registeredWorkflows = [];
+    foreach ($workflowTypes as $workflowType) {
+        // Skip TaskWorkflow as it's a duplicate of CreateTaskWorkflow
+        if (str_contains($workflowType, 'TaskWorkflow') && $workflowType !== 'App\\Temporal\\CreateTaskWorkflow') {
+            error_log("[SKIP] Skipping duplicate workflow: $workflowType");
+            continue;
+        }
+
+        if (in_array($workflowType, $registeredWorkflows)) {
+            error_log("[WARN] Duplicate workflow found: $workflowType");
+            continue;
+        }
+
+        error_log("[INFO] Registering workflow: $workflowType");
+        $registeredWorkflows[] = $workflowType;
+        $worker->registerWorkflowTypes($workflowType);
+    }
+
+    // Initialize Laravel application
+    error_log("Initializing Laravel application...");
+    $basePath = require '/app/vendor/laravel/octane/bin/bootstrap.php';
+    $appFactory = new ApplicationFactory($basePath);
+    $app = $appFactory->createApplication();
+
+    // Register activities
+    $registeredActivities = [];
+    foreach ($activityTypes as $activityType) {
+        if (in_array($activityType, $registeredActivities)) {
+            error_log("[WARN] Duplicate activity found: $activityType");
+            continue;
+        }
+        error_log("[INFO] Registering activity: $activityType");
+        $registeredActivities[] = $activityType;
+        $worker->registerActivity($activityType);
+    }
+
+    error_log("Starting worker...");
+    $factory->run();
+    error_log("Worker started successfully");
+} catch (\Throwable $e) {
+    error_log("FATAL ERROR: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
+    throw $e;
 }
-
-$basePath = require '/app/vendor/laravel/octane/bin/bootstrap.php';
-$appFactory = new ApplicationFactory($basePath);
-$app = $appFactory->createApplication();
-
-foreach ($declarations->getActivityTypes() as $activityType) {
-    // Activities are stateless and thread safe. So a shared instance is used.
-    $worker->registerActivity($activityType);
-}
-
-// We can use task queue for more complex task routing, for example our FileProcessing
-// activity will receive unique, host specific, TaskQueue which can be used to process
-// files locally.
-// $hostTaskQueue = gethostname();
-
-//$factory->newWorker($hostTaskQueue)
-//    ->registerActivityImplementations(new FileProcessing\StoreActivity($hostTaskQueue));
-
-// start primary loop
-$factory->run();
