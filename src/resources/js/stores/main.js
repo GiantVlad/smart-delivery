@@ -49,7 +49,7 @@ export const useMainStore = defineStore('main', () => {
     if (payload.email) {
       userEmail.value = payload.email
     }
-    isAuthenticated.value = userEmail.value && userName.value
+    isAuthenticated.value = Boolean(userEmail.value && userName.value)
   }
 
   watch (

@@ -87,13 +87,60 @@ Main flow (high-level):
 ## API and Auth Notes
 - API routes are in `src/routes/api.php`.
 - Uses Sanctum-protected route groups for most business endpoints.
-- Login/register/logout endpoints exist.
+- Login/logout endpoints exist.
+- Public registration endpoint is intentionally disabled.
+- User creation is available only for authenticated users via `POST /api/users` (manual/admin-driven creation flow).
 - Includes endpoints for:
   - orders and assignment
   - tasks and route updates
   - courier management and schedules
   - slots management
   - centrifugo token generation
+
+## Business Flow to Code Map
+- Main pages and router definitions:
+  - Dashboard: `src/resources/js/views/HomeView.vue`, route name `dashboard` in `src/resources/js/router/index.js`
+  - Orders: `src/resources/js/views/Orders.vue`, route name `orders`
+  - Tasks: `src/resources/js/views/Tasks.vue`, route name `tasks`
+  - Edit Route: `src/resources/js/views/EditRouteView.vue`, route name `edit-route`
+
+- Customer creates delivery order from point A to point B:
+  - UI: `src/resources/js/views/OrderCreateFormView.vue`
+  - API: `POST /api/order` in `src/routes/api.php`
+  - Controller: `App\\Http\\Controllers\\OrderCreateController::createOrder`
+  - Workflow trigger: `CreateOrderWorkflowInterface` (Temporal)
+  - Order includes `startPointId` (pickup), `endPointId` (destination), date, and time slot (`slotId` -> `from`/`to`)
+
+- Agent/driver delivers multiple orders (task assignment):
+  - Task creation UI with selectable orders/courier: `src/resources/js/views/TaskCreateFormView.vue`
+  - Task create API: `POST /api/task` -> `TaskController::createTask`
+  - Order assignment/unassignment inside task:
+    - UI: `src/resources/js/views/UpdateOrderInTaskView.vue`
+    - APIs: `POST /api/add-orders-to-task`, `POST /api/unassign-order`
+    - Controller: `OrderController`
+    - Workflows: `AssignOrderWorkflowInterface`, `UnassignOrderWorkflowInterface`
+  - Guardrail: `OrdersCanBeAddedRule` prevents adding orders already assigned to a task.
+
+- Route editing and pickup/delivery sequence:
+  - UI: `src/resources/js/views/EditRouteView.vue`
+  - Data load:
+    - Task list: `GET /api/tasks`
+    - Orders by task: `GET /api/orders-by-task/{taskUuid}`
+    - Route points: `GET /api/route/{taskUuid}`
+  - Save route order:
+    - API: `POST /api/update-route`
+    - Controller: `RouteController::updateRoute`
+    - Workflow: `UpdateRouteWorkflowInterface` -> `UpdateRoteActivity::updateRoute`
+  - Validation:
+    - Request class: `EditRouteRequest`
+    - Rule: `FirstLastRouteRule`
+    - Enforces first point must be one of assigned orders' pickup points and last point must be one of assigned orders' delivery points.
+  - Frontend also provides immediate visual checks for invalid first/last route points in `EditRouteView.vue`.
+
+- Route point semantics:
+  - Enum: `src/app/Enums/RoutePointTypeEnum.php`
+  - Types include pickup/start and delivery/finish variants (`START`, `FINISH`, `INTERMEDIATE`).
+  - Resource returned to UI: `RouteResource` (`pointId`, `pointAddress`, `sequence`, `type`).
 
 ## Build and Run
 Backend dependencies:
@@ -132,4 +179,3 @@ Typical local flow:
 - Repository currently includes built frontend artifacts under `src/public/build/`.
 - Repository currently includes installed dependencies folders (`src/vendor/`, `src/node_modules/`) in workspace.
 - `.agents/` and `.codex/` directories exist but are read-only in current filesystem state.
-
