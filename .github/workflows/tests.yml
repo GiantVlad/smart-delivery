@@ -11,12 +11,15 @@ jobs:
   php-tests:
     name: PHPUnit (${{ matrix.suite }})
     runs-on: ubuntu-latest
+    container:
+      image: gaintvlad/php84-grpc-rrunner:v2025.1.6
     strategy:
       fail-fast: false
       matrix:
         suite: [Unit, Integration, Feature]
     env:
       APP_ENV: testing
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       DB_CONNECTION: sqlite
       DB_DATABASE: ":memory:"
       CACHE_STORE: array
@@ -28,13 +31,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.4"
-          extensions: pdo_sqlite
-          coverage: none
 
       - name: Prepare Laravel writable directories
         run: |
