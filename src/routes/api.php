@@ -17,6 +17,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkingTimeController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/health', static fn () => response()->json([
+    'status' => 'ok',
+    'timestamp' => now()->toIso8601String(),
+]))->name('api.health');
+
 Route::post('login', [AuthController::class, 'login'])->name('api.login');
 
 Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
