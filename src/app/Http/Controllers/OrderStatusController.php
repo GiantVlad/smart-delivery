@@ -51,9 +51,9 @@ class OrderStatusController extends Controller
         $task = Order::whereUuid($orderUuid)->first()->task;
 
         if (in_array(
-                OrderStatusEnum::tryFrom($status),
-                [OrderStatusEnum::DELIVERED, OrderStatusEnum::CANCELED],
-                true)
+            OrderStatusEnum::tryFrom($status),
+            [OrderStatusEnum::DELIVERED, OrderStatusEnum::CANCELED],
+            true)
             && $orderStatusDomain->isOneOrderLeft($task)
         ) {
             $workflow = $this->workflowClient->newWorkflowStub(

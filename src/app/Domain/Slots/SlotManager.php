@@ -5,8 +5,8 @@ namespace App\Domain\Slots;
 use App\Dto\SlotDto;
 use App\Exceptions\GeneralDomainException;
 use App\Models\Slot;
-use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +17,7 @@ class SlotManager
         $slots = [];
         $start = new \DateTime(Config::get('settings.working_hours')['from']);
         $end = new \DateTime(Config::get('settings.working_hours')['to']);
-        $interval = new \DateInterval('PT'. Config::get('settings.slot_duration') .'M');
+        $interval = new \DateInterval('PT'.Config::get('settings.slot_duration').'M');
 
         $current = clone $start;
 
@@ -37,6 +37,7 @@ class SlotManager
         if ($slots->isEmpty()) {
             return $this->cloneDefaultSlotsForDate($date);
         }
+
         return $slots->where('available', '>', 0);
     }
 
@@ -88,7 +89,7 @@ class SlotManager
             ];
         }
 
-        if (!empty($newSlots)) {
+        if (! empty($newSlots)) {
             DB::transaction(function () use ($newSlots, $date) {
                 Slot::where('date', $date->toDateString())->delete();
                 Slot::insert($newSlots);

@@ -28,7 +28,7 @@ class StopStatusHandlerWorkflow extends Command
     public function handle(WorkflowClientInterface $workflowClient): void
     {
         try {
-            $this->info("Finishing <comment>OrderStatusHandlerWorkflow</comment>... ");
+            $this->info('Finishing <comment>OrderStatusHandlerWorkflow</comment>... ');
 
             $workflow = $workflowClient->newRunningWorkflowStub(
                 OrderStatusHandlerWorkflowInterface::class,

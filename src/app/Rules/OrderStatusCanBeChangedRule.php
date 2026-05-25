@@ -47,7 +47,7 @@ class OrderStatusCanBeChangedRule implements DataAwareRule, ValidationRule
         $order = Order::whereUuid($value)->first();
         $canBeChangedTo = OrderStatusEnum::canBeChangedTo(OrderStatusEnum::tryFrom($order->status));
         if (! in_array(OrderStatusEnum::tryFrom($this->status), $canBeChangedTo, true)) {
-            $fail("The order with status $order->status can not be changed to " . $this->status);
+            $fail("The order with status $order->status can not be changed to ".$this->status);
         }
     }
 }

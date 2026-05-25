@@ -31,7 +31,7 @@ class CreateWorkingHoursRequest extends FormRequest
                     if ($exists) {
                         $fail('Working hours for this courier on the selected day already exist.');
                     }
-                }
+                },
             ],
             'day' => ['required', new Enum(WeekDaysEnum::class)],
             'from' => ['required', 'string', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],

@@ -28,7 +28,7 @@ class EditRouteRequest extends FormRequest
                 'required',
                 'array',
                 'min:1',
-                (new FirstLastRouteRule())->setData(['taskUuid' => $this->taskUuid]),
+                (new FirstLastRouteRule)->setData(['taskUuid' => $this->taskUuid]),
             ],
         ];
     }

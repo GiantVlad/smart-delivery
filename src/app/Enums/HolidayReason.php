@@ -11,7 +11,7 @@ enum HolidayReason: int
 
     public static function getLabel(self $value): string
     {
-        return match($value) {
+        return match ($value) {
             self::VACATION => 'Vacation',
             self::SICK_LEAVE => 'Sick Leave',
             self::DAY_OFF => 'Day Off',

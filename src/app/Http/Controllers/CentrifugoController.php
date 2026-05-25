@@ -20,32 +20,31 @@ class CentrifugoController extends Controller
         /** @var User|null $user */
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'Unauthenticated'], 401);
         }
 
         $info = [
             'name' => $user->name,
             'email' => $user->email,
-            'roles' => $user->getRoleNames()->toArray()
+            'roles' => $user->getRoleNames()->toArray(),
         ];
 
         $token = $this->centrifugo->generateConnectionToken(
             (string) $user->id,
-            time() + config('broadcasting.centrifugo.token_expire_time', 3600*5), // 1 hour by default
+            time() + config('broadcasting.centrifugo.token_expire_time', 3600 * 5), // 1 hour by default
             $info
         );
 
         return response()->json([
             'token' => $token,
-            'expires_in' => config('broadcasting.centrifugo.token_expire_time', 3600*5)
+            'expires_in' => config('broadcasting.centrifugo.token_expire_time', 3600 * 5),
         ]);
     }
 
     /**
      * Generate a subscription token for a private channel.
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getSubscriptionToken(Request $request)
@@ -53,7 +52,7 @@ class CentrifugoController extends Controller
         $user = Auth::user();
         $channel = $request->input('channel');
 
-        if (!$user || !$channel) {
+        if (! $user || ! $channel) {
             return response()->json(['error' => 'Unauthenticated or invalid channel'], 401);
         }
 
@@ -68,7 +67,7 @@ class CentrifugoController extends Controller
         return response()->json([
             'token' => $token,
             'channel' => $channel,
-            'expires_in' => config('broadcasting.centrifugo.token_expire_time', 3600)
+            'expires_in' => config('broadcasting.centrifugo.token_expire_time', 3600),
         ]);
     }
 }

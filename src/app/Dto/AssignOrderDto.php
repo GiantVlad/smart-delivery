@@ -12,6 +12,5 @@ class AssignOrderDto extends Data
         public array $orderCustomerUuids,
         public string $taskUuid,
         public string $courierUuid,
-    ) {
-    }
+    ) {}
 }

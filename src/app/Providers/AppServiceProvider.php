@@ -11,7 +11,7 @@ use Temporal\Client\WorkflowClientInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register ()
+    public function register()
     {
         $this->app->singleton(
             WorkflowClientInterface::class,
@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
             )
         );
     }
+
     /**
      * Bootstrap any application services.
      */

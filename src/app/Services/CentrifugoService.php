@@ -18,11 +18,6 @@ class CentrifugoService
 
     /**
      * Generate a connection token for a user.
-     *
-     * @param string $userId
-     * @param array $info
-     * @param int $ttl
-     * @return string
      */
     public function generateConnectionToken(string $userId, array $info = [], int $ttl = 3600): string
     {
@@ -37,10 +32,6 @@ class CentrifugoService
 
     /**
      * Generate a subscription token for a private channel.
-     *
-     * @param string $channel
-     * @param int $ttl
-     * @return string
      */
     public function generateSubscriptionToken(string $channel, int $ttl = 3600): string
     {

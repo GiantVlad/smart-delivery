@@ -10,6 +10,7 @@ use Temporal\Client\ScheduleClientInterface;
 use Temporal\Client\WorkflowClient;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Interceptor\SimplePipelineProvider;
+
 // use Temporal\OpenTelemetry\Interceptor\OpenTelemetryWorkflowClientCallsInterceptor;
 
 class Command extends \Symfony\Component\Console\Command\Command
@@ -29,6 +30,7 @@ class Command extends \Symfony\Component\Console\Command\Command
     protected const ARGUMENTS = [];
 
     protected WorkflowClientInterface $workflowClient;
+
     protected ScheduleClientInterface $scheduleClient;
 
     /**
@@ -41,7 +43,7 @@ class Command extends \Symfony\Component\Console\Command\Command
         $this->workflowClient = WorkflowClient::create(
             serviceClient: $serviceClient,
             interceptorProvider: new SimplePipelineProvider([
-                //new OpenTelemetryWorkflowClientCallsInterceptor(TracerFactory::create('interceptors-sample-client')),
+                // new OpenTelemetryWorkflowClientCallsInterceptor(TracerFactory::create('interceptors-sample-client')),
             ])
         );
         $this->scheduleClient = ScheduleClient::create($serviceClient);
@@ -66,8 +68,6 @@ class Command extends \Symfony\Component\Console\Command\Command
 
     /**
      * Define command options.
-     *
-     * @return array
      */
     protected function defineOptions(): array
     {
@@ -76,8 +76,6 @@ class Command extends \Symfony\Component\Console\Command\Command
 
     /**
      * Define command arguments.
-     *
-     * @return array
      */
     protected function defineArguments(): array
     {
@@ -85,7 +83,6 @@ class Command extends \Symfony\Component\Console\Command\Command
     }
 
     /**
-     * @param string $class
      * @return static
      */
     public static function create(string $class, ServiceClient $client): self

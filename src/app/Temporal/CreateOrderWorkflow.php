@@ -14,7 +14,9 @@ use Temporal\Workflow;
 class CreateOrderWorkflow implements CreateOrderWorkflowInterface
 {
     private $createOrderActivity;
+
     private $createOrderErpActivity;
+
     private $notifyActivity;
 
     public function __construct()

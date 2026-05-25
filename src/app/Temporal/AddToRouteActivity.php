@@ -8,9 +8,6 @@ use App\Enums\RoutePointTypeEnum;
 use App\Models\Route;
 use App\Models\Task;
 use Illuminate\Support\Collection;
-use Temporal\Activity;
-use Temporal\Client\WorkflowOptions;
-use Temporal\Exception\IllegalStateException;
 
 class AddToRouteActivity implements AddToRouteActivityInterface
 {
@@ -37,6 +34,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
                 && $route->point_type !== RoutePointTypeEnum::FINISH->value
             ) {
                 $startPointId = null;
+
                 continue;
             }
             if ($endPointId
@@ -48,7 +46,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
         }
 
         if ($startPointId !== null) {
-            $route = new Route();
+            $route = new Route;
             $route->point_type = RoutePointTypeEnum::START->value;
             $route->point_id = $startPointId;
             $route->sequence = $lastStart;
@@ -57,7 +55,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
         }
 
         if ($endPointId !== null) {
-            $route = new Route();
+            $route = new Route;
             $route->point_type = RoutePointTypeEnum::FINISH->value;
             $route->point_id = $endPointId;
             $route->sequence = $lastFinish;

@@ -12,10 +12,12 @@ use Temporal\Workflow;
 class OrderStatusHandlerWorkflow implements OrderStatusHandlerWorkflowInterface
 {
     private $updateOrderActivity;
+
     /**
      * @var array|string[]
      */
     private array $input = [];
+
     private bool $exit = false;
 
     public function __construct()
@@ -36,7 +38,7 @@ class OrderStatusHandlerWorkflow implements OrderStatusHandlerWorkflowInterface
     public function run(): \Generator
     {
         while (true) {
-            yield Workflow::await(fn() => $this->input !== [] || $this->exit);
+            yield Workflow::await(fn () => $this->input !== [] || $this->exit);
             if ($this->exit) {
                 return;
             }
@@ -50,7 +52,7 @@ class OrderStatusHandlerWorkflow implements OrderStatusHandlerWorkflowInterface
 
     public function updateStatus(string $orderUuid, string $status): void
     {
-        $this->input = ['orderUuid' => $orderUuid, 'status' => $status,];
+        $this->input = ['orderUuid' => $orderUuid, 'status' => $status];
     }
 
     public function exit(): void

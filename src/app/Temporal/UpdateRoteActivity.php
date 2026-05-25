@@ -7,9 +7,6 @@ namespace App\Temporal;
 use App\Models\Route;
 use App\Models\Task;
 use Illuminate\Support\Collection;
-use Temporal\Activity;
-use Temporal\Client\WorkflowOptions;
-use Temporal\Exception\IllegalStateException;
 
 class UpdateRoteActivity implements UpdateRouteActivityInterface
 {

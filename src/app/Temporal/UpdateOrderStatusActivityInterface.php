@@ -10,7 +10,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'UpdateOrderStatusActivity.')]
 interface UpdateOrderStatusActivityInterface
 {
-    #[ActivityMethod(name: "UpdateOrderStatus")]
+    #[ActivityMethod(name: 'UpdateOrderStatus')]
     public function updateOrderStatus(
         string $orderUuid,
         string $status,

@@ -12,9 +12,9 @@ use Temporal\Activity\ActivityMethod;
 interface NotifyCourierActivityInterface
 {
     /**
-     * @param class-string<Notification> $notificationClass
+     * @param  class-string<Notification>  $notificationClass
      */
-    #[ActivityMethod(name: "NotifyCourier")]
+    #[ActivityMethod(name: 'NotifyCourier')]
     public function notifyCourier(
         string $courierUuid,
         string $taskUuid,

@@ -10,7 +10,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'CreateOrderErpActivity.')]
 interface CreateOrderErpActivityInterface
 {
-    #[ActivityMethod(name: "CreateOrderInErp")]
+    #[ActivityMethod(name: 'CreateOrderInErp')]
     public function createOrderInErp(
         string $orderUuid,
     ): string;

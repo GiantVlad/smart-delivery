@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-
 use App\Dto\TaskDto;
 use App\Enums\CourierStatusEnum;
 use App\Notifications\TaskFinishedNotification;
@@ -12,11 +11,11 @@ use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\Workflow;
-use Temporal\Workflow\WorkflowExecution;
 
 class TaskFinishWorkflow implements TaskFinishWorkflowInterface
 {
     private $taskFinishActivity;
+
     private $notifyTaskActivity;
 
     public function __construct()

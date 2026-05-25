@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class WorkingHour extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'courier_id',
         'date',

@@ -11,7 +11,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'CreateOrderActivity.')]
 interface CreateOrderActivityInterface
 {
-    #[ActivityMethod(name: "CreateOrder")]
+    #[ActivityMethod(name: 'CreateOrder')]
     public function createOrder(
         OrderDto $orderDto
     ): string;

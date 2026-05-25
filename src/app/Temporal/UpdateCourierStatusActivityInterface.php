@@ -10,8 +10,8 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'UpdateCourierStatusActivity.')]
 interface UpdateCourierStatusActivityInterface
 {
-    #[ActivityMethod(name: "UpdateCourierStatus")]
-    public function updateCourierStatus (
+    #[ActivityMethod(name: 'UpdateCourierStatus')]
+    public function updateCourierStatus(
         string $courierUuid,
         string $status,
     ): string;

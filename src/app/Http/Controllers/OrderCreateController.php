@@ -15,18 +15,19 @@ use App\Models\Slot;
 use App\Models\Task;
 use App\Temporal\CreateOrderWorkflowInterface;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Temporal\Client\WorkflowOptions;
-use Carbon\CarbonInterval;
 
 class OrderCreateController extends Controller
 {
     public function getOrderForm()
     {
-        $dto = new class {
+        $dto = new class
+        {
             public array $emails;
+
             public Collection $points;
         };
         $dto->emails = Customer::limit(10)->get('email')->pluck('email')->toArray();
@@ -53,7 +54,7 @@ class OrderCreateController extends Controller
         $unitType = $request->get('unitType');
         $startPointId = $request->get('startAddressId');
         $endPointId = $request->get('endAddressId');
-        $slot = Slot::findOrFail((int)$request->get('slotId'));
+        $slot = Slot::findOrFail((int) $request->get('slotId'));
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateOrderWorkflowInterface::class,
@@ -69,7 +70,7 @@ class OrderCreateController extends Controller
             endPointId: $endPointId,
             from: $slot->from,
             to: $slot->to,
-            date:  Carbon::parse($slot->date ?? $request->get('date')),
+            date: Carbon::parse($slot->date ?? $request->get('date')),
         );
 
         $this->workflowClient->start($workflow, $orderDTO);

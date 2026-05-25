@@ -19,6 +19,6 @@ class TaskCreateFormResource extends JsonResource
         return [
             'orders' => $this->orders,
             'couriers' => $this->couriers,
-         ];
+        ];
     }
 }

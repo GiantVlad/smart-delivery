@@ -3,9 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Temporal\OrderForErpObserverWorkflowInterface;
-use App\Temporal\OrderStatusHandlerWorkflowInterface;
 use Carbon\CarbonInterval;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Console\Command;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Client\WorkflowOptions;
@@ -32,7 +30,7 @@ class OrderErpObserverWorkflow extends Command
     public function handle(WorkflowClientInterface $workflowClient): void
     {
         try {
-            $this->info("Starting <comment>OrderForErpObserverWorkflow</comment>... ");
+            $this->info('Starting <comment>OrderForErpObserverWorkflow</comment>... ');
             $workflow = $workflowClient->newWorkflowStub(
                 OrderForErpObserverWorkflowInterface::class,
                 WorkflowOptions::new()

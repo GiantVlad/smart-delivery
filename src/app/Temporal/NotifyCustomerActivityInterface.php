@@ -12,9 +12,9 @@ use Temporal\Activity\ActivityMethod;
 interface NotifyCustomerActivityInterface
 {
     /**
-     * @param class-string<Notification> $notificationClass
+     * @param  class-string<Notification>  $notificationClass
      */
-    #[ActivityMethod(name: "NotifyCustomer")]
+    #[ActivityMethod(name: 'NotifyCustomer')]
     public function notifyCustomer(
         string $customerUuid,
         string $orderUuid,

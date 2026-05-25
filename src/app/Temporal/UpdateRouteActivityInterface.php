@@ -10,7 +10,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'UpdateRouteActivity.')]
 interface UpdateRouteActivityInterface
 {
-    #[ActivityMethod(name: "UpdateRoute")]
+    #[ActivityMethod(name: 'UpdateRoute')]
     public function updateRoute(
         string $taskUuid,
         array $points,

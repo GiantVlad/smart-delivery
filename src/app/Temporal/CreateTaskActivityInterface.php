@@ -11,7 +11,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'CreateTaskActivity.')]
 interface CreateTaskActivityInterface
 {
-    #[ActivityMethod(name: "CreateTask")]
+    #[ActivityMethod(name: 'CreateTask')]
     public function createTask(
         TaskDto $taskDto
     ): string;

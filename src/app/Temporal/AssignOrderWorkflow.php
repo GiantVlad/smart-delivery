@@ -18,6 +18,7 @@ class AssignOrderWorkflow implements AssignOrderWorkflowInterface
     private $assignOrderActivity;
 
     private $addToRouteActivity;
+
     private $notifyCustomerActivity;
 
     private $notifyCouirierActivity;

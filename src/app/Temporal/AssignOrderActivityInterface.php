@@ -11,7 +11,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'AssignOrderActivity.')]
 interface AssignOrderActivityInterface
 {
-    #[ActivityMethod(name: "AssignOrder")]
+    #[ActivityMethod(name: 'AssignOrder')]
     public function assignOrder(
         string $orderUuid,
         string $taskUuid,
