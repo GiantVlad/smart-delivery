@@ -27,35 +27,49 @@ jobs:
 
             cd "${{ secrets.DEPLOY_PATH }}"
 
+            if [ -f .env ]; then
+              set -a
+              . ./.env
+              set +a
+            fi
+
             PREV_COMMIT="$(git rev-parse HEAD)"
             TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
             BACKUP_DIR="${{ secrets.DEPLOY_PATH }}/backups"
             mkdir -p "$BACKUP_DIR"
 
+            DUMP_USER="${DB_USERNAME:-${MYSQL_USER:-root}}"
+            DUMP_PASSWORD="${DB_PASSWORD:-${MYSQL_PASSWORD:-${MYSQL_ROOT_PASSWORD:-}}}"
+            DUMP_DATABASE="${DB_DATABASE:-${MYSQL_DATABASE:-appdb}}"
+
             rollback() {
               echo "Deployment failed. Rolling back to commit $PREV_COMMIT"
               git reset --hard "$PREV_COMMIT"
-              docker compose -f compose.yml up -d --build
-              docker compose -f compose.yml exec -T roadrunner php artisan optimize:clear || true
-              docker compose -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset || true
+              docker compose --env-file .env -f compose.yml up -d --build
+              docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear || true
+              docker compose --env-file .env -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset || true
             }
 
             trap 'rollback' ERR
 
             echo "Creating MySQL backup..."
             BACKUP_FILE="$BACKUP_DIR/appdb_${TIMESTAMP}.sql.gz"
-            docker compose -f compose.yml exec -T mysql sh -lc 'mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' | gzip -9 > "$BACKUP_FILE"
+            docker compose --env-file .env -f compose.yml exec -T \
+              -e DUMP_USER="$DUMP_USER" \
+              -e DUMP_PASSWORD="$DUMP_PASSWORD" \
+              -e DUMP_DATABASE="$DUMP_DATABASE" \
+              mysql sh -lc 'MYSQL_PWD="$DUMP_PASSWORD" mysqldump -u"$DUMP_USER" "$DUMP_DATABASE"' | gzip -9 > "$BACKUP_FILE"
             ls -1t "$BACKUP_DIR"/appdb_*.sql.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
 
             git fetch --all --prune
             git checkout deploy
             git pull --ff-only origin deploy
 
-            docker compose -f compose.yml up -d --build
+            docker compose --env-file .env -f compose.yml up -d --build
 
-            docker compose -f compose.yml exec -T roadrunner php artisan migrate --force
-            docker compose -f compose.yml exec -T roadrunner php artisan optimize:clear
-            docker compose -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset
+            docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan migrate --force
+            docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear
+            docker compose --env-file .env -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset
 
             if [ -n "${{ secrets.DEPLOY_HEALTHCHECK_URL }}" ]; then
               echo "Running health check..."
