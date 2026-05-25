@@ -24,6 +24,11 @@ jobs:
           php-version: "8.4"
           coverage: none
 
+      - name: Prepare Laravel writable directories
+        run: |
+          mkdir -p bootstrap/cache storage/framework/{cache,sessions,views,testing} storage/logs
+          chmod -R ug+rwX bootstrap/cache storage
+
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --ignore-platform-req=ext-sockets
 
@@ -60,4 +65,3 @@ jobs:
 
       - name: Build frontend
         run: npm run build
-
