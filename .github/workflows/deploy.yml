@@ -48,7 +48,13 @@ jobs:
               mysql sh -lc '
                 set -e
                 DB_NAME="${MYSQL_DATABASE:-appdb}"
-                MYSQL_PWD="${MYSQL_ROOT_PASSWORD:-}" mysqldump --no-tablespaces -uroot "$DB_NAME"
+                DB_USER="${MYSQL_USER:-user}"
+                DB_PASS="${MYSQL_PASSWORD:-}"
+                if MYSQL_PWD="$DB_PASS" mysqldump --no-tablespaces -u"$DB_USER" "$DB_NAME" >/dev/null 2>&1; then
+                  MYSQL_PWD="$DB_PASS" mysqldump --no-tablespaces -u"$DB_USER" "$DB_NAME"
+                else
+                  MYSQL_PWD="${MYSQL_ROOT_PASSWORD:-}" mysqldump --no-tablespaces -uroot "$DB_NAME"
+                fi
               ' | gzip -9 > "$BACKUP_FILE"
             ls -1t "$BACKUP_DIR"/appdb_*.sql.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
 
