@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - deploy
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to remote Docker server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            cd "${{ secrets.DEPLOY_PATH }}"
+
+            PREV_COMMIT="$(git rev-parse HEAD)"
+            TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
+            BACKUP_DIR="${{ secrets.DEPLOY_PATH }}/backups"
+            mkdir -p "$BACKUP_DIR"
+
+            rollback() {
+              echo "Deployment failed. Rolling back to commit $PREV_COMMIT"
+              git reset --hard "$PREV_COMMIT"
+              docker compose -f compose.yml up -d --build
+              docker compose -f compose.yml exec -T roadrunner php artisan optimize:clear || true
+              docker compose -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset || true
+            }
+
+            trap 'rollback' ERR
+
+            echo "Creating MySQL backup..."
+            BACKUP_FILE="$BACKUP_DIR/appdb_${TIMESTAMP}.sql.gz"
+            docker compose -f compose.yml exec -T mysql sh -lc 'mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' | gzip -9 > "$BACKUP_FILE"
+            ls -1t "$BACKUP_DIR"/appdb_*.sql.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
+
+            git fetch --all --prune
+            git checkout deploy
+            git pull --ff-only origin deploy
+
+            docker compose -f compose.yml up -d --build
+
+            docker compose -f compose.yml exec -T roadrunner php artisan migrate --force
+            docker compose -f compose.yml exec -T roadrunner php artisan optimize:clear
+            docker compose -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset
+
+            if [ -n "${{ secrets.DEPLOY_HEALTHCHECK_URL }}" ]; then
+              echo "Running health check..."
+              curl -fsS --max-time 15 "${{ secrets.DEPLOY_HEALTHCHECK_URL }}"
+            fi
+
+            trap - ERR
+            echo "Deployment finished successfully."
