@@ -13,3 +13,4 @@ certbot/*
 ssl/*
 src/appdb
 src/bootstrap/cache
+backups/*
