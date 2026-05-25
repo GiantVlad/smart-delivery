@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -14,6 +13,7 @@ class OrderUnaAssignedFromTaskNotification extends Notification
     use Queueable;
 
     private string $uuid;
+
     private array $data;
 
     public function __construct(string $uuid, array $data)
@@ -38,10 +38,10 @@ class OrderUnaAssignedFromTaskNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line("Orders " . implode(',', ($this->data['orderUuids'] ?? []))
-                        . " has been unassigned from the task $this->uuid.")
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our Smart Delivery service!');
+            ->line('Orders '.implode(',', ($this->data['orderUuids'] ?? []))
+                ." has been unassigned from the task $this->uuid.")
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our Smart Delivery service!');
     }
 
     /**

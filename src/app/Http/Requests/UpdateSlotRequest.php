@@ -18,7 +18,7 @@ class UpdateSlotRequest extends FormRequest
     {
         return [
             'id' => ['required', 'exists:slots,id', 'integer'],
-            'capacity' => ['required', 'integer', 'min:1', 'max:' . Slot::MAX_CAPACITY],
+            'capacity' => ['required', 'integer', 'min:1', 'max:'.Slot::MAX_CAPACITY],
         ];
     }
 }

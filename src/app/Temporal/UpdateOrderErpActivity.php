@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
-use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Models\Order;
 use Illuminate\Support\Facades\Http;

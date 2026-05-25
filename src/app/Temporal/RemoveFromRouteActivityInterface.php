@@ -10,7 +10,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'RemoveFromRouteActivity.')]
 interface RemoveFromRouteActivityInterface
 {
-    #[ActivityMethod(name: "RemoveFromRoute")]
+    #[ActivityMethod(name: 'RemoveFromRoute')]
     public function removeFromRoute(
         string $taskUuid,
         int $startPointId,

@@ -49,7 +49,7 @@ class FirstLastRouteRule implements DataAwareRule, ValidationRule
             $fail('Invalid first point in the route.');
         }
 
-        if (! $endPoints->contains($value[count($value)-1])) {
+        if (! $endPoints->contains($value[count($value) - 1])) {
             $fail('Invalid last point in the route.');
         }
     }

@@ -7,12 +7,10 @@ namespace App\Temporal;
 use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Models\Order;
-use Temporal\Activity;
-use Temporal\Exception\IllegalStateException;
 
 class UnassignOrderActivity implements UnassignOrderActivityInterface
 {
-    public function unassignOrder(string $orderUuid,): OrderDto
+    public function unassignOrder(string $orderUuid): OrderDto
     {
         $order = Order::where('uuid', $orderUuid)->first();
         $order->task_id = null;

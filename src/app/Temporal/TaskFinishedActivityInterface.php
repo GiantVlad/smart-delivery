@@ -11,7 +11,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'TaskFinishedActivity.')]
 interface TaskFinishedActivityInterface
 {
-    #[ActivityMethod(name: "FinishTask")]
+    #[ActivityMethod(name: 'FinishTask')]
     public function finishTask(
         TaskDto $taskDto
     ): string;

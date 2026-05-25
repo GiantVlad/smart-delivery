@@ -10,7 +10,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'CreateRouteActivity.')]
 interface CreateRouteActivityInterface
 {
-    #[ActivityMethod(name: "CreateRoute")]
+    #[ActivityMethod(name: 'CreateRoute')]
     public function createRoute(
         string $taskUuid,
     ): true;

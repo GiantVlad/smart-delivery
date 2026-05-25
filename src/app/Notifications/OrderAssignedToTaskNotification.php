@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -14,6 +13,7 @@ class OrderAssignedToTaskNotification extends Notification
     use Queueable;
 
     private string $uuid;
+
     private ?array $data;
 
     public function __construct(string $uuid, array $data)
@@ -39,9 +39,9 @@ class OrderAssignedToTaskNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line("The order " . ($this->data['orderUuid'] ?? '') . " has been assigned to the task $this->uuid.")
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our Smart Delivery service!');
+            ->line('The order '.($this->data['orderUuid'] ?? '')." has been assigned to the task $this->uuid.")
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our Smart Delivery service!');
     }
 
     /**

@@ -35,9 +35,9 @@ class OrderUnassignedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line("The order $this->uuid has been unassigned from driver.")
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our Smart Delivery service!');
+            ->line("The order $this->uuid has been unassigned from driver.")
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our Smart Delivery service!');
     }
 
     /**

@@ -6,13 +6,11 @@ namespace App\Temporal;
 
 use App\Models\Courier;
 use Illuminate\Notifications\Notification;
-use Temporal\Activity;
-use Temporal\Exception\IllegalStateException;
 
 class NotifyCourierActivity implements NotifyCourierActivityInterface
 {
     /**
-     * @param class-string<Notification> $notificationClass
+     * @param  class-string<Notification>  $notificationClass
      */
     public function notifyCourier(
         string $courierUuid,

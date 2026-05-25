@@ -8,12 +8,10 @@ use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Models\Order;
 use App\Models\Task;
-use Temporal\Activity;
-use Temporal\Exception\IllegalStateException;
 
 class AssignOrderActivity implements AssignOrderActivityInterface
 {
-    public function assignOrder(string $orderUuid, string $taskUuid,): OrderDto
+    public function assignOrder(string $orderUuid, string $taskUuid): OrderDto
     {
         $task = Task::where('uuid', $taskUuid)->firstOrFail();
         $order = Order::where('uuid', $orderUuid)->with('customer')->firstOrFail();

@@ -9,9 +9,6 @@ use App\Models\Route;
 use App\Models\Task;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Temporal\Activity;
-use Temporal\Client\WorkflowOptions;
-use Temporal\Exception\IllegalStateException;
 
 class CreateRoteActivity implements CreateRouteActivityInterface
 {
@@ -20,12 +17,14 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         $task = Task::where('uuid', $taskUuid)->firstOrFail();
         $orders = $task->orders()->get();
 
-        $from = new Collection();
-        $destinations = new Collection();
+        $from = new Collection;
+        $destinations = new Collection;
 
-        $tmpObjectFn = static function (int $pointId, string $type)  {
-            $obj = new class() {
+        $tmpObjectFn = static function (int $pointId, string $type) {
+            $obj = new class
+            {
                 public $id;
+
                 public $type;
             };
             $obj->id = $pointId;
@@ -69,7 +68,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         $from = $from->filter(function ($fromItem) use ($destinations) {
             $matchingItem = $destinations->first(static fn ($el) => $el->id === $fromItem->id, false);
 
-            return !$matchingItem;
+            return ! $matchingItem;
         });
 
         /** @var Collection $points */
@@ -78,7 +77,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         DB::transaction(static function () use ($task, $points) {
             $idx = 0;
             foreach ($points as $point) {
-                $route = new Route();
+                $route = new Route;
                 $route->sequence = $idx;
                 $route->task_id = $task->id;
                 $route->point_id = $point->id;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
 use App\Models\Courier;
+use App\Models\Customer;
 use App\Models\Point;
 use Illuminate\Database\Seeder;
 

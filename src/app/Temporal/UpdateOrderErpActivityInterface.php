@@ -10,6 +10,6 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'UpdateOrderErpActivity.')]
 interface UpdateOrderErpActivityInterface
 {
-    #[ActivityMethod(name: "UpdateOrderInErp")]
+    #[ActivityMethod(name: 'UpdateOrderInErp')]
     public function updateOrderInErp(): array;
 }

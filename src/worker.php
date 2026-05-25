@@ -10,7 +10,7 @@
 declare(strict_types=1);
 
 // Include Composer's autoloader
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use App\Temporal\DeclarationLocator;
 use Laravel\Octane\ApplicationFactory;
@@ -24,18 +24,18 @@ ini_set('log_errors', '1');
 ini_set('error_log', 'php://stderr');
 
 // Log startup
-error_log("Starting Temporal worker...");
+error_log('Starting Temporal worker...');
 
 try {
     // finds all available workflows, activity types and commands in a given directory
-    $declarations = new DeclarationLocator(__DIR__ . '/app/Temporal/');
+    $declarations = new DeclarationLocator(__DIR__.'/app/Temporal/');
 
     // Convert generators to arrays to avoid multiple iterations
     $workflowTypes = iterator_to_array($declarations->getWorkflowTypes());
     $activityTypes = iterator_to_array($declarations->getActivityTypes());
 
-    error_log("Found " . count($workflowTypes) . " workflow types");
-    error_log("Found " . count($activityTypes) . " activity types");
+    error_log('Found '.count($workflowTypes).' workflow types');
+    error_log('Found '.count($activityTypes).' activity types');
 
     // factory initiates and runs task queue specific activity and workflow workers
     $factory = WorkerFactory::create();
@@ -47,11 +47,13 @@ try {
         // Skip TaskWorkflow as it's a duplicate of CreateTaskWorkflow
         if (str_contains($workflowType, 'TaskWorkflow') && $workflowType !== 'App\\Temporal\\CreateTaskWorkflow') {
             error_log("[SKIP] Skipping duplicate workflow: $workflowType");
+
             continue;
         }
 
         if (in_array($workflowType, $registeredWorkflows)) {
             error_log("[WARN] Duplicate workflow found: $workflowType");
+
             continue;
         }
 
@@ -61,7 +63,7 @@ try {
     }
 
     // Initialize Laravel application
-    error_log("Initializing Laravel application...");
+    error_log('Initializing Laravel application...');
     $basePath = require '/app/vendor/laravel/octane/bin/bootstrap.php';
     $appFactory = new ApplicationFactory($basePath);
     $app = $appFactory->createApplication();
@@ -71,6 +73,7 @@ try {
     foreach ($activityTypes as $activityType) {
         if (in_array($activityType, $registeredActivities)) {
             error_log("[WARN] Duplicate activity found: $activityType");
+
             continue;
         }
         error_log("[INFO] Registering activity: $activityType");
@@ -78,11 +81,11 @@ try {
         $worker->registerActivity($activityType);
     }
 
-    error_log("Starting worker...");
+    error_log('Starting worker...');
     $factory->run();
-    error_log("Worker started successfully");
+    error_log('Worker started successfully');
 } catch (\Throwable $e) {
-    error_log("FATAL ERROR: " . $e->getMessage());
-    error_log("Stack trace: " . $e->getTraceAsString());
+    error_log('FATAL ERROR: '.$e->getMessage());
+    error_log('Stack trace: '.$e->getTraceAsString());
     throw $e;
 }

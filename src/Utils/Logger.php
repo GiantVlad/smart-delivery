@@ -14,7 +14,7 @@ class Logger implements LoggerInterface
 {
     use LoggerTrait;
 
-    public function log($level, $message, array $context = array()): void
+    public function log($level, $message, array $context = []): void
     {
         file_put_contents('php://stderr', sprintf('[%s] %s', $level, $message));
     }

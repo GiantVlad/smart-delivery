@@ -6,29 +6,29 @@ namespace App\Http\Controllers;
 
 use App\Domain\CourierManager;
 use App\Dto\TaskDto;
-use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskCreateFormResource;
 use App\Http\Resources\TaskResource;
-use App\Models\Courier;
 use App\Models\Order;
 use App\Models\Task;
 use App\Temporal\TaskWorkflowInterface;
+use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Temporal\Client\WorkflowOptions;
-use Carbon\CarbonInterval;
 
 class TaskController extends Controller
 {
     public function createTaskForm(string $date, CourierManager $courierManager)
     {
         $date = Carbon::parse($date);
-        $dto = new class {
+        $dto = new class
+        {
             public Collection $orders;
+
             public Collection $couriers;
         };
 
@@ -63,7 +63,7 @@ class TaskController extends Controller
             WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
         );
 
-       $this->workflowClient->start($workflow, new TaskDto($courierUuid, $orderUuids));
+        $this->workflowClient->start($workflow, new TaskDto($courierUuid, $orderUuids));
 
         return response()->json(['data' => true]);
     }

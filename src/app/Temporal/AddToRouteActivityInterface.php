@@ -10,7 +10,7 @@ use Temporal\Activity\ActivityMethod;
 #[ActivityInterface(prefix: 'AddToRouteActivity.')]
 interface AddToRouteActivityInterface
 {
-    #[ActivityMethod(name: "AddToRoute")]
+    #[ActivityMethod(name: 'AddToRoute')]
     public function addToRoute(
         string $taskUuid,
         int $startPointId,

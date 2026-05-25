@@ -19,6 +19,6 @@ class OrderCreateFormResource extends JsonResource
         return [
             'customerEmails' => $this->emails,
             'points' => $this->points,
-         ];
+        ];
     }
 }

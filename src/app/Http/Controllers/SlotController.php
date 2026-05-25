@@ -21,6 +21,7 @@ class SlotController extends Controller
 
         return SlotResource::collection($slots);
     }
+
     public function getAvailableByDate(string $date, SlotManager $slot): JsonResource
     {
         try {
@@ -54,9 +55,9 @@ class SlotController extends Controller
 
     public function updateCapacity(UpdateSlotRequest $request): JsonResource
     {
-        $slot = Slot::findOrFail((int)$request->id);
-        $slot->available = max(0, ((int)$request->capacity - $slot->capacity) + $slot->available);
-        $slot->capacity = (int)$request->capacity;
+        $slot = Slot::findOrFail((int) $request->id);
+        $slot->available = max(0, ((int) $request->capacity - $slot->capacity) + $slot->available);
+        $slot->capacity = (int) $request->capacity;
         $slot->save();
 
         return SlotResource::make($slot);

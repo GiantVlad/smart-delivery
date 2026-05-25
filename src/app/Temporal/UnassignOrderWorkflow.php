@@ -18,6 +18,7 @@ class UnassignOrderWorkflow implements UnassignOrderWorkflowInterface
     private $unAssignOrderActivity;
 
     private $removeFromRouteActivity;
+
     private $notifyCustomerActivity;
 
     private $notifyCouirierActivity;

@@ -21,7 +21,7 @@ class OrdersCanBeAddedRule implements ValidationRule
     {
         $orders = Order::whereIn('uuid', $value)->get();
         if ($orders->isEmpty() || $orders->count() !== count($value)) {
-            $fail("Invalid list of orders.");
+            $fail('Invalid list of orders.');
         }
         foreach ($orders as $order) {
             if ($order->status !== OrderStatusEnum::ACCEPTED->value) {

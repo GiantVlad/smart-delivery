@@ -12,6 +12,5 @@ class TaskDto extends Data
         public string $courierUuid,
         public array $orderUuids,
         public ?string $taskUuid = null,
-    ) {
-    }
+    ) {}
 }

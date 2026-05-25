@@ -10,14 +10,14 @@
 declare(strict_types=1);
 
 use App\Temporal\DeclarationLocator;
-use Temporal\Client\GRPC\ServiceClient;
 use Symfony\Component\Console\Application;
+use Temporal\Client\GRPC\ServiceClient;
 use Utils\Command;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 // finds all available workflows, activity types and commands in a given directory
-$declarations = DeclarationLocator::create(__DIR__ . '/app/Temporal/');
+$declarations = DeclarationLocator::create(__DIR__.'/app/Temporal/');
 
 $host = getenv('TEMPORAL_ADDRESS') ?: getenv('TEMPORAL_CLI_ADDRESS');
 if (empty($host)) {

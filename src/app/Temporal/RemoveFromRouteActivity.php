@@ -8,9 +8,6 @@ use App\Enums\RoutePointTypeEnum;
 use App\Models\Route;
 use App\Models\Task;
 use Illuminate\Support\Collection;
-use Temporal\Activity;
-use Temporal\Client\WorkflowOptions;
-use Temporal\Exception\IllegalStateException;
 
 class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
 {
@@ -31,7 +28,7 @@ class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
             $foundStart = $orders->firstWhere('start_point_id', $pointId);
             $foundEnd = $orders->firstWhere('end_point_id', $pointId);
 
-            if (!$foundStart && !$foundEnd) {
+            if (! $foundStart && ! $foundEnd) {
                 /** @var Route|null $route */
                 $route = $routes->firstWhere('point_id', $pointId);
                 $route->delete();

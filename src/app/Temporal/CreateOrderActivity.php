@@ -9,15 +9,13 @@ use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Support\Str;
-use Temporal\Activity;
-use Temporal\Exception\IllegalStateException;
 
 class CreateOrderActivity implements CreateOrderActivityInterface
 {
     public function createOrder(OrderDto $orderDto): string
     {
         $customer = Customer::where('uuid', $orderDto->customerUuid)->firstOrFail();
-        $order = new Order();
+        $order = new Order;
         $order->customer_id = $customer->id;
         $order->unit_type = $orderDto->unitType;
         $order->start_point_id = $orderDto->startPointId;

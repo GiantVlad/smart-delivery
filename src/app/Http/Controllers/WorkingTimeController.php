@@ -51,7 +51,7 @@ class WorkingTimeController extends Controller
 
     public function create(CreateWorkingHoursRequest $request): JsonResource
     {
-        $wh = new WorkingHour();
+        $wh = new WorkingHour;
 
         $wh->courier_id = $request->courier_id;
         $wh->day = $request->day;
@@ -77,7 +77,7 @@ class WorkingTimeController extends Controller
         $reasonCode = $request->get('reason_code', 0);
 
         $dates = collect(\Carbon\CarbonPeriod::create($dateFrom, $dateTo))
-            ->map(fn($date) => $date->format('Y-m-d'));
+            ->map(fn ($date) => $date->format('Y-m-d'));
 
         // Get existing holidays for these dates
         $existingHolidays = CourierHoliday::where('courier_id', $courierId)
@@ -85,7 +85,7 @@ class WorkingTimeController extends Controller
             ->pluck('date')
             ->toArray();
 
-        $newHolidays = $dates->reject(fn($date) => in_array($date, $existingHolidays))
+        $newHolidays = $dates->reject(fn ($date) => in_array($date, $existingHolidays))
             ->map(function ($date) use ($courierId, $reasonCode) {
                 return [
                     'courier_id' => $courierId,

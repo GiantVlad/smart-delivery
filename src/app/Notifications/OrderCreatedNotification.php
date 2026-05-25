@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -36,9 +35,9 @@ class OrderCreatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line("The order $this->uuid has been created.")
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our Smart Delivery service!');
+            ->line("The order $this->uuid has been created.")
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our Smart Delivery service!');
     }
 
     /**

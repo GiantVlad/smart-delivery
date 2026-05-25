@@ -19,6 +19,5 @@ class OrderDto extends Data
         public Carbon $date,
         public string $uuid = '',
         public string $status = '',
-    ) {
-    }
+    ) {}
 }

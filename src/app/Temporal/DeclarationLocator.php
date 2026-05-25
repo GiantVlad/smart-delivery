@@ -16,17 +16,14 @@ class DeclarationLocator
     public function __construct(string $directory)
     {
         $this->classLocator = new ClassLocator(
-            (new Finder())->in($directory)->name('*.php')
+            (new Finder)->in($directory)->name('*.php')
         );
     }
 
-    /**
-     * @return  \Generator
-     */
     public function getCommands(): \Generator
     {
         foreach ($this->classLocator->getClasses(Command::class) as $class) {
-            if (!$class->isAbstract()) {
+            if (! $class->isAbstract()) {
                 yield $class->getName();
             }
         }
@@ -34,15 +31,13 @@ class DeclarationLocator
 
     /**
      * Finds all activity declarations using Activity suffix.
-     *
-     * @return  \Generator
      */
     public function getActivityTypes(): \Generator
     {
         $registered = [];
         foreach ($this->getAvailableDeclarations() as $class) {
             $className = $class->getName();
-            if ($this->endsWith($className, 'Activity') && !in_array($className, $registered)) {
+            if ($this->endsWith($className, 'Activity') && ! in_array($className, $registered)) {
                 $registered[] = $className;
                 yield $className;
             }
@@ -51,15 +46,13 @@ class DeclarationLocator
 
     /**
      * Finds all workflow declarations using Workflow suffix.
-     *
-     * @return  \Generator
      */
     public function getWorkflowTypes(): \Generator
     {
         $registered = [];
         foreach ($this->getAvailableDeclarations() as $class) {
             $className = $class->getName();
-            if ($this->endsWith($className, 'Workflow') && !in_array($className, $registered)) {
+            if ($this->endsWith($className, 'Workflow') && ! in_array($className, $registered)) {
                 $registered[] = $className;
                 yield $className;
             }
@@ -80,22 +73,17 @@ class DeclarationLocator
         }
     }
 
-    /**
-     * @param string $haystack
-     * @param string $needle
-     * @return bool
-     */
     private function endsWith(string $haystack, string $needle): bool
     {
         $length = strlen($needle);
-        if (!$length) {
+        if (! $length) {
             return true;
         }
+
         return substr($haystack, -$length) === $needle;
     }
 
     /**
-     * @param string $dir
      * @return $this
      */
     public static function create(string $dir): self

@@ -11,6 +11,6 @@ use Temporal\Workflow\WorkflowMethod;
 #[WorkflowInterface]
 interface AssignOrderWorkflowInterface
 {
-    #[WorkflowMethod(name: "AssignOrder.Assign")]
+    #[WorkflowMethod(name: 'AssignOrder.Assign')]
     public function assign(AssignOrderDto $assignOrderDto);
 }
