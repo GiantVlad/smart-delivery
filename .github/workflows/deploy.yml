@@ -27,20 +27,10 @@ jobs:
 
             cd "${{ secrets.DEPLOY_PATH }}"
 
-            if [ -f .env ]; then
-              set -a
-              . ./.env
-              set +a
-            fi
-
             PREV_COMMIT="$(git rev-parse HEAD)"
             TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
             BACKUP_DIR="${{ secrets.DEPLOY_PATH }}/backups"
             mkdir -p "$BACKUP_DIR"
-
-            DUMP_USER="${DB_USERNAME:-${MYSQL_USER:-root}}"
-            DUMP_PASSWORD="${DB_PASSWORD:-${MYSQL_PASSWORD:-${MYSQL_ROOT_PASSWORD:-}}}"
-            DUMP_DATABASE="${DB_DATABASE:-${MYSQL_DATABASE:-appdb}}"
 
             rollback() {
               echo "Deployment failed. Rolling back to commit $PREV_COMMIT"
@@ -55,10 +45,11 @@ jobs:
             echo "Creating MySQL backup..."
             BACKUP_FILE="$BACKUP_DIR/appdb_${TIMESTAMP}.sql.gz"
             docker compose --env-file .env -f compose.yml exec -T \
-              -e DUMP_USER="$DUMP_USER" \
-              -e DUMP_PASSWORD="$DUMP_PASSWORD" \
-              -e DUMP_DATABASE="$DUMP_DATABASE" \
-              mysql sh -lc 'MYSQL_PWD="$DUMP_PASSWORD" mysqldump -u"$DUMP_USER" "$DUMP_DATABASE"' | gzip -9 > "$BACKUP_FILE"
+              mysql sh -lc '
+                set -e
+                DB_NAME="${MYSQL_DATABASE:-appdb}"
+                MYSQL_PWD="${MYSQL_ROOT_PASSWORD:-}" mysqldump --no-tablespaces -uroot "$DB_NAME"
+              ' | gzip -9 > "$BACKUP_FILE"
             ls -1t "$BACKUP_DIR"/appdb_*.sql.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
 
             git fetch --all --prune
