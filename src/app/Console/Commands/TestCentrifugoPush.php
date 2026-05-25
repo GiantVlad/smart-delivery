@@ -35,9 +35,9 @@ class TestCentrifugoPush extends Command
         ]);
         $this->info('Subscription token '.substr($apiSign, 0, 5).'...');
 
-        //Get a list of currently active channels.
+        // Get a list of currently active channels.
         $channels = $centrifugo->channels() ?? [];
-        $this->info('Active channels '. implode(',', $channels));
+        $this->info('Active channels '.implode(',', $channels));
 
         // Get channel presence information (all clients currently subscribed on this channel).
         $centrifugo->presence('test');
