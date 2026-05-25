@@ -1,25 +1,25 @@
 services:
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
-    networks:
-      - smart-l
-    depends_on:
-      - roadrunner
-      - centrifugo
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
+#  nginx:
+#    image: nginx:alpine
+#    container_name: nginx
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+#      - ./certbot/www:/var/www/certbot
+#      - ./certbot/conf:/etc/letsencrypt
+#    networks:
+#      - smart-l
+#    depends_on:
+#      - roadrunner
+#      - centrifugo
+#
+#  certbot:
+#    image: certbot/certbot
+#    volumes:
+#      - ./certbot/www:/var/www/certbot
+#      - ./certbot/conf:/etc/letsencrypt
 
   roadrunner:
     build:
