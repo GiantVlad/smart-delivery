@@ -35,7 +35,7 @@ jobs:
             rollback() {
               echo "Deployment failed. Rolling back to commit $PREV_COMMIT"
               git reset --hard "$PREV_COMMIT"
-              docker compose --env-file .env -f compose.yml up -d --build
+              docker compose --env-file .env -f compose.yml up -d
               docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear || true
               docker compose --env-file .env -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset || true
             }
@@ -62,7 +62,7 @@ jobs:
             git checkout deploy
             git pull --ff-only origin deploy
 
-            docker compose --env-file .env -f compose.yml up -d --build
+            docker compose --env-file .env -f compose.yml up -d
 
             docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan migrate --force
             docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear
