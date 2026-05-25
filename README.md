@@ -63,7 +63,7 @@ id|from |to   |capacity|available
 
 to stop status handler:
 ```
-docker compose exec roadrunner php artisan wf-status-handler:stop <workflow_id>
+docker compose exec roadrunner php artisan wf-status-handler:stop workflow-status-handler-v1
 ```
 
 Services:
@@ -73,9 +73,9 @@ Services:
 - :8090 go-server (Mock of an ERP System)
 - :8010 Centrifuge (websockets)
 
-It requires Nginx proxy on the host machine for https, see docker/nginx/app.conf example 
+It requires Nginx proxy on the host machine for https, see docker/nginx/app.conf example
 
-To create a docker image with roadrunner php and grpc: 
+To create a docker image with roadrunner php and grpc:
 ```
 docker build -t  gaintvlad/php-grpc-rrunner:v2025.1.2 -f docker/roadrunner/DockerfileRR .
 ```

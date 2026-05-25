@@ -132,7 +132,8 @@ const formStatusSubmit = () => {
           <FormControl
             v-model="form.courier"
             :options="couriers"
-            value-prop="id"/>
+            value-prop="id"
+          />
         </FormField>
 
         <FormField label="Orders">

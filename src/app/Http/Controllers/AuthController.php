@@ -4,42 +4,30 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Enums\CourierStatusEnum;
 use App\Http\Requests\AuthLoginRequest;
-use App\Http\Requests\AuthRegisterRequest;
-use App\Http\Requests\CreateCourierRequest;
-use App\Http\Requests\UpdateCourierRequest;
-use App\Http\Resources\CourierResource;
-use App\Models\Courier;
-use App\Models\User;
-use App\Temporal\UpdateCourierStatusWorkflowInterface;
-use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Temporal\Client\WorkflowOptions;
 
 class AuthController extends Controller
 {
-    public function login(AuthLoginRequest $request)
+    public function login(AuthLoginRequest $request): JsonResponse
     {
-        $credentials = $request->validated();
+        $credentials = $request->only(['email', 'password']);
+        $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            $response = ['data' => ['email' => $credentials['email'], 'name' =>  Auth::user()?->name]];
-
-            return response($response, 200);
-
-        } else {
-            $response = ["message" => "Password mismatch"];
-
-            return response($response, 422);
+            return response()->json([
+                'data' => [
+                    'email' => Auth::user()?->email,
+                    'name' => Auth::user()?->name,
+                ],
+            ]);
         }
+
+        return response()->json(['message' => 'Invalid credentials'], 422);
     }
 
     public function logout(): JsonResponse
@@ -64,20 +52,5 @@ class AuthController extends Controller
                 'message' => 'Error during logout'
             ], 500);
         }
-    }
-
-    public function register(AuthRegisterRequest $request)
-    {
-        $user = User::where('email', $request->email)->first();
-        if ($user) {
-            return response(['message' => 'User already exist'], 422);
-        }
-        $user = User::create($request->toArray());
-        $token = $user->createToken(
-            'spa-token', ['*'], now()->addWeek()
-        )->plainTextToken;
-        $response = ['data' => ['token' => $token, 'name' => $user->name, 'email' => $user->email]];
-
-        return response($response, 200);
     }
 }

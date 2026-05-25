@@ -22,7 +22,7 @@ const form = reactive({
 const users = ref([])
 
 const submit = () => {
-  http.post('/api/register',
+  http.post('/api/users',
     {
       name: form.name,
       email: form.email,
@@ -59,7 +59,7 @@ const formStatusSubmit = () => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Registration" main>
+      <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Users" main>
       </SectionTitleLineWithButton>
 
       <CardBox form @submit.prevent="submit" :is-form="true">

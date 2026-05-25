@@ -15,6 +15,7 @@ class UpdateOrderStatusActivity implements UpdateOrderStatusActivityInterface
     {
         $order = Order::where('uuid', $orderUuid)->firstOrFail();
         $order->status = $status;
+        $order->delivered_at = $status === OrderStatusEnum::DELIVERED->value ? now() : null;
         if ($status === OrderStatusEnum::CANCELED->value) {
             $order->task_id = null;
         }

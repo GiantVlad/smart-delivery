@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - deploy
+
+jobs:
+  php-tests:
+    name: PHPUnit (${{ matrix.suite }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [Unit, Integration, Feature]
+    env:
+      APP_ENV: testing
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      CACHE_STORE: array
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+    defaults:
+      run:
+        working-directory: src
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_sqlite
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --ignore-platform-req=ext-sockets
+
+      - name: Ensure Unit tests directory exists
+        run: mkdir -p tests/Unit
+
+      - name: Run PHPUnit suite
+        run: php artisan test --testsuite=${{ matrix.suite }} --log-junit junit-${{ matrix.suite }}.xml
+
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-${{ matrix.suite }}
+          path: src/junit-${{ matrix.suite }}.xml
+

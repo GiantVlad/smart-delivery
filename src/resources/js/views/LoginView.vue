@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { mdiAccount, mdiAsterisk } from '@mdi/js'
 import SectionFullScreen from '@/components/SectionFullScreen.vue'
@@ -18,14 +18,18 @@ const form = reactive({
   password: null,
   remember: true
 })
+const errorMessage = reactive({ value: '' })
 
 const router = useRouter()
 const mainStore = useMainStore()
 
-const submit = () => {
+const submit = async () => {
+  errorMessage.value = ''
+  await http.get('/sanctum/csrf-cookie')
   http.post('/api/login', {
     email: form.email,
     password: form.password,
+    remember: form.remember,
   })
   .then((response) => {
     if (response.data && response.data.data) {
@@ -37,23 +41,13 @@ const submit = () => {
       const redirectPath = router.currentRoute.value.query.redirect || '/orders'
       router.push(redirectPath)
     } else {
-      console.error('Invalid response format:', response)
+      errorMessage.value = 'Unexpected server response.'
     }
   })
   .catch((error) => {
-    console.error('Login error:', error)
-    if (error.response) {
-      console.error('Response data:', error.response.data)
-      console.error('Response status:', error.response.status)
-    }
+    errorMessage.value = error.response?.data?.message || 'Unable to sign in.'
   })
 }
-
-onMounted(async () => {
-  http.get('/sanctum/csrf-cookie').then(response => {
-    console.log(response)
-  });
-})
 </script>
 
 <template>
@@ -78,6 +72,7 @@ onMounted(async () => {
             autocomplete="current-password"
           />
         </FormField>
+        <p v-if="errorMessage.value" class="text-sm text-red-600 mb-2">{{ errorMessage.value }}</p>
 
         <FormCheckRadio
           v-model="form.remember"

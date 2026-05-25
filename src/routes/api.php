@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CentrifugoController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\RouteController;
@@ -20,8 +21,6 @@ Route::post('login', [ AuthController::class, 'login' ])->name('api.login');
 
 Route::post('logout', [ AuthController::class, 'logout' ])->name('api.logout');
 
-Route::post('register', [ AuthController::class, 'register' ])->name('api.register');
-
 Route::post('/erp-webhook', [ OrderStatusController::class, 'confirmOrder' ]);
 
 // Public routes
@@ -33,6 +32,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('centrifugo.subscription-token');
     // User management
     Route::get('users', [ UserController::class, 'list' ])->name('api.users');
+    Route::post('users', [ UserController::class, 'create' ])->name('api.users.create');
+    Route::get('dashboard/delivered-orders-trend', [DashboardController::class, 'deliveredOrdersTrend'])
+        ->name('api.dashboard.delivered-orders-trend');
 
     Route::get('/order', [ OrderCreateController::class, 'getOrderForm' ]);
 

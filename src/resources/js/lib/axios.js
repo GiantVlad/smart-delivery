@@ -1,6 +1,6 @@
 import axiosLib from "axios";
 import { useMainStore } from "@/stores/main";
-import { useRouter } from "vue-router";
+import router from "@/router";
 
 const http = axiosLib.create({
   baseURL: "https://delivery.cloud-workflow.com",
@@ -18,7 +18,6 @@ const http = axiosLib.create({
 http.interceptors.response.use(
   response => response,
   error => {
-    const router = useRouter();
     const mainStore = useMainStore();
 
     if (error.response?.status === 401) {
