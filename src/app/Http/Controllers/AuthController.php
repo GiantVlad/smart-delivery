@@ -17,7 +17,9 @@ class AuthController extends Controller
         $remember = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
+            if ($request->hasSession()) {
+                $request->session()->regenerate();
+            }
 
             return response()->json([
                 'data' => [
@@ -40,8 +42,10 @@ class AuthController extends Controller
 
             // Clear session data
             auth()->logout();
-            request()->session()->invalidate();
-            request()->session()->regenerateToken();
+            if (request()->hasSession()) {
+                request()->session()->invalidate();
+                request()->session()->regenerateToken();
+            }
 
             return response()->json([
                 'message' => 'Successfully logged out',
