@@ -91,7 +91,7 @@
                 <div class="text-left break-words">{{order.endPointAddress}}</div>
               </td>
               <td class="p-2">
-                <div class="text-left break-words">{{order.updated_at}}</div>
+                <div class="text-left break-words">{{ formatDateTime(order.updated_at) }}</div>
               </td>
             </tr>
             </tbody>
@@ -124,6 +124,21 @@ import { useOrderStatusStore } from "@/stores/orderStatus.js"
 
 const orders = ref([])
 const orderStatusStore = useOrderStatusStore()
+
+const formatDateTime = (value) => {
+  if (!value) return '-'
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return date.toLocaleString('en-GB', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 const statuses = computed(() => {
   const arr = []
