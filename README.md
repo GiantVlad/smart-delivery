@@ -94,4 +94,7 @@ There is a Golang mock erp in the docker/go_server folder.
 ### Google Map
 https://vue3-google-map.com/getting-started
 
+### UI Base Template
+This project UI is based on [justboil/admin-one-vue-tailwind](https://github.com/justboil/admin-one-vue-tailwind).
+
 Uladzimir Sadkou hofirma@gmail.com MIT
