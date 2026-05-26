@@ -62,7 +62,7 @@
                 <div class="text-left">{{task.countOrders}}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-left">{{task.updated_at}}</div>
+                <div class="text-left">{{ formatDateTime(task.updated_at) }}</div>
               </td>
             </tr>
             </tbody>
@@ -95,6 +95,21 @@ import { useTaskStatusStore } from "@/stores/taskStatus.js"
 
 const tasks = ref([])
 const taskStatusStore = useTaskStatusStore()
+
+const formatDateTime = (value) => {
+  if (!value) return '-'
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return date.toLocaleString('en-GB', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 const statuses = computed(() => {
   const arr = []

@@ -80,7 +80,7 @@
               />
             </div>
             <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{courier.updated_at}}</div>
+              <div class="text-left">{{ formatDateTime(courier.updated_at) }}</div>
             </td>
           </tr>
           </tbody>
@@ -122,6 +122,21 @@ const form = reactive({
   uuid: null,
   phone: null,
 })
+
+const formatDateTime = (value) => {
+  if (!value) return '-'
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return date.toLocaleString('en-GB', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 const courierStatusStore = useCourierStatusStore()
 

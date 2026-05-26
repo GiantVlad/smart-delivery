@@ -21,6 +21,21 @@ const form = reactive({
 
 const users = ref([])
 
+const formatDateTime = (value) => {
+  if (!value) return '-'
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return date.toLocaleString('en-GB', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
 const submit = () => {
   http.post('/api/users',
     {
@@ -120,7 +135,7 @@ const formStatusSubmit = () => {
               <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{user.email}}</div>
             </td>
             <td class="p-2 whitespace-nowrap">
-              <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{user.updated_at}}</div>
+              <div class="text-left font-medium text-gray-800 dark:text-gray-100">{{ formatDateTime(user.updated_at) }}</div>
             </td>
           </tr>
           </tbody>
