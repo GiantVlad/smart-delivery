@@ -35,7 +35,7 @@ class DashboardController extends Controller
                 $startDate->toDateString(),
                 $endDate->toDateString(),
             ])
-            ->groupBy('date', 'courier_name')
+            ->groupByRaw('DATE(orders.delivered_at), couriers.name')
             ->orderBy('date')
             ->get();
 
