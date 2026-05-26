@@ -6,6 +6,72 @@
 
 php-8.4, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
 
+## Features and Pages
+
+### Authentication
+- `Login` (`/login`)
+- Session-based auth via Laravel Sanctum for all protected pages.
+
+### Dashboard (`/`)
+- Delivered orders trend chart for the latest 10 days.
+- Chart groups data by courier/agent with a separate color per courier.
+- Customers table with real data loaded from API.
+- Google map widget.
+
+### Orders
+- `Orders` (`/orders`)
+  - List of orders with status, customer, courier, pickup/destination, date and time window.
+- `Create Order` (`/order`)
+  - Create customer delivery orders from point A to point B.
+  - Customer creation from modal.
+  - Delivery slot selection by date and available capacity.
+
+### Tasks and Assignment
+- `Tasks` (`/tasks`)
+  - List of tasks, courier, order count, and task status.
+- `Create Task` (`/task`)
+  - Select date, available courier, and accepted orders.
+  - Create delivery task through workflow.
+- `Update Order in Task` (`/update-order-in-task`)
+  - Change order status inside a task.
+  - Unassign order from task.
+  - Add accepted orders to existing task.
+
+### Route Planning
+- `Edit Route` (`/edit-route`)
+  - Load route points for selected task.
+  - Drag-and-drop route sequence.
+  - Validate first and last points (pickup first, delivery last).
+  - Save updated route sequence.
+
+### Couriers
+- `Couriers` (`/couriers`)
+  - List couriers and statuses.
+  - Create courier.
+  - Edit courier (name, phone, status).
+- `Courier Working Hours` (`/courier-working-hours/:courierId`)
+  - Manage weekly working hours.
+  - Add/update/delete working intervals.
+  - Manage courier holidays (date range + reason).
+
+### Users
+- `Users` (`/users`)
+  - List users.
+  - Manual user creation for authenticated staff.
+  - Public self-registration endpoint is disabled.
+
+### Realtime and Workflow
+- Realtime status updates via Centrifugo.
+- Temporal workflows for:
+  - order creation and ERP status handling,
+  - task creation/finishing,
+  - order assignment/unassignment,
+  - route updates and related activities.
+
+### API and Health
+- Main API under `/api/*`.
+- Health endpoint: `/api/health`.
+
 ```sh
 cp .env.example .env
 cp src/.env.example src/.env 
