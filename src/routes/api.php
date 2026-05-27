@@ -42,6 +42,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users', [UserController::class, 'create'])->name('api.users.create');
     Route::get('dashboard/delivered-orders-trend', [DashboardController::class, 'deliveredOrdersTrend'])
         ->name('api.dashboard.delivered-orders-trend');
+    Route::get('dashboard/active-couriers-map', [DashboardController::class, 'activeCouriersMap'])
+        ->name('api.dashboard.active-couriers-map');
 
     Route::get('/order', [OrderCreateController::class, 'getOrderForm']);
 

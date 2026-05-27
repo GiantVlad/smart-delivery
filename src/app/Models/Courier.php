@@ -35,4 +35,9 @@ class Courier extends Model
     {
         return $this->hasMany(WorkingHour::class);
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

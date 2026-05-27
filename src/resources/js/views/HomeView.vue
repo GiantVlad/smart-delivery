@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import {
   mdiAccountMultiple,
   mdiCartOutline,
@@ -21,6 +21,9 @@ import http from '@/lib/axios.js'
 
 const chartData = ref(null)
 const chartError = ref('')
+const mapCouriers = ref([])
+const mapError = ref('')
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
 
 const chartPalette = [
   '#2563EB',
@@ -62,25 +65,69 @@ const fillChartData = async () => {
   }
 }
 
+const loadMapCouriers = async () => {
+  mapError.value = ''
+  try {
+    const response = await http.get('/api/dashboard/active-couriers-map')
+    mapCouriers.value = response.data?.data || []
+  } catch (error) {
+    mapError.value = error.response?.data?.message || 'Failed to load courier map data.'
+  }
+}
+
 onMounted(() => {
   fillChartData()
+  loadMapCouriers()
 })
 
-const center = { lat: 40.689247, lng: -74.044502 }
+const defaultCenter = { lat: 40.689247, lng: -74.044502 }
+const mapMarkers = computed(() => mapCouriers.value
+  .map((courier) => {
+    const lat = Number(courier.lat)
+    const lng = Number(courier.lng)
+
+    return {
+      ...courier,
+      position: { lat, lng },
+    }
+  })
+  .filter((courier) => Number.isFinite(courier.position.lat) && Number.isFinite(courier.position.lng)))
+const mapCenter = computed(() => mapMarkers.value[0]?.position || defaultCenter)
 
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <GoogleMap
-        api-key="AIzaSyDF6ZTPdgnpG9wp_gRRWWWfI-QLI0pw1Tg"
-        style="width: 100%; height: 500px"
-        :center="center"
-        :zoom="15"
-      >
-        <Marker :options="{ position: center }" />
-      </GoogleMap>
+      <CardBox class="mb-6">
+        <GoogleMap
+          v-if="googleMapsApiKey"
+          :api-key="googleMapsApiKey"
+          class="rounded-xl overflow-hidden"
+          style="width: 100%; height: 500px"
+          :center="mapCenter"
+          :zoom="mapMarkers.length ? 12 : 3"
+        >
+          <Marker
+            v-for="(courier, idx) in mapMarkers"
+            :key="courier.courierUuid"
+            :options="{
+              position: courier.position,
+              label: String(idx + 1),
+              title: `${courier.courierName} (${courier.pointType}): ${courier.pointAddress}`,
+            }"
+          />
+        </GoogleMap>
+        <NotificationBar v-else color="warning">
+          Set VITE_GOOGLE_MAPS_API_KEY to show active couriers on the map.
+        </NotificationBar>
+        <NotificationBar v-if="mapError" color="danger">
+          {{ mapError }}
+        </NotificationBar>
+        <NotificationBar v-else-if="googleMapsApiKey && !mapMarkers.length" color="info">
+          No couriers with active on-task routes found.
+        </NotificationBar>
+      </CardBox>
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
         <CardBoxWidget
           trend="12%"

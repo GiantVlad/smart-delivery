@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
+use App\Enums\TaskStatusEnum;
 use App\Models\Order;
+use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -62,6 +65,57 @@ class DashboardController extends Controller
                 'labels' => $labels,
                 'datasets' => $datasets,
             ],
+        ]);
+    }
+
+    public function activeCouriersMap(): JsonResponse
+    {
+        $tasks = Task::query()
+            ->with([
+                'courier',
+                'routes' => static fn ($query) => $query
+                    ->with('point')
+                    ->orderByDesc('sequence'),
+            ])
+            ->whereNotIn('status', [
+                TaskStatusEnum::FINISHED->value,
+                TaskStatusEnum::CANCELED->value,
+            ])
+            ->whereHas('courier', static fn ($query) => $query
+                ->where('status', CourierStatusEnum::OT->value))
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->get()
+            ->unique('courier_id');
+
+        $couriers = $tasks
+            ->map(function (Task $task): ?array {
+                $route = $task->routes->first();
+                $point = $route?->point;
+
+                if (! $point || $point->lat === null || $point->long === null) {
+                    return null;
+                }
+
+                return [
+                    'courierUuid' => $task->courier->uuid,
+                    'courierName' => $task->courier->name,
+                    'courierStatus' => $task->courier->status,
+                    'taskUuid' => $task->uuid,
+                    'taskStatus' => $task->status,
+                    'pointId' => $point->id,
+                    'pointAddress' => $point->address,
+                    'pointType' => $route->point_type,
+                    'sequence' => $route->sequence,
+                    'lat' => (float) $point->lat,
+                    'lng' => (float) $point->long,
+                ];
+            })
+            ->filter()
+            ->values();
+
+        return response()->json([
+            'data' => $couriers,
         ]);
     }
 }
