@@ -30,6 +30,8 @@ Route::post('/erp-webhook', [OrderStatusController::class, 'confirmOrder']);
 
 // Public routes
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [AuthController::class, 'me'])->name('api.me');
+
     // Centrifugo endpoints
     Route::get('/centrifugo/connection-token', [CentrifugoController::class, 'getConnectionToken'])
         ->name('centrifugo.connection-token');

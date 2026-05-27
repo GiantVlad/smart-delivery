@@ -4,7 +4,6 @@ import {
   mdiAccountMultiple,
   mdiCartOutline,
   mdiChartTimelineVariant,
-  mdiMonitorCellphone,
   mdiReload,
   mdiChartPie
 } from '@mdi/js'
@@ -126,9 +125,6 @@ const center = { lat: 40.689247, lng: -74.044502 }
 
       <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Customers" />
 
-      <NotificationBar color="info" :icon="mdiMonitorCellphone">
-        <b>Responsive table.</b> Collapses on mobile
-      </NotificationBar>
       <CardBox class="mb-6" has-table>
         <TableSampleCustomers />
       </CardBox>

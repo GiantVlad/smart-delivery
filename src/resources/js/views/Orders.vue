@@ -7,9 +7,6 @@
         <BaseButton type="button" color="info" label="Create Order" @click="router.push('/order')"/>
       </BaseButtons>
       <BaseDivider />
-      <NotificationBar color="info" :icon="mdiMonitorCellphone">
-        <b>Responsive table.</b> Collapses on mobile
-      </NotificationBar>
       <CardBox has-table v-if="orders.length > 0">
         <!-- Table -->
           <table class="table-auto w-full" style="table-layout: fixed;">
@@ -107,7 +104,7 @@
 
 <script setup>
 
-import { mdiMonitorCellphone, mdiTableBorder } from '@mdi/js'
+import { mdiTableBorder } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 import CardBox from '@/components/CardBox.vue'

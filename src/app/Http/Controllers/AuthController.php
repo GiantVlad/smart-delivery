@@ -11,6 +11,22 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+    public function me(): JsonResponse
+    {
+        $user = Auth::user();
+        if (! $user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
+        return response()->json([
+            'data' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'roles' => $user->getRoleNames()->values()->all(),
+            ],
+        ]);
+    }
+
     public function login(AuthLoginRequest $request): JsonResponse
     {
         $credentials = $request->only(['email', 'password']);

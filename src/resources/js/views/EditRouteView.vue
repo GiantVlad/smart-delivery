@@ -3,10 +3,6 @@
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Edit route" main>
       </SectionTitleLineWithButton>
-      <NotificationBar color="info" :icon="mdiMonitorCellphone">
-        <b>Responsive table.</b> Collapses on mobile
-      </NotificationBar>
-
       <CardBox class="mb-6" has-table>
         <FormField label="Task">
           <FormControl v-model="selectedTask" :options="tasks"/>
@@ -99,6 +95,42 @@
           </tr>
           </VueDraggableNext>
         </table>
+        <div class="p-4 border-t border-gray-100 dark:border-gray-700/60">
+          <div class="mb-3">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Route map</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Markers follow the current pickup and delivery sequence.
+            </p>
+          </div>
+          <GoogleMap
+            v-if="googleMapsApiKey && mapPoints.length"
+            :api-key="googleMapsApiKey"
+            class="rounded-xl overflow-hidden"
+            style="width: 100%; height: 420px"
+            :center="mapCenter"
+            :zoom="12"
+          >
+            <Polyline
+              v-if="routePath.length > 1"
+              :options="routeLineOptions"
+            />
+            <Marker
+              v-for="(point, idx) in mapPoints"
+              :key="`${point.pointId}-${idx}`"
+              :options="{
+                position: point.position,
+                label: String(idx + 1),
+                title: `${idx + 1}. ${point.type}: ${point.pointAddress}`,
+              }"
+            />
+          </GoogleMap>
+          <NotificationBar v-else-if="!googleMapsApiKey" color="warning">
+            Set VITE_GOOGLE_MAPS_API_KEY to show the route map.
+          </NotificationBar>
+          <NotificationBar v-else color="warning">
+            This route has no valid point coordinates for the map.
+          </NotificationBar>
+        </div>
         <template #footer>
           <BaseButtons>
             <BaseButton type="submit" color="info" label="Save route" />
@@ -111,15 +143,16 @@
 
 <script setup>
 
-import { mdiMonitorCellphone, mdiTableBorder } from '@mdi/js'
+import { mdiTableBorder } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
 import NotificationBar from '@/components/NotificationBar.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import { VueDraggableNext } from 'vue-draggable-next'
+import { GoogleMap, Marker, Polyline } from 'vue3-google-map'
 import http from "@/lib/axios.js"
-import {ref, onMounted, watch, reactive} from "vue";
+import {ref, onMounted, watch, reactive, computed} from "vue";
 import FormControl from "@/components/FormControl.vue";
 import FormField from "@/components/FormField.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
@@ -132,6 +165,29 @@ const tasks = ref([])
 const orders = ref([])
 const points = ref([])
 const error = ref(null)
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+
+const mapPoints = computed(() => points.value
+  .map((point) => {
+    const lat = Number(point.lat)
+    const lng = Number(point.lng)
+
+    return {
+      ...point,
+      position: { lat, lng },
+    }
+  })
+  .filter((point) => Number.isFinite(point.position.lat) && Number.isFinite(point.position.lng)))
+
+const mapCenter = computed(() => mapPoints.value[0]?.position || { lat: 0, lng: 0 })
+const routePath = computed(() => mapPoints.value.map((point) => point.position))
+const routeLineOptions = computed(() => ({
+  path: routePath.value,
+  geodesic: true,
+  strokeColor: '#2563EB',
+  strokeOpacity: 0.9,
+  strokeWeight: 4,
+}))
 
 onMounted(() => {
   http.get('/api/tasks')

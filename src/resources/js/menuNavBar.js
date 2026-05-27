@@ -14,7 +14,7 @@ export default [
       {
         icon: mdiAccount,
         label: 'My Profile',
-        to: '/profile'
+        isProfile: true,
       },
       {
         icon: mdiCogOutline,

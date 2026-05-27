@@ -7,10 +7,6 @@
         <BaseButton type="button" color="info" label="Create Task" @click="router.push('/task')"/>
       </BaseButtons>
       <BaseDivider />
-      <NotificationBar color="info" :icon="mdiMonitorCellphone">
-        <b>Resdevops ponsive table.</b> Collapses on mobile
-      </NotificationBar>
-
       <CardBox class="mb-6 max-w-5xl" has-table v-if="tasks.length > 0">
         <!-- Table -->
           <table class="table-auto w-full">
@@ -78,9 +74,8 @@
 
 <script setup>
 
-import { mdiMonitorCellphone, mdiTableBorder, mdiTableOff } from '@mdi/js'
+import { mdiTableBorder, mdiTableOff } from '@mdi/js'
 import SectionMain from '@/components/SectionMain.vue'
-import NotificationBar from '@/components/NotificationBar.vue'
 import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'

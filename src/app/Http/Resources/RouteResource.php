@@ -19,6 +19,8 @@ class RouteResource extends JsonResource
         return [
             'pointId' => $this->point_id,
             'pointAddress' => $this->whenLoaded('point') ? $this->point->address : '',
+            'lat' => $this->whenLoaded('point') ? $this->point->lat : null,
+            'lng' => $this->whenLoaded('point') ? $this->point->long : null,
             'sequence' => $this->sequence,
             'type' => $this->point_type,
         ];
