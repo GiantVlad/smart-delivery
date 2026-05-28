@@ -185,9 +185,9 @@ const addOrdersToTask = () => {
             <td class="p-2 whitespace-nowrap">
               <div class="text-left font-medium text-green-500">
                 <BaseButton v-show="showActionButton[order.uuid]" type="button" color="success" label="Change status" small @click="onUpdateStatus(order)"/>
-                <div v-show="!showActionButton[order.uuid]">
+                <div v-show="!showActionButton[order.uuid]" class="space-y-2">
                   <FormControl v-model="selectedStatus[order.uuid]" :options="Object.values(OrderStatuses)"/>
-                  <BaseButton class="pt-1" type="button" color="info" label="Submit" small @click="submit(order.uuid)"/>
+                  <BaseButton type="button" color="info" label="Submit" small @click="submit(order.uuid)"/>
                 </div>
               </div>
             </td>

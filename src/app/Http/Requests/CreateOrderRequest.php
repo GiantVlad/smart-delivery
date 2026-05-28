@@ -24,8 +24,16 @@ class CreateOrderRequest extends FormRequest
         return [
             'customerEmail' => 'required|email',
             'unitType' => 'required|string|min:3|max:20',
-            'startAddressId' => 'required|numeric|exists:points,id',
-            'endAddressId' => 'required|numeric|different:startAddressId|exists:points,id',
+            'startPoint' => 'required|array',
+            'startPoint.address' => 'required|string|max:255',
+            'startPoint.lat' => 'required|numeric|between:-90,90',
+            'startPoint.lng' => 'required|numeric|between:-180,180',
+            'startPoint.placeId' => 'nullable|string|max:255',
+            'endPoint' => 'required|array',
+            'endPoint.address' => 'required|string|max:255|different:startPoint.address',
+            'endPoint.lat' => 'required|numeric|between:-90,90',
+            'endPoint.lng' => 'required|numeric|between:-180,180',
+            'endPoint.placeId' => 'nullable|string|max:255',
             'slotId' => 'required|integer|exists:slots,id',
             'date' => 'required|date|after:yesterday',
         ];

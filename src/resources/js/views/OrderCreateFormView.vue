@@ -14,13 +14,15 @@ import http from "@/lib/axios.js"
 import router from "@/router/index.js"
 import CardBoxModal from "@/components/CardBoxModal.vue"
 import DatePicker from '@/components/DatePicker.vue'
+import GoogleAddressAutocomplete from '@/components/GoogleAddressAutocomplete.vue'
+import NotificationBar from '@/components/NotificationBar.vue'
 
 const customers = ref([])
-const points = ref([])
 const unitTypes = ['Small', 'Medium', 'Large']
 const isModalActive = ref(false)
 const selectedDate = ref('');
 const timeSlots = ref([]);
+const submitError = ref('')
 
 const dateOptions = {
   minDate: 'today',
@@ -60,8 +62,8 @@ const selectTimeSlot = (slot) => {
 const form = reactive({
   customer: null,
   type: unitTypes[1],
-  startAddress: null,
-  endAddress: null,
+  startPoint: null,
+  endPoint: null,
   slotId: null,
   date: null,
 })
@@ -78,17 +80,22 @@ const showModal = () => {
 }
 
 const submit = () => {
+  submitError.value = ''
+
   http.post('/api/order',
     {
       customerEmail: form.customer,
       unitType: form.type,
-      startAddressId: form.startAddress,
-      endAddressId: form.endAddress,
+      startPoint: form.startPoint,
+      endPoint: form.endPoint,
       slotId: form.slotId,
       date: form.date,
     })
     .then((response) => {
       router.push({ path: 'orders' })
+    })
+    .catch((error) => {
+      submitError.value = error.response?.data?.message || 'Failed to create order.'
     })
 }
 
@@ -101,13 +108,7 @@ const formStatusOptions = ['info', 'success', 'danger', 'warning']
 onMounted(async () => {
   const response = await http.get('/api/customers')
   customers.value = response.data.data.map(el => el.email)
-  await http.get('/api/order')
-    .then((response) => {
-      points.value = response.data.data.points.map(el => ({id: el.id, label: el.address}))
-      form.customer = customers.value[0]
-      form.startAddress = points.value[0].id
-      form.endAddress = points.value[1].id
-    })
+  form.customer = customers.value[0]
 })
 
 const formStatusSubmit = () => {
@@ -179,11 +180,19 @@ const createCustomer = () => {
         </FormField>
 
         <FormField label="Pick up">
-          <FormControl v-model="form.startAddress" :options="points" />
+          <GoogleAddressAutocomplete
+            id="pickup-address"
+            v-model="form.startPoint"
+            placeholder="Enter pickup address"
+          />
         </FormField>
 
         <FormField label="Destination">
-          <FormControl v-model="form.endAddress" :options="points" />
+          <GoogleAddressAutocomplete
+            id="destination-address"
+            v-model="form.endPoint"
+            placeholder="Enter destination address"
+          />
         </FormField>
 
         <DatePicker
@@ -219,9 +228,18 @@ const createCustomer = () => {
 
         <BaseDivider />
 
+        <NotificationBar v-if="submitError" color="danger">
+          {{ submitError }}
+        </NotificationBar>
+
         <template #footer>
           <BaseButtons>
-            <BaseButton type="submit" color="info" label="Submit" />
+            <BaseButton
+              type="submit"
+              color="info"
+              label="Submit"
+              :disabled="!form.startPoint || !form.endPoint"
+            />
           </BaseButtons>
         </template>
       </CardBox>

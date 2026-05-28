@@ -52,8 +52,8 @@ class OrderCreateController extends Controller
     {
         $email = $request->get('customerEmail');
         $unitType = $request->get('unitType');
-        $startPointId = $request->get('startAddressId');
-        $endPointId = $request->get('endAddressId');
+        $startPointId = $this->resolvePoint($request->array('startPoint'))->id;
+        $endPointId = $this->resolvePoint($request->array('endPoint'))->id;
         $slot = Slot::findOrFail((int) $request->get('slotId'));
 
         $workflow = $this->workflowClient->newWorkflowStub(
@@ -76,5 +76,16 @@ class OrderCreateController extends Controller
         $this->workflowClient->start($workflow, $orderDTO);
 
         return response()->json(['data' => true]);
+    }
+
+    private function resolvePoint(array $pointData): Point
+    {
+        return Point::firstOrCreate(
+            [
+                'address' => $pointData['address'],
+                'lat' => (float) $pointData['lat'],
+                'long' => (float) $pointData['lng'],
+            ]
+        );
     }
 }
