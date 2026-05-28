@@ -23,6 +23,8 @@ const inputValue = ref(props.modelValue?.address || '')
 const loadError = ref('')
 let autocomplete = null
 let placeChangedListener = null
+let AutocompleteClass = null
+let LatLngBoundsClass = null
 
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
 const autocompleteCountries = (import.meta.env.VITE_GOOGLE_MAPS_AUTOCOMPLETE_COUNTRIES || '')
@@ -46,34 +48,40 @@ const parseBounds = () => {
 
   const [south, west, north, east] = parts
 
-  return new window.google.maps.LatLngBounds(
+  return new LatLngBoundsClass(
     { lat: south, lng: west },
     { lat: north, lng: east },
   )
 }
 
 const loadPlacesLibrary = async () => {
-  if (window.google?.maps?.places?.Autocomplete) {
+  if (AutocompleteClass && LatLngBoundsClass) {
     return window.google
   }
 
   if (window.google?.maps?.importLibrary) {
-    await window.google.maps.importLibrary('places')
+    const coreLibrary = await window.google.maps.importLibrary('core')
+    const placesLibrary = await window.google.maps.importLibrary('places')
+
+    AutocompleteClass = placesLibrary.Autocomplete
+    LatLngBoundsClass = coreLibrary.LatLngBounds
+  } else {
+    AutocompleteClass = window.google?.maps?.places?.Autocomplete
+    LatLngBoundsClass = window.google?.maps?.LatLngBounds
   }
 
-  if (!window.google?.maps?.places?.Autocomplete) {
+  if (!AutocompleteClass) {
     throw new Error('Google Places library is not available.')
+  }
+
+  if (!LatLngBoundsClass) {
+    throw new Error('Google Maps bounds library is not available.')
   }
 
   return window.google
 }
 
 const loadGoogleMaps = () => new Promise((resolve, reject) => {
-  if (window.google?.maps?.places) {
-    loadPlacesLibrary().then(resolve).catch(reject)
-    return
-  }
-
   if (window.google?.maps?.importLibrary) {
     loadPlacesLibrary().then(resolve).catch(reject)
     return
@@ -86,7 +94,7 @@ const loadGoogleMaps = () => new Promise((resolve, reject) => {
 
   const existingScript = document.getElementById('google-maps-places-script')
   if (existingScript) {
-    existingScript.addEventListener('load', () => resolve(window.google), { once: true })
+    existingScript.addEventListener('load', () => loadPlacesLibrary().then(resolve).catch(reject), { once: true })
     existingScript.addEventListener('error', () => reject(new Error('Failed to load Google Maps.')), { once: true })
     return
   }
@@ -129,7 +137,7 @@ const initAutocomplete = async () => {
       options.componentRestrictions = { country: autocompleteCountries }
     }
 
-    autocomplete = new window.google.maps.places.Autocomplete(inputEl.value, options)
+    autocomplete = new AutocompleteClass(inputEl.value, options)
     placeChangedListener = autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace()
       const location = place.geometry?.location
