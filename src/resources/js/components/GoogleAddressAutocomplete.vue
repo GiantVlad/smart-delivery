@@ -52,9 +52,30 @@ const parseBounds = () => {
   )
 }
 
+const loadPlacesLibrary = async () => {
+  if (window.google?.maps?.places?.Autocomplete) {
+    return window.google
+  }
+
+  if (window.google?.maps?.importLibrary) {
+    await window.google.maps.importLibrary('places')
+  }
+
+  if (!window.google?.maps?.places?.Autocomplete) {
+    throw new Error('Google Places library is not available.')
+  }
+
+  return window.google
+}
+
 const loadGoogleMaps = () => new Promise((resolve, reject) => {
   if (window.google?.maps?.places) {
-    resolve(window.google)
+    loadPlacesLibrary().then(resolve).catch(reject)
+    return
+  }
+
+  if (window.google?.maps?.importLibrary) {
+    loadPlacesLibrary().then(resolve).catch(reject)
     return
   }
 
@@ -81,7 +102,7 @@ const loadGoogleMaps = () => new Promise((resolve, reject) => {
   script.src = `https://maps.googleapis.com/maps/api/js?${params.toString()}`
   script.async = true
   script.defer = true
-  script.onload = () => resolve(window.google)
+  script.onload = () => loadPlacesLibrary().then(resolve).catch(reject)
   script.onerror = () => reject(new Error('Failed to load Google Maps.'))
   document.head.appendChild(script)
 })
