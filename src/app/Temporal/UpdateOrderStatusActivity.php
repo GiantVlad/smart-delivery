@@ -13,6 +13,11 @@ class UpdateOrderStatusActivity implements UpdateOrderStatusActivityInterface
 {
     public function updateOrderStatus(string $orderUuid, string $status): string
     {
+        Log::info('Updating order status', [
+            'order' => $orderUuid,
+            'status' => $status,
+        ]);
+
         $order = Order::where('uuid', $orderUuid)->firstOrFail();
         $order->status = $status;
         $order->delivered_at = $status === OrderStatusEnum::DELIVERED->value ? now() : null;
@@ -23,8 +28,16 @@ class UpdateOrderStatusActivity implements UpdateOrderStatusActivityInterface
 
         try {
             CentrifugoFacade::publish('order_status', ['order' => $orderUuid, 'status' => $status]);
+            Log::info('Published order_status event', [
+                'order' => $orderUuid,
+                'status' => $status,
+            ]);
         } catch (\Throwable $e) {
-            Log::error($e);
+            Log::error('Failed to publish order_status event', [
+                'order' => $orderUuid,
+                'status' => $status,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         return $orderUuid;

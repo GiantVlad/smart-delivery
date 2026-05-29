@@ -182,6 +182,14 @@ onMounted(() => {
 
   if (centrifugo?.subscribe) {
     orderStatusSub.value = centrifugo.subscribe('order_status', (data) => {
+      if (data?.order && data?.status) {
+        orderStatusStore.updateOrderStatus(data)
+        const order = orders.value.find((item) => item.uuid === data.order)
+        if (order) {
+          order.status = data.status
+        }
+      }
+
       liveUpdatesCount.value += 1
       lastOrderStatusEvent.value = `${data?.order || '-'} -> ${data?.status || '-'}`
       console.info('[orders] order_status update', data)

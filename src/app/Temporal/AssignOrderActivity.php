@@ -6,8 +6,10 @@ namespace App\Temporal;
 
 use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
+use App\Facades\CentrifugoFacade;
 use App\Models\Order;
 use App\Models\Task;
+use Illuminate\Support\Facades\Log;
 
 class AssignOrderActivity implements AssignOrderActivityInterface
 {
@@ -18,6 +20,16 @@ class AssignOrderActivity implements AssignOrderActivityInterface
         $order->task_id = $task->id;
         $order->status = OrderStatusEnum::ASSIGNED->value;
         $order->save();
+
+        try {
+            CentrifugoFacade::publish('order_status', ['order' => $order->uuid, 'status' => $order->status]);
+        } catch (\Throwable $error) {
+            Log::error('Failed to publish order_status for assign', [
+                'order' => $order->uuid,
+                'status' => $order->status,
+                'error' => $error->getMessage(),
+            ]);
+        }
 
         return new OrderDto(
             $order->customer->uuid,

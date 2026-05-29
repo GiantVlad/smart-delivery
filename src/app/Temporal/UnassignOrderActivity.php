@@ -6,7 +6,9 @@ namespace App\Temporal;
 
 use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
+use App\Facades\CentrifugoFacade;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 
 class UnassignOrderActivity implements UnassignOrderActivityInterface
 {
@@ -16,6 +18,16 @@ class UnassignOrderActivity implements UnassignOrderActivityInterface
         $order->task_id = null;
         $order->status = OrderStatusEnum::CANCELED->value;
         $order->save();
+
+        try {
+            CentrifugoFacade::publish('order_status', ['order' => $order->uuid, 'status' => $order->status]);
+        } catch (\Throwable $error) {
+            Log::error('Failed to publish order_status for unassign', [
+                'order' => $order->uuid,
+                'status' => $order->status,
+                'error' => $error->getMessage(),
+            ]);
+        }
 
         return new OrderDto(
             $order->customer->uuid,
