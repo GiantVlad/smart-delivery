@@ -33,39 +33,58 @@ let autocompleteElement = null
 let selectListener = null
 let inputListener = null
 
-const loadGoogleMaps = () => new Promise((resolve, reject) => {
+const ensureImportLibrary = async () => {
   if (window.google?.maps?.importLibrary) {
-    resolve(window.google)
     return
   }
 
   if (!googleMapsApiKey) {
-    reject(new Error('Missing VITE_GOOGLE_MAPS_API_KEY.'))
+    throw new Error('Missing VITE_GOOGLE_MAPS_API_KEY.')
+  }
+
+  const globalGoogle = window.google || (window.google = {})
+  const maps = globalGoogle.maps || (globalGoogle.maps = {})
+
+  if (maps.importLibrary) {
     return
   }
 
-  const existingScript = document.getElementById('google-maps-places-script')
-  if (existingScript) {
-    existingScript.addEventListener('load', () => resolve(window.google), { once: true })
-    existingScript.addEventListener('error', () => reject(new Error('Failed to load Google Maps.')), { once: true })
-    return
-  }
+  await new Promise((resolve, reject) => {
+    const loadedLibraries = new Set()
+    const params = new URLSearchParams()
+    let scriptLoadingPromise = null
 
-  const script = document.createElement('script')
-  const params = new URLSearchParams({
-    key: googleMapsApiKey,
-    libraries: 'places',
-    loading: 'async',
+    const loadScript = () => {
+      if (!scriptLoadingPromise) {
+        scriptLoadingPromise = new Promise((innerResolve, innerReject) => {
+          const script = document.createElement('script')
+
+          params.set('libraries', [...loadedLibraries].join(','))
+          params.set('key', googleMapsApiKey)
+          params.set('v', 'beta')
+          params.set('loading', 'async')
+          params.set('callback', 'google.maps.__ib__')
+
+          script.id = 'google-maps-import-library-shim'
+          script.src = `https://maps.googleapis.com/maps/api/js?${params.toString()}`
+          script.onerror = () => innerReject(new Error('Failed to load Google Maps.'))
+          maps.__ib__ = innerResolve
+          document.head.appendChild(script)
+        })
+      }
+
+      return scriptLoadingPromise
+    }
+
+    maps.importLibrary = (libraryName, ...args) => {
+      loadedLibraries.add(libraryName)
+
+      return loadScript().then(() => maps.importLibrary(libraryName, ...args))
+    }
+
+    maps.importLibrary('core').then(resolve).catch(reject)
   })
-
-  script.id = 'google-maps-places-script'
-  script.src = `https://maps.googleapis.com/maps/api/js?${params.toString()}`
-  script.async = true
-  script.defer = true
-  script.onload = () => resolve(window.google)
-  script.onerror = () => reject(new Error('Failed to load Google Maps.'))
-  document.head.appendChild(script)
-})
+}
 
 const parseBoundsLiteral = () => {
   const parts = autocompleteBounds.split(',').map((part) => Number(part.trim()))
@@ -90,7 +109,7 @@ const clearSelection = () => {
 
 const initAutocomplete = async () => {
   try {
-    await loadGoogleMaps()
+    await ensureImportLibrary()
 
     const [{ PlaceAutocompleteElement }, { LatLngBounds }] = await Promise.all([
       window.google.maps.importLibrary('places'),
@@ -152,7 +171,11 @@ const initAutocomplete = async () => {
 
     autocompleteElement.addEventListener('gmp-select', selectListener)
     autocompleteElement.addEventListener('input', inputListener)
-    wrapperEl.value.appendChild(autocompleteElement)
+
+    if (wrapperEl.value) {
+      wrapperEl.value.replaceChildren()
+      wrapperEl.value.appendChild(autocompleteElement)
+    }
   } catch (error) {
     loadError.value = error.message || 'Failed to load Google address autocomplete.'
   }
@@ -177,15 +200,15 @@ onBeforeUnmount(() => {
   if (autocompleteElement && inputListener) {
     autocompleteElement.removeEventListener('input', inputListener)
   }
+  if (wrapperEl.value) {
+    wrapperEl.value.replaceChildren()
+  }
 })
 </script>
 
 <template>
   <div>
-    <div
-      ref="wrapperEl"
-      class="google-places-wrapper px-3 py-2 max-w-full focus-within:ring border-gray-700 rounded w-full h-12 border bg-white dark:bg-slate-800"
-    />
+    <div ref="wrapperEl" class="google-places-wrapper" />
     <p v-if="loadError" class="mt-1 text-xs text-red-500">
       {{ loadError }}
     </p>
@@ -194,6 +217,29 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .google-places-wrapper :deep(gmp-place-autocomplete) {
+  display: block;
   width: 100%;
+  min-height: 3rem;
+  border: 1px solid rgb(55 65 81);
+  border-radius: 0.25rem;
+  background: white;
+}
+
+.google-places-wrapper:focus-within {
+  box-shadow: 0 0 0 2px rgb(59 130 246 / 0.35);
+  border-radius: 0.25rem;
+}
+
+:global(.dark) .google-places-wrapper :deep(gmp-place-autocomplete) {
+  background: rgb(30 41 59);
+}
+
+.google-places-wrapper :deep(gmp-place-autocomplete input) {
+  width: 100%;
+  min-height: 3rem;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
 }
 </style>
