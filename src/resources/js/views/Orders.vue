@@ -3,6 +3,22 @@
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiTableBorder" title="Orders" main>
       </SectionTitleLineWithButton>
+      <NotificationBar
+        class="mb-4"
+        :color="centrifugoState?.connected ? 'success' : 'warning'"
+      >
+        WS: {{ centrifugoState?.connected ? 'connected' : 'disconnected' }} |
+        channel: order_status |
+        updates: {{ liveUpdatesCount }} |
+        last event: {{ lastOrderStatusEvent || 'none' }}
+      </NotificationBar>
+      <NotificationBar
+        v-if="centrifugoState?.lastError"
+        class="mb-4"
+        color="danger"
+      >
+        Centrifugo error: {{ centrifugoState.lastError }}
+      </NotificationBar>
       <BaseButtons>
         <BaseButton type="button" color="info" label="Create Order" @click="router.push('/order')"/>
       </BaseButtons>
@@ -112,7 +128,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
 import http from "@/lib/axios.js"
-import {ref, onMounted, reactive, computed} from "vue"
+import {ref, onMounted, computed, inject, onUnmounted} from "vue"
 import BaseButton from "@/components/BaseButton.vue"
 import BaseButtons from "@/components/BaseButtons.vue"
 import router from "@/router/index.js"
@@ -121,6 +137,11 @@ import { useOrderStatusStore } from "@/stores/orderStatus.js"
 
 const orders = ref([])
 const orderStatusStore = useOrderStatusStore()
+const centrifugo = inject('centrifugo', null)
+const centrifugoState = inject('centrifugoState', null)
+const liveUpdatesCount = ref(0)
+const lastOrderStatusEvent = ref('')
+const orderStatusSub = ref(null)
 
 const formatDateTime = (value) => {
   if (!value) return '-'
@@ -158,6 +179,18 @@ onMounted(() => {
         })
       }
     })
+
+  if (centrifugo?.subscribe) {
+    orderStatusSub.value = centrifugo.subscribe('order_status', (data) => {
+      liveUpdatesCount.value += 1
+      lastOrderStatusEvent.value = `${data?.order || '-'} -> ${data?.status || '-'}`
+      console.info('[orders] order_status update', data)
+    })
+  }
+})
+
+onUnmounted(() => {
+  orderStatusSub.value?.unsubscribe?.()
 })
 
 </script>
