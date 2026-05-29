@@ -1,6 +1,9 @@
 import { Centrifuge } from 'centrifuge';
 import { useMainStore } from '@/stores/main'
 import { reactive } from 'vue'
+import { useOrderStatusStore } from '@/stores/orderStatus'
+import { useTaskStatusStore } from '@/stores/taskStatus'
+import { useCourierStatusStore } from '@/stores/courierStatus'
 
 export default {
   install(app, { url }) {
@@ -179,27 +182,44 @@ export default {
 
     // Set up store subscription
     const mainStore = useMainStore();
+    const orderStatusStore = useOrderStatusStore()
+    const taskStatusStore = useTaskStatusStore()
+    const courierStatusStore = useCourierStatusStore()
+    let internalSubscriptions = []
+
+    const bindInternalChannels = () => {
+      if (internalSubscriptions.length) {
+        return
+      }
+
+      internalSubscriptions = [
+        subscribe('order_status', (data) => orderStatusStore.updateOrderStatus(data)),
+        subscribe('task_status', (data) => taskStatusStore.updateStatus(data)),
+        subscribe('courier_status', (data) => courierStatusStore.updateStatus(data)),
+      ]
+    }
+
+    const clearInternalChannels = () => {
+      internalSubscriptions.forEach((sub) => sub?.unsubscribe?.())
+      internalSubscriptions = []
+    }
 
     // Initial connection check
     if (mainStore.isAuthenticated) {
+      bindInternalChannels();
       connect();
     }
 
     // Watch for authentication state changes
-    const unwatch = mainStore.$subscribe((mutation, state) => {
+    mainStore.$subscribe((mutation, state) => {
       if (state.isAuthenticated) {
+        bindInternalChannels();
         connect();
       } else {
+        clearInternalChannels();
         disconnect();
         subscriptions.clear();
       }
-    });
-
-    // Clean up on app unmount
-    app.mixin({
-      unmounted() {
-        unwatch();
-      },
     });
   },
 };
