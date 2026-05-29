@@ -81,7 +81,7 @@ const routes = [
   },
   {
     meta: {
-      title: 'Update order in task',
+      title: 'Update order',
       requiresAuth: true,
     },
     path: '/update-order-in-task',
@@ -126,20 +126,53 @@ const router = createRouter({
   }
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    const mainStore = useMainStore()
-    if (mainStore.isAuthenticated) {
-      // User is authenticated, proceed to the route
-      next()
-    } else {
-      // User is not authenticated, redirect to login
-      next('/login')
-    }
-  } else {
-    // Non-protected route, allow access
-    next();
+const verifyServerSession = async () => {
+  const response = await fetch('https://delivery.cloud-workflow.com/api/me', {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error('Unauthenticated')
   }
+
+  const payload = await response.json()
+
+  return payload?.data ?? null
+}
+
+router.beforeEach(async (to, from, next) => {
+  if (!to.meta.requiresAuth) {
+    next()
+    return
+  }
+
+  const mainStore = useMainStore()
+
+  try {
+    const user = await verifyServerSession()
+    if (user?.email && user?.name) {
+      mainStore.setUser({
+        email: user.email,
+        name: user.name,
+      })
+      next()
+      return
+    }
+  } catch (error) {
+    // Handle below
+  }
+
+  mainStore.clearStore()
+  next({
+    name: 'login',
+    query: {
+      redirect: to.fullPath,
+    },
+  })
 })
 
 

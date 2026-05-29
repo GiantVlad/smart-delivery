@@ -39,7 +39,7 @@ export default [
   },
   {
     to: '/update-order-in-task',
-    label: 'Update order in task',
+    label: 'Update order',
     icon: mdiPalette
   },
   {

@@ -4,7 +4,7 @@ import {
   mdiEmail,
   mdiLogout,
   mdiThemeLightDark,
-  mdiReact, mdiLogin
+  mdiReact
 } from '@mdi/js'
 
 export default [
@@ -30,13 +30,8 @@ export default [
       {
         icon: mdiLogout,
         label: 'Log Out',
-        isCurrentUser: true
-      },
-      {
-        icon: mdiLogin,
-        label: 'Login',
-        isCurrentUser: false,
-        to: '/login'
+        isCurrentUser: true,
+        isLogout: true
       }
     ]
   },
