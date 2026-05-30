@@ -113,22 +113,29 @@ export default {
       }
     };
 
+    const normalizeChannel = (channel) => (typeof channel === 'string' ? channel.trim() : channel)
+
     const subscribe = (channel, callback) => {
-      if (!subscriptions.has(channel)) {
-        subscriptions.set(channel, {
+      const normalizedChannel = normalizeChannel(channel)
+      if (!normalizedChannel) {
+        return { unsubscribe: () => {} }
+      }
+
+      if (!subscriptions.has(normalizedChannel)) {
+        subscriptions.set(normalizedChannel, {
           callbacks: new Set(),
           subscription: null,
           publicationHandler: null,
         })
       }
 
-      const entry = subscriptions.get(channel)
+      const entry = subscriptions.get(normalizedChannel)
       entry.callbacks.add(callback)
 
       if (centrifuge && !entry.subscription) {
-        let sub = centrifuge.getSubscription(channel)
+        let sub = centrifuge.getSubscription(normalizedChannel)
         if (!sub) {
-          sub = centrifuge.newSubscription(channel)
+          sub = centrifuge.newSubscription(normalizedChannel)
         }
 
         const publicationHandler = (ctx) => {
@@ -152,14 +159,15 @@ export default {
                 centrifuge.removeSubscription(entry.subscription)
               }
             }
-            subscriptions.delete(channel)
+            subscriptions.delete(normalizedChannel)
           }
         },
       };
     };
 
     const unsubscribe = (channel) => {
-      const entry = subscriptions.get(channel)
+      const normalizedChannel = normalizeChannel(channel)
+      const entry = subscriptions.get(normalizedChannel)
       if (!entry) {
         return
       }
@@ -170,7 +178,7 @@ export default {
           centrifuge.removeSubscription(entry.subscription)
         }
       }
-      subscriptions.delete(channel)
+      subscriptions.delete(normalizedChannel)
     };
 
     const api = { connect, disconnect, subscribe, unsubscribe };

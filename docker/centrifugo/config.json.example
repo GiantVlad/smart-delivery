@@ -9,7 +9,10 @@
   },
   "channel": {
     "without_namespace": {
-      "allow_subscribe_for_client": true
+      "allow_subscribe_for_client": true,
+      "history_size": 100,
+      "history_ttl": "1h",
+      "history_meta_ttl": "24h"
     }
   },
   "admin": {
