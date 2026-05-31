@@ -13,7 +13,7 @@ class OrderDto extends Data
         public string $unitType,
         public int $startPointId,
         public int $endPointId,
-        public string $timeRanges,
+        public array $timeRanges,
         public string $uuid = '',
         public string $status = '',
     ) {}

@@ -28,7 +28,7 @@ class CreateOrderActivity implements CreateOrderActivityInterface
         $primaryRange = collect($timeRanges)
             ->first(static fn (array $range): bool => isset($range['date']));
         $order->date = $primaryRange['date'] ?? now()->toDateString();
-        $order->time_ranges = json_encode($timeRanges);
+        $order->time_ranges = $timeRanges;
         $order->uuid = Str::uuid()->toString();
         $order->status = OrderStatusEnum::NEW;
         $order->save();
