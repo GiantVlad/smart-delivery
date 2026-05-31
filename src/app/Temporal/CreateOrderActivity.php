@@ -15,7 +15,6 @@ class CreateOrderActivity implements CreateOrderActivityInterface
 {
     public function createOrder(OrderDto $orderDto): string
     {
-        $timeRanges = $orderDto->normalizedTimeRanges();
         if (empty($timeRanges)) {
             throw new InvalidArgumentException('Order time ranges are required for order creation.');
         }
@@ -29,7 +28,7 @@ class CreateOrderActivity implements CreateOrderActivityInterface
         $primaryRange = collect($timeRanges)
             ->first(static fn (array $range): bool => isset($range['date']));
         $order->date = $primaryRange['date'] ?? now()->toDateString();
-        $order->time_ranges = $timeRanges;
+        $order->time_ranges = json_encode($timeRanges);
         $order->uuid = Str::uuid()->toString();
         $order->status = OrderStatusEnum::NEW;
         $order->save();
