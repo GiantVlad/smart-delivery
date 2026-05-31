@@ -39,8 +39,6 @@ class OrderResource extends JsonResource
             'startPointId' => $this->startPoint?->id,
             'endPointId' => $this->endPoint?->id,
             'date' => $this->date,
-            'from' => $this->from,
-            'to' => $this->to,
             'timeRanges' => $timeRanges,
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
