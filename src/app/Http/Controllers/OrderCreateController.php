@@ -87,7 +87,7 @@ class OrderCreateController extends Controller
             unitType: $unitType,
             startPointId: $startPointId,
             endPointId: $endPointId,
-            timeRanges: $timeRanges,
+            timeRanges: json_encode($timeRanges),
         );
 
         $this->workflowClient->start($workflow, $orderDTO);

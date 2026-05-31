@@ -32,11 +32,13 @@ class AssignOrderActivity implements AssignOrderActivityInterface
         }
 
         return new OrderDto(
-            $order->customer->uuid,
-            $order->unit_type,
-            $order->start_point_id,
-            $order->end_point_id,
-            $order->uuid
+            customerUuid: $order->customer->uuid,
+            unitType: $order->unit_type,
+            startPointId: $order->start_point_id,
+            endPointId: $order->end_point_id,
+            timeRanges: $order->time_ranges,
+            uuid: $order->uuid,
+            status: $order->status,
         );
     }
 }
