@@ -34,7 +34,7 @@ const dateOptions = {
 };
 
 const handleDateChange = async (selectedDates, dateStr) => {
-  form.slotId = null; // Reset selected slot when date changes
+  form.slotIds = [] // Reset selected slots when date changes
   if (!dateStr) {
     timeSlots.value = []
     return
@@ -54,9 +54,12 @@ const handleDateChange = async (selectedDates, dateStr) => {
 
 
 const selectTimeSlot = (slot) => {
-  form.slotId = slot.id;
-  // Emit an event or update a parent component if needed
-  // emit('slot-selected', slot);
+  if (form.slotIds.includes(slot.id)) {
+    form.slotIds = form.slotIds.filter((id) => id !== slot.id)
+    return
+  }
+
+  form.slotIds = [...form.slotIds, slot.id]
 }
 
 const form = reactive({
@@ -64,7 +67,7 @@ const form = reactive({
   type: unitTypes[1],
   startPoint: null,
   endPoint: null,
-  slotId: null,
+  slotIds: [],
   date: null,
 })
 
@@ -88,7 +91,7 @@ const submit = () => {
       unitType: form.type,
       startPoint: form.startPoint,
       endPoint: form.endPoint,
-      slotId: form.slotId,
+      slotIds: form.slotIds,
       date: form.date,
     })
     .then((response) => {
@@ -206,7 +209,7 @@ const createCustomer = () => {
           Selected: {{ selectedDate }}
         </p>
 
-        <FormField v-if="timeSlots.length > 0" label="Available Time Slots" help="Select a time slot for delivery">
+        <FormField v-if="timeSlots.length > 0" label="Available Time Slots" help="Select one or more time slots for delivery">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
             <div
               v-for="slot in timeSlots"
@@ -214,8 +217,8 @@ const createCustomer = () => {
               @click="selectTimeSlot(slot)"
               class="border rounded-lg p-4 cursor-pointer transition-colors"
               :class="{
-          'border-blue-500 bg-blue-50 dark:bg-blue-900/20': form.slotId === slot.id,
-          'border-gray-200 hover:border-blue-300 dark:border-gray-600 dark:hover:border-blue-600': form.slotId !== slot.id
+          'border-blue-500 bg-blue-50 dark:bg-blue-900/20': form.slotIds.includes(slot.id),
+          'border-gray-200 hover:border-blue-300 dark:border-gray-600 dark:hover:border-blue-600': !form.slotIds.includes(slot.id)
         }"
             >
               <div class="font-medium">{{ slot.from }} - {{ slot.to }}</div>
@@ -224,6 +227,9 @@ const createCustomer = () => {
               </div>
             </div>
           </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Selected slots: {{ form.slotIds.length }}
+          </p>
         </FormField>
 
         <BaseDivider />
@@ -238,7 +244,7 @@ const createCustomer = () => {
               type="submit"
               color="info"
               label="Submit"
-              :disabled="!form.startPoint || !form.endPoint"
+              :disabled="!form.startPoint || !form.endPoint || form.slotIds.length === 0"
             />
           </BaseButtons>
         </template>

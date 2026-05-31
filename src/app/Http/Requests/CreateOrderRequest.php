@@ -34,7 +34,9 @@ class CreateOrderRequest extends FormRequest
             'endPoint.lat' => 'required|numeric|between:-90,90',
             'endPoint.lng' => 'required|numeric|between:-180,180',
             'endPoint.placeId' => 'nullable|string|max:255',
-            'slotId' => 'required|integer|exists:slots,id',
+            'slotId' => 'nullable|integer|exists:slots,id',
+            'slotIds' => 'required_without:slotId|array|min:1',
+            'slotIds.*' => 'integer|exists:slots,id|distinct',
             'date' => 'required|date|after:yesterday',
         ];
     }

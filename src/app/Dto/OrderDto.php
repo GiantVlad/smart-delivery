@@ -17,6 +17,7 @@ class OrderDto extends Data
         public string $from,
         public string $to,
         public Carbon $date,
+        public array $timeRanges = [],
         public string $uuid = '',
         public string $status = '',
     ) {}

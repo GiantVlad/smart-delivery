@@ -1,1 +1,0 @@
-import{I as t,x as s,d as o,s as r}from"./main-C1vmmYay.js";const n={},a={class:"text-center py-24 text-gray-500 dark:text-slate-400"};function c(d,e){return o(),s("div",a,[...e[0]||(e[0]=[r("p",null,"Nothing's here…",-1)])])}const x=t(n,[["render",c]]);export{x as C};

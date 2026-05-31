@@ -23,6 +23,7 @@ class CreateOrderActivity implements CreateOrderActivityInterface
         $order->from = $orderDto->from;
         $order->to = $orderDto->to;
         $order->date = $orderDto->date->toDateString();
+        $order->time_ranges = $orderDto->timeRanges;
         $order->uuid = Str::uuid()->toString();
         $order->status = OrderStatusEnum::NEW;
         $order->save();

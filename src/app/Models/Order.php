@@ -18,6 +18,7 @@ class Order extends Model
 
     protected $casts = [
         'delivered_at' => 'datetime',
+        'time_ranges' => 'array',
     ];
 
     public function customer()

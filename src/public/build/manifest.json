@@ -1,14 +1,7 @@
 {
-  "_CardBoxComponentEmpty-DjDWmJ1R.js": {
-    "file": "assets/CardBoxComponentEmpty-DjDWmJ1R.js",
+  "_CardBoxComponentEmpty-CMdPbnGZ.js": {
+    "file": "assets/CardBoxComponentEmpty-CMdPbnGZ.js",
     "name": "CardBoxComponentEmpty",
-    "imports": [
-      "resources/js/main.js"
-    ]
-  },
-  "_CardBoxModal-DY7M9wXc.js": {
-    "file": "assets/CardBoxModal-DY7M9wXc.js",
-    "name": "CardBoxModal",
     "imports": [
       "resources/js/main.js"
     ]
@@ -18,16 +11,15 @@
     "name": "Statuses"
   },
   "resources/css/style.css": {
-    "file": "assets/style-DFb0rvIE.css",
+    "file": "assets/style-BhU08CGf.css",
     "src": "resources/css/style.css",
     "isEntry": true,
-    "name": "style",
     "names": [
       "style.css"
     ]
   },
   "resources/js/main.js": {
-    "file": "assets/main-CTqAAFas.js",
+    "file": "assets/main-BlfWjjMU.js",
     "name": "main",
     "src": "resources/js/main.js",
     "isEntry": true,
@@ -42,11 +34,11 @@
       "resources/js/views/CourierWorkingHours.vue"
     ],
     "css": [
-      "assets/main-C7xQbybJ.css"
+      "assets/main-CvX9skSc.css"
     ]
   },
   "resources/js/views/CourierWorkingHours.vue": {
-    "file": "assets/CourierWorkingHours-CBEYz0eR.js",
+    "file": "assets/CourierWorkingHours-C8bJTmjT.js",
     "name": "CourierWorkingHours",
     "src": "resources/js/views/CourierWorkingHours.vue",
     "isDynamicEntry": true,
@@ -55,18 +47,17 @@
     ]
   },
   "resources/js/views/Couriers.vue": {
-    "file": "assets/Couriers-Gp62MDp9.js",
+    "file": "assets/Couriers-BOKeLs82.js",
     "name": "Couriers",
     "src": "resources/js/views/Couriers.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_CardBoxModal-DY7M9wXc.js",
       "_Statuses-BSKbIDnF.js"
     ]
   },
   "resources/js/views/EditRouteView.vue": {
-    "file": "assets/EditRouteView-EPSZk5iP.js",
+    "file": "assets/EditRouteView-C9p-ZxCN.js",
     "name": "EditRouteView",
     "src": "resources/js/views/EditRouteView.vue",
     "isDynamicEntry": true,
@@ -75,30 +66,29 @@
     ]
   },
   "resources/js/views/OrderCreateFormView.vue": {
-    "file": "assets/OrderCreateFormView-Cx0XPHMT.js",
+    "file": "assets/OrderCreateFormView-BbGjmmYS.js",
     "name": "OrderCreateFormView",
     "src": "resources/js/views/OrderCreateFormView.vue",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/main.js",
-      "_CardBoxModal-DY7M9wXc.js"
+      "resources/js/main.js"
     ],
     "css": [
-      "assets/OrderCreateFormView-BsjuKcJZ.css"
+      "assets/OrderCreateFormView-Dap1b6Zc.css"
     ]
   },
   "resources/js/views/Orders.vue": {
-    "file": "assets/Orders-BPe55d2l.js",
+    "file": "assets/Orders-C2OrkPv2.js",
     "name": "Orders",
     "src": "resources/js/views/Orders.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_CardBoxComponentEmpty-DjDWmJ1R.js"
+      "_CardBoxComponentEmpty-CMdPbnGZ.js"
     ]
   },
   "resources/js/views/TaskCreateFormView.vue": {
-    "file": "assets/TaskCreateFormView-ylSxu3-v.js",
+    "file": "assets/TaskCreateFormView-alz18Yf6.js",
     "name": "TaskCreateFormView",
     "src": "resources/js/views/TaskCreateFormView.vue",
     "isDynamicEntry": true,
@@ -110,17 +100,17 @@
     ]
   },
   "resources/js/views/Tasks.vue": {
-    "file": "assets/Tasks-CgIoIDUX.js",
+    "file": "assets/Tasks-k3nioNky.js",
     "name": "Tasks",
     "src": "resources/js/views/Tasks.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/main.js",
-      "_CardBoxComponentEmpty-DjDWmJ1R.js"
+      "_CardBoxComponentEmpty-CMdPbnGZ.js"
     ]
   },
   "resources/js/views/UpdateOrderInTaskView.vue": {
-    "file": "assets/UpdateOrderInTaskView-DFzB1g3J.js",
+    "file": "assets/UpdateOrderInTaskView-CPTQPOby.js",
     "name": "UpdateOrderInTaskView",
     "src": "resources/js/views/UpdateOrderInTaskView.vue",
     "isDynamicEntry": true,

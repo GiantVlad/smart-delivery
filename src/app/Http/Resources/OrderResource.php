@@ -31,6 +31,7 @@ class OrderResource extends JsonResource
             'date' => $this->date,
             'from' => $this->from,
             'to' => $this->to,
+            'timeRanges' => $this->time_ranges ?? [],
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }

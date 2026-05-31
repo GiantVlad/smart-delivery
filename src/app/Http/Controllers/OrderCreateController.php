@@ -54,7 +54,20 @@ class OrderCreateController extends Controller
         $unitType = $request->get('unitType');
         $startPointId = $this->resolvePoint($request->array('startPoint'))->id;
         $endPointId = $this->resolvePoint($request->array('endPoint'))->id;
-        $slot = Slot::findOrFail((int) $request->get('slotId'));
+        $slotIds = collect($request->input('slotIds', []))
+            ->when(
+                $request->filled('slotId'),
+                fn (Collection $ids): Collection => $ids->push((int) $request->input('slotId'))
+            )
+            ->map(fn ($id): int => (int) $id)
+            ->unique()
+            ->values();
+
+        $slots = Slot::query()
+            ->whereIn('id', $slotIds->all())
+            ->orderBy('from')
+            ->get();
+        $slot = $slots->firstOrFail();
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateOrderWorkflowInterface::class,
@@ -71,6 +84,12 @@ class OrderCreateController extends Controller
             from: $slot->from,
             to: $slot->to,
             date: Carbon::parse($slot->date ?? $request->get('date')),
+            timeRanges: $slots->map(static fn (Slot $selectedSlot): array => [
+                'slot_id' => $selectedSlot->id,
+                'date' => $selectedSlot->date ?? $request->get('date'),
+                'from' => $selectedSlot->from,
+                'to' => $selectedSlot->to,
+            ])->all(),
         );
 
         $this->workflowClient->start($workflow, $orderDTO);
