@@ -12,16 +12,25 @@ use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Mockery\MockInterface;
+use Temporal\Client\WorkflowClientInterface;
 use Tests\TestCase;
 
 class OrdersEndpointTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mock(WorkflowClientInterface::class, function (MockInterface $mock): void {});
+    }
+
     public function test_guest_cannot_access_orders_endpoint(): void
     {
         $this->getJson('/api/orders')->assertUnauthorized();
     }
 
-    public function test_orders_endpoint_returns_latest_30_orders_sorted_and_with_time_ranges_fallback(): void
+    public function test_orders_endpoint_returns_latest_30_orders_sorted_and_with_time_ranges(): void
     {
         $user = User::create([
             'name' => 'Orders User',
@@ -71,9 +80,7 @@ class OrdersEndpointTest extends TestCase
             $order->start_point_id = $pointA->id;
             $order->end_point_id = $pointB->id;
             $order->date = '2026-05-31';
-            $order->from = '08:00';
-            $order->to = '09:00';
-            $order->time_ranges = $i === 35 ? [] : [[
+            $order->time_ranges = [[
                 'slot_id' => $i,
                 'date' => '2026-05-31',
                 'from' => '08:00',

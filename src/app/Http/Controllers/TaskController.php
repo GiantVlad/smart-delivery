@@ -35,7 +35,7 @@ class TaskController extends Controller
         $dto->orders = Order::where('status', OrderStatusEnum::ACCEPTED->value)
             ->whereDate('date', $date)
             ->with(['startPoint', 'endPoint'])
-            ->orderBy('from')
+            ->orderBy('updated_at')
             ->get();
 
         $dto->couriers = $courierManager->getFreeCouriersForDay($date);

@@ -18,14 +18,6 @@ class OrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         $timeRanges = $this->time_ranges ?? [];
-        if (empty($timeRanges) && $this->date && $this->from && $this->to) {
-            $timeRanges = [[
-                'slot_id' => null,
-                'date' => $this->date,
-                'from' => $this->from,
-                'to' => $this->to,
-            ]];
-        }
 
         return [
             'id' => $this->id,

@@ -22,11 +22,7 @@ class CreateOrderActivity implements CreateOrderActivityInterface
         $order->start_point_id = $orderDto->startPointId;
         $order->end_point_id = $orderDto->endPointId;
         $primaryRange = collect($orderDto->timeRanges)
-            ->filter(static fn (array $range): bool => isset($range['from'], $range['to'], $range['date']))
-            ->sortBy('from')
-            ->first();
-        $order->from = $primaryRange['from'] ?? '08:00';
-        $order->to = $primaryRange['to'] ?? '12:00';
+            ->first(static fn (array $range): bool => isset($range['date']));
         $order->date = $primaryRange['date'] ?? now()->toDateString();
         if (Schema::hasColumn('orders', 'time_ranges')) {
             $order->time_ranges = $orderDto->timeRanges;
