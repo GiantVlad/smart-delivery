@@ -9,17 +9,11 @@ use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Support\Str;
-use InvalidArgumentException;
 
 class CreateOrderActivity implements CreateOrderActivityInterface
 {
     public function createOrder(OrderDto $orderDto): string
     {
-//        $timeRanges = $orderDto->normalizedTimeRanges();
-//        if (empty($timeRanges)) {
-//            throw new InvalidArgumentException('Order time ranges are required for order creation.');
-//        }
-
         $customer = Customer::where('uuid', $orderDto->customerUuid)->firstOrFail();
         $order = new Order;
         $order->customer_id = $customer->id;

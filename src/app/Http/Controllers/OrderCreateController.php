@@ -66,7 +66,6 @@ class OrderCreateController extends Controller
             ->whereIn('id', $slotIds->all())
             ->orderBy('from')
             ->get();
-        $slots->firstOrFail();
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateOrderWorkflowInterface::class,
