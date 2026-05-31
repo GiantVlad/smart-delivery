@@ -14,7 +14,6 @@ use App\Models\Point;
 use App\Models\Slot;
 use App\Models\Task;
 use App\Temporal\CreateOrderWorkflowInterface;
-use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -67,7 +66,7 @@ class OrderCreateController extends Controller
             ->whereIn('id', $slotIds->all())
             ->orderBy('from')
             ->get();
-        $slot = $slots->firstOrFail();
+        $slots->firstOrFail();
 
         $workflow = $this->workflowClient->newWorkflowStub(
             CreateOrderWorkflowInterface::class,
@@ -76,20 +75,19 @@ class OrderCreateController extends Controller
 
         $customer = Customer::where('email', $email)->firstOrFail();
 
+        $timeRanges = $slots->map(static fn (Slot $selectedSlot): array => [
+            'slot_id' => $selectedSlot->id,
+            'date' => $selectedSlot->date ?? $request->get('date'),
+            'from' => $selectedSlot->from,
+            'to' => $selectedSlot->to,
+        ])->all();
+
         $orderDTO = new OrderDto(
             customerUuid: $customer->uuid,
             unitType: $unitType,
             startPointId: $startPointId,
             endPointId: $endPointId,
-            from: $slot->from,
-            to: $slot->to,
-            date: Carbon::parse($slot->date ?? $request->get('date')),
-            timeRanges: $slots->map(static fn (Slot $selectedSlot): array => [
-                'slot_id' => $selectedSlot->id,
-                'date' => $selectedSlot->date ?? $request->get('date'),
-                'from' => $selectedSlot->from,
-                'to' => $selectedSlot->to,
-            ])->all(),
+            timeRanges: $timeRanges,
         );
 
         $this->workflowClient->start($workflow, $orderDTO);

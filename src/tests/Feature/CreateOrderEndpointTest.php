@@ -73,10 +73,6 @@ class CreateOrderEndpointTest extends TestCase
                             return false;
                         }
 
-                        if ($dto->from !== '08:00' || $dto->to !== '09:00') {
-                            return false;
-                        }
-
                         if (count($dto->timeRanges) !== 2) {
                             return false;
                         }
