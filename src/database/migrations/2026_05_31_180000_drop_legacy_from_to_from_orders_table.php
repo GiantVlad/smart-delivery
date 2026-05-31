@@ -17,7 +17,7 @@ return new class extends Migration
                 ->orderBy('id')
                 ->chunkById(200, function ($orders): void {
                     foreach ($orders as $order) {
-                        if (!empty($order->time_ranges) || empty($order->from) || empty($order->to)) {
+                        if (! empty($order->time_ranges) || empty($order->from) || empty($order->to)) {
                             continue;
                         }
 
@@ -48,10 +48,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table): void {
-            if (!Schema::hasColumn('orders', 'from')) {
+            if (! Schema::hasColumn('orders', 'from')) {
                 $table->string('from')->default('8:00')->after('end_point_id');
             }
-            if (!Schema::hasColumn('orders', 'to')) {
+            if (! Schema::hasColumn('orders', 'to')) {
                 $table->string('to')->default('12:00')->after('end_point_id');
             }
         });
