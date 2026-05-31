@@ -9,6 +9,8 @@ use Spatie\LaravelData\Data;
 
 class OrderDto extends Data
 {
+    public array $timeRanges = [];
+
     public function __construct(
         public string $customerUuid,
         public string $unitType,
@@ -17,8 +19,10 @@ class OrderDto extends Data
         public string $from,
         public string $to,
         public Carbon $date,
-        public array $timeRanges = [],
+        ?array $timeRanges = null,
         public string $uuid = '',
         public string $status = '',
-    ) {}
+    ) {
+        $this->timeRanges = $timeRanges ?? [];
+    }
 }
