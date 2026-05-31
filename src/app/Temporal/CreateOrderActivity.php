@@ -15,6 +15,7 @@ class CreateOrderActivity implements CreateOrderActivityInterface
 {
     public function createOrder(OrderDto $orderDto): string
     {
+        $timeRanges = $orderDto->normalizedTimeRanges();
         if (empty($timeRanges)) {
             throw new InvalidArgumentException('Order time ranges are required for order creation.');
         }
