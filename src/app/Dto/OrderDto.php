@@ -8,17 +8,13 @@ use Spatie\LaravelData\Data;
 
 class OrderDto extends Data
 {
-    public array $timeRanges = [];
-
     public function __construct(
         public string $customerUuid,
         public string $unitType,
         public int $startPointId,
         public int $endPointId,
+        public array $timeRanges = [],
         public string $uuid = '',
         public string $status = '',
-        ?array $timeRanges = null,
-    ) {
-        $this->timeRanges = $timeRanges ?? [];
-    }
+    ) {}
 }

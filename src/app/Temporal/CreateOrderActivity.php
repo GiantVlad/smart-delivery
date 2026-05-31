@@ -8,7 +8,6 @@ use App\Dto\OrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class CreateOrderActivity implements CreateOrderActivityInterface
@@ -24,9 +23,7 @@ class CreateOrderActivity implements CreateOrderActivityInterface
         $primaryRange = collect($orderDto->timeRanges)
             ->first(static fn (array $range): bool => isset($range['date']));
         $order->date = $primaryRange['date'] ?? now()->toDateString();
-        if (Schema::hasColumn('orders', 'time_ranges')) {
-            $order->time_ranges = $orderDto->timeRanges;
-        }
+        $order->time_ranges = $orderDto->timeRanges;
         $order->uuid = Str::uuid()->toString();
         $order->status = OrderStatusEnum::NEW;
         $order->save();
