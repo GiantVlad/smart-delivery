@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Temporal;
 
-use App\Dto\OrderDto;
+use App\Dto\CreateOrderCommand;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Point;
-use App\Temporal\CreateOrderActivity;
+use App\Temporal\OrderProjectionActivity;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -49,7 +49,9 @@ class CreateOrderActivityTest extends TestCase
             ],
         ];
 
-        $dto = new OrderDto(
+        $orderUuid = (string) Str::uuid();
+        $command = new CreateOrderCommand(
+            orderUuid: $orderUuid,
             customerUuid: $customer->uuid,
             unitType: 'Medium',
             startPointId: $startPoint->id,
@@ -57,8 +59,8 @@ class CreateOrderActivityTest extends TestCase
             timeRanges: $ranges,
         );
 
-        $activity = new CreateOrderActivity;
-        $orderUuid = $activity->createOrder($dto);
+        $activity = new OrderProjectionActivity;
+        $activity->create($command);
 
         $order = Order::query()
             ->where('uuid', $orderUuid)

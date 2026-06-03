@@ -13,6 +13,7 @@ interface TaskFinishedActivityInterface
 {
     #[ActivityMethod(name: 'FinishTask')]
     public function finishTask(
-        TaskDto $taskDto
+        TaskDto $taskDto,
+        string $status = 'finished',
     ): string;
 }

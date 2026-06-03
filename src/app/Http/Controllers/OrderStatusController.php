@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Domain\OrderStatus;
-use App\Dto\TaskDto;
-use App\Enums\OrderStatusEnum;
 use App\Http\Requests\OrderConfirmationRequest;
 use App\Http\Requests\UpdateStatusByCourierRequest;
 use App\Models\Order;
-use App\Temporal\OrderStatusHandlerWorkflowInterface;
-use App\Temporal\TaskFinishWorkflowInterface;
-use Carbon\CarbonInterval;
+use App\Temporal\OrderWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Temporal\Client\WorkflowOptions;
 
 class OrderStatusController extends Controller
 {
@@ -27,49 +21,27 @@ class OrderStatusController extends Controller
         Log::info("Order $orderUuid status updated: $status");
 
         $workflow = $this->workflowClient->newRunningWorkflowStub(
-            OrderStatusHandlerWorkflowInterface::class,
-            OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
+            OrderWorkflowInterface::class,
+            'order:'.$orderUuid,
         );
 
-        $workflow->updateStatus($orderUuid, $status);
+        $workflow->confirm($status);
 
         return response()->json('Updated');
     }
 
-    public function updateStatusByCourier(UpdateStatusByCourierRequest $request, OrderStatus $orderStatusDomain): JsonResponse
+    public function updateStatusByCourier(UpdateStatusByCourierRequest $request): JsonResponse
     {
         $orderUuid = $request->get('orderUuid');
         $status = $request->get('status');
 
         $workflow = $this->workflowClient->newRunningWorkflowStub(
-            OrderStatusHandlerWorkflowInterface::class,
-            OrderStatusHandlerWorkflowInterface::WORKFLOW_ID,
+            OrderWorkflowInterface::class,
+            'order:'.$orderUuid,
         );
 
-        $workflow->updateStatus($orderUuid, $status);
+        $workflow->updateStatus($status);
 
-        $task = Order::whereUuid($orderUuid)->first()->task;
-
-        if (in_array(
-            OrderStatusEnum::tryFrom($status),
-            [OrderStatusEnum::DELIVERED, OrderStatusEnum::CANCELED],
-            true)
-            && $orderStatusDomain->isOneOrderLeft($task)
-        ) {
-            $workflow = $this->workflowClient->newWorkflowStub(
-                TaskFinishWorkflowInterface::class,
-                WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
-            );
-
-            $taskDto = new TaskDto(
-                $task->courier->uuid,
-                [],
-                $task->uuid,
-            );
-
-            $this->workflowClient->start($workflow, $taskDto);
-        }
-
-        return response()->json(OrderStatusEnum::ASSIGNED->value);
+        return response()->json($status);
     }
 }

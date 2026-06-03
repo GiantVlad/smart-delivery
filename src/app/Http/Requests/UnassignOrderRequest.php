@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Enums\OrderStatusEnum;
-use App\Rules\OrderStatusCanBeChangedRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -29,7 +27,6 @@ class UnassignOrderRequest extends FormRequest
                 'required',
                 'string',
                 'exists:orders,uuid',
-                new OrderStatusCanBeChangedRule(OrderStatusEnum::CANCELED->value),
             ],
         ];
     }

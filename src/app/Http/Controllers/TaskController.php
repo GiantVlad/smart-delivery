@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Domain\CourierManager;
-use App\Dto\TaskDto;
+use App\Dto\CreateTaskCommand;
 use App\Enums\OrderStatusEnum;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskCreateFormResource;
@@ -18,6 +18,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
 
 class TaskController extends Controller
@@ -57,14 +58,17 @@ class TaskController extends Controller
     {
         $courierUuid = $request->get('courierUuid');
         $orderUuids = $request->get('orderUuids');
+        $taskUuid = Str::uuid()->toString();
 
         $workflow = $this->workflowClient->newWorkflowStub(
             TaskWorkflowInterface::class,
-            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(2))
+            WorkflowOptions::new()
+                ->withWorkflowId('task:'.$taskUuid)
+                ->withWorkflowExecutionTimeout(CarbonInterval::days(30))
         );
 
-        $this->workflowClient->start($workflow, new TaskDto($courierUuid, $orderUuids));
+        $this->workflowClient->start($workflow, new CreateTaskCommand($taskUuid, $courierUuid, $orderUuids));
 
-        return response()->json(['data' => true]);
+        return response()->json(['data' => ['uuid' => $taskUuid]]);
     }
 }

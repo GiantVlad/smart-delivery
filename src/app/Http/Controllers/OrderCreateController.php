@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Dto\OrderDto;
+use App\Dto\CreateOrderCommand;
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Resources\OrderCreateFormResource;
 use App\Http\Resources\OrderResource;
@@ -13,10 +13,11 @@ use App\Models\Order;
 use App\Models\Point;
 use App\Models\Slot;
 use App\Models\Task;
-use App\Temporal\CreateOrderWorkflowInterface;
+use App\Temporal\OrderWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
 
 class OrderCreateController extends Controller
@@ -67,12 +68,8 @@ class OrderCreateController extends Controller
             ->orderBy('from')
             ->get();
 
-        $workflow = $this->workflowClient->newWorkflowStub(
-            CreateOrderWorkflowInterface::class,
-            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
-        );
-
         $customer = Customer::where('email', $email)->firstOrFail();
+        $orderUuid = Str::uuid()->toString();
 
         $timeRanges = $slots->map(static fn (Slot $selectedSlot): array => [
             'slot_id' => $selectedSlot->id,
@@ -81,7 +78,8 @@ class OrderCreateController extends Controller
             'to' => $selectedSlot->to,
         ])->all();
 
-        $orderDTO = new OrderDto(
+        $command = new CreateOrderCommand(
+            orderUuid: $orderUuid,
             customerUuid: $customer->uuid,
             unitType: $unitType,
             startPointId: $startPointId,
@@ -89,9 +87,16 @@ class OrderCreateController extends Controller
             timeRanges: $timeRanges,
         );
 
-        $this->workflowClient->start($workflow, $orderDTO);
+        $workflow = $this->workflowClient->newWorkflowStub(
+            OrderWorkflowInterface::class,
+            WorkflowOptions::new()
+                ->withWorkflowId('order:'.$orderUuid)
+                ->withWorkflowExecutionTimeout(CarbonInterval::days(30))
+        );
 
-        return response()->json(['data' => true]);
+        $this->workflowClient->start($workflow, $command);
+
+        return response()->json(['data' => ['uuid' => $orderUuid]]);
     }
 
     private function resolvePoint(array $pointData): Point

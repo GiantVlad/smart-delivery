@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Dto\OrderDto;
+use App\Dto\CreateOrderCommand;
 use App\Models\Customer;
 use App\Models\Slot;
 use App\Models\User;
-use App\Temporal\CreateOrderWorkflowInterface;
+use App\Temporal\OrderWorkflowInterface;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
@@ -45,14 +45,14 @@ class CreateOrderEndpointTest extends TestCase
             'to' => '09:00',
             'capacity' => 10,
             'available' => 10,
-            'date' => '2026-06-01',
+            'date' => '2026-06-04',
         ]);
         $slotB = Slot::create([
             'from' => '09:00',
             'to' => '10:00',
             'capacity' => 10,
             'available' => 9,
-            'date' => '2026-06-01',
+            'date' => '2026-06-04',
         ]);
 
         $workflowStub = new \stdClass;
@@ -61,23 +61,23 @@ class CreateOrderEndpointTest extends TestCase
         $this->mock(WorkflowClientInterface::class, function (MockInterface $mock) use ($workflowStub, $workflowRun, $customer, $slotA, $slotB): void {
             $mock->shouldReceive('newWorkflowStub')
                 ->once()
-                ->with(CreateOrderWorkflowInterface::class, Mockery::type(\Temporal\Client\WorkflowOptions::class))
+                ->with(OrderWorkflowInterface::class, Mockery::type(\Temporal\Client\WorkflowOptions::class))
                 ->andReturn($workflowStub);
 
             $mock->shouldReceive('start')
                 ->once()
                 ->with(
                     $workflowStub,
-                    Mockery::on(function (OrderDto $dto) use ($customer, $slotA, $slotB): bool {
-                        if ($dto->customerUuid !== $customer->uuid) {
+                    Mockery::on(function (CreateOrderCommand $command) use ($customer, $slotA, $slotB): bool {
+                        if ($command->orderUuid === '' || $command->customerUuid !== $customer->uuid) {
                             return false;
                         }
 
-                        if (count($dto->timeRanges) !== 2) {
+                        if (count($command->timeRanges) !== 2) {
                             return false;
                         }
 
-                        $slotIds = array_column($dto->timeRanges, 'slot_id');
+                        $slotIds = array_column($command->timeRanges, 'slot_id');
                         sort($slotIds);
 
                         return $slotIds === [$slotA->id, $slotB->id];
@@ -100,7 +100,7 @@ class CreateOrderEndpointTest extends TestCase
                 'lng' => 21.03,
             ],
             'slotIds' => [$slotA->id, $slotB->id],
-            'date' => '2026-06-01',
+            'date' => '2026-06-04',
         ];
 
         $response = $this
@@ -109,7 +109,7 @@ class CreateOrderEndpointTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJson(['data' => true]);
+            ->assertJsonStructure(['data' => ['uuid']]);
 
         $this->assertDatabaseHas('points', ['address' => 'Pickup street 1']);
         $this->assertDatabaseHas('points', ['address' => 'Destination street 5']);
