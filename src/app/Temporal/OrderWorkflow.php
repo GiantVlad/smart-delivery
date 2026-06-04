@@ -16,11 +16,11 @@ use Temporal\Workflow\WorkflowExecution;
 
 class OrderWorkflow implements OrderWorkflowInterface
 {
-    private OrderProjectionActivityInterface $projection;
+    private $projection;
 
-    private CreateOrderErpActivityInterface $createOrderErpActivity;
+    private $createOrderErpActivity;
 
-    private NotifyCustomerActivityInterface $notifyCustomerActivity;
+    private $notifyCustomerActivity;
 
     private ?OrderWorkflowState $state = null;
 
