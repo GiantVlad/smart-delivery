@@ -153,7 +153,10 @@ class OrderWorkflow implements OrderWorkflowInterface
         while ($this->pendingStatuses !== []) {
             $status = array_shift($this->pendingStatuses);
             $previousTaskUuid = $this->state->taskUuid;
-            $this->applyStatus($status);
+            if (! $this->applyStatus($status)) {
+                continue;
+            }
+
             yield $this->projection->update($this->state);
 
             if ($this->isTerminal($this->state->status) && $previousTaskUuid !== null) {
@@ -186,13 +189,17 @@ class OrderWorkflow implements OrderWorkflowInterface
         $this->state->status = OrderStatusEnum::ACCEPTED->value;
     }
 
-    private function applyStatus(string $status): void
+    private function applyStatus(string $status): bool
     {
         $next = OrderStatusEnum::tryFrom($status);
         $current = OrderStatusEnum::tryFrom($this->state->status);
 
         if ($next === null || $current === null) {
             throw new \InvalidArgumentException('Unknown order status.');
+        }
+
+        if ($next === $current) {
+            return false;
         }
 
         if (! in_array($next, OrderStatusEnum::canBeChangedTo($current), true)) {
@@ -203,6 +210,8 @@ class OrderWorkflow implements OrderWorkflowInterface
         if ($next === OrderStatusEnum::CANCELED) {
             $this->state->taskUuid = null;
         }
+
+        return true;
     }
 
     private function isTerminal(string $status): bool
