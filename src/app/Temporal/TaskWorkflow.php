@@ -127,8 +127,8 @@ class TaskWorkflow implements TaskWorkflowInterface
         $taskUuid = yield $this->createTaskActivity->createTask($taskDto);
 
         foreach ($this->state->orderUuids as $orderUuid) {
-            yield $this->orderWorkflow($orderUuid)->assignToTask($taskUuid);
             yield $this->taskOrderProjectionActivity->attach($taskUuid, $orderUuid);
+            yield $this->orderWorkflow($orderUuid)->assignToTask($taskUuid);
         }
 
         yield $this->createRouteActivity->createRoute($taskUuid, $this->state->orderUuids);
@@ -205,8 +205,8 @@ class TaskWorkflow implements TaskWorkflowInterface
                     continue;
                 }
                 $this->state->orderUuids[] = $orderUuid;
-                yield $this->orderWorkflow($orderUuid)->assignToTask($this->state->taskUuid);
                 $order = yield $this->taskOrderProjectionActivity->attach($this->state->taskUuid, $orderUuid);
+                yield $this->orderWorkflow($orderUuid)->assignToTask($this->state->taskUuid);
                 yield $this->addToRouteActivity->addToRoute($this->state->taskUuid, $order->startPointId, $order->endPointId);
             }
         }
