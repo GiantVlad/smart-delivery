@@ -128,9 +128,10 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         foreach ($this->state->orderUuids as $orderUuid) {
             yield $this->orderWorkflow($orderUuid)->assignToTask($taskUuid);
+            yield $this->taskOrderProjectionActivity->attach($taskUuid, $orderUuid);
         }
 
-        yield $this->createRouteActivity->createRoute($taskUuid);
+        yield $this->createRouteActivity->createRoute($taskUuid, $this->state->orderUuids);
 
         while ($this->state->status !== TaskStatusEnum::FINISHED->value && $this->state->status !== TaskStatusEnum::CANCELED->value) {
             yield Workflow::await(fn () => $this->hasPendingChange());

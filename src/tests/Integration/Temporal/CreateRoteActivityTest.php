@@ -34,6 +34,27 @@ class CreateRoteActivityTest extends TestCase
         $this->assertEquals(RoutePointTypeEnum::FINISH->value, $routes[1]->point_type);
     }
 
+    public function test_create_route_from_explicit_order_uuids_before_orders_are_attached(): void
+    {
+        $task = $this->createTaskWithoutOrders();
+        $customer = Customer::first();
+        $orderA = $this->createOrder($customer, 1, 2);
+        $orderB = $this->createOrder($customer, 2, 3);
+
+        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity->createRoute($task->uuid, [$orderA->uuid, $orderB->uuid]);
+
+        $routes = Route::where('task_id', $task->id)->get();
+
+        $this->assertCount(3, $routes);
+        $this->assertEquals(1, $routes[0]->point_id);
+        $this->assertEquals(RoutePointTypeEnum::START->value, $routes[0]->point_type);
+        $this->assertEquals(2, $routes[1]->point_id);
+        $this->assertEquals(RoutePointTypeEnum::INTERMEDIATE->value, $routes[1]->point_type);
+        $this->assertEquals(3, $routes[2]->point_id);
+        $this->assertEquals(RoutePointTypeEnum::FINISH->value, $routes[2]->point_type);
+    }
+
     public function test_create_route2_orders_from_same_address(): void
     {
         $task = $this->createTask([[1 => 2], [1 => 3]]);
@@ -153,17 +174,24 @@ class CreateRoteActivityTest extends TestCase
 
     private function createTask(array $points): Task
     {
-        $courier = Courier::first();
         $customer = Customer::first();
-        $task = new Task;
-        $task->courier_id = $courier->id;
-        $task->uuid = Str::uuid();
-        $task->save();
+        $task = $this->createTaskWithoutOrders();
         foreach ($points as $point) {
             $order = $this->createOrder($customer, array_key_first($point), $point[array_key_first($point)]);
             $order->task_id = $task->id;
             $order->save();
         }
+
+        return $task;
+    }
+
+    private function createTaskWithoutOrders(): Task
+    {
+        $courier = Courier::first();
+        $task = new Task;
+        $task->courier_id = $courier->id;
+        $task->uuid = Str::uuid();
+        $task->save();
 
         return $task;
     }
