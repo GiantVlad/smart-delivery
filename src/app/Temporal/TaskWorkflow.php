@@ -175,6 +175,17 @@ class TaskWorkflow implements TaskWorkflowInterface
     {
         if ($this->pendingCancel) {
             $this->pendingCancel = false;
+
+            foreach ($this->state->orderUuids as $orderUuid) {
+                if (array_key_exists($orderUuid, $this->state->terminalOrders)) {
+                    continue;
+                }
+
+                yield $this->orderWorkflow($orderUuid)->unassignFromTask($this->state->taskUuid);
+                $order = yield $this->taskOrderProjectionActivity->detach($this->state->taskUuid, $orderUuid);
+                yield $this->removeFromRouteActivity->removeFromRoute($this->state->taskUuid, $order->startPointId, $order->endPointId);
+            }
+
             $this->state->status = TaskStatusEnum::CANCELED->value;
             yield $this->taskFinishActivity->finishTask(
                 new TaskDto($this->state->courierUuid, [], $this->state->taskUuid),

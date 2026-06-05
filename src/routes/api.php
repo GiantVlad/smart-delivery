@@ -63,6 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/task', [TaskController::class, 'createTask']);
 
+    Route::post('/task/cancel', [TaskController::class, 'cancelTask']);
+
     Route::post('/unassign-order', [OrderController::class, 'unassignOrder']);
 
     Route::post('/add-orders-to-task', [OrderController::class, 'addOrdersToTask']);

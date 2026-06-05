@@ -16,7 +16,7 @@ class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
         int $startPointId,
         int $endPointId,
     ): array {
-        $task = Task::where('uuid', $taskUuid)->with(['orders', 'routes'])->first();
+        $task = Task::where('uuid', $taskUuid)->with(['orders', 'routes'])->firstOrFail();
 
         /** @var Collection $routes */
         $routes = $task->routes;
@@ -31,22 +31,24 @@ class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
             if (! $foundStart && ! $foundEnd) {
                 /** @var Route|null $route */
                 $route = $routes->firstWhere('point_id', $pointId);
-                $route->delete();
+                $route?->delete();
             } else {
                 $route = $routes->firstWhere('point_id', $pointId);
-                if ($route->point_type === RoutePointTypeEnum::INTERMEDIATE->value
-                    && ($foundStart?->count() === 0 || $foundEnd?->count() === 0)
+                if ($route !== null
+                    && $route->point_type === RoutePointTypeEnum::INTERMEDIATE->value
+                    && (! $foundStart || ! $foundEnd)
                 ) {
                     $route->point_type = $idx === 0
                         ? RoutePointTypeEnum::FINISH->value
                         : RoutePointTypeEnum::START->value;
+                    $route->save();
                 }
             }
 
-            if ($foundStart?->count() === 1 && $foundEnd?->count() === 1) {
+            if ($foundStart && $foundEnd) {
                 $route = $routes->firstWhere('point_id', $pointId);
 
-                $route->delete();
+                $route?->delete();
             }
         }
 

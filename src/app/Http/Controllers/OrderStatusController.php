@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Temporal\OrderWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Temporal\Exception\Client\WorkflowNotFoundException;
 
 class OrderStatusController extends Controller
 {
@@ -25,7 +26,11 @@ class OrderStatusController extends Controller
             'order:'.$orderUuid,
         );
 
-        $workflow->confirm($status);
+        try {
+            $workflow->confirm($status);
+        } catch (WorkflowNotFoundException $exception) {
+            return $this->workflowNotFoundResponse($orderUuid, $exception);
+        }
 
         return response()->json('Updated');
     }
@@ -40,8 +45,26 @@ class OrderStatusController extends Controller
             'order:'.$orderUuid,
         );
 
-        $workflow->updateStatus($status);
+        try {
+            $workflow->updateStatus($status);
+        } catch (WorkflowNotFoundException $exception) {
+            return $this->workflowNotFoundResponse($orderUuid, $exception);
+        }
 
         return response()->json($status);
+    }
+
+    private function workflowNotFoundResponse(string $orderUuid, WorkflowNotFoundException $exception): JsonResponse
+    {
+        Log::warning('Order workflow is not running', [
+            'orderUuid' => $orderUuid,
+            'workflowId' => 'order:'.$orderUuid,
+            'exception' => $exception->getMessage(),
+        ]);
+
+        return response()->json([
+            'message' => 'Order workflow is not running. Recreate the order or reset its Temporal workflow.',
+            'orderUuid' => $orderUuid,
+        ], 409);
     }
 }

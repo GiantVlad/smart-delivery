@@ -26,6 +26,13 @@ class TaskOrderProjectionActivity implements TaskOrderProjectionActivityInterfac
     {
         $task = Task::where('uuid', $taskUuid)->firstOrFail();
         $order = Order::where('uuid', $orderUuid)->with('customer')->firstOrFail();
+        if ($order->task_id === null) {
+            $order->status = OrderStatusEnum::ACCEPTED->value;
+            $order->save();
+
+            return $this->dto($order);
+        }
+
         if ((int) $order->task_id !== (int) $task->id) {
             throw new \InvalidArgumentException('Order is not attached to the given task projection.');
         }

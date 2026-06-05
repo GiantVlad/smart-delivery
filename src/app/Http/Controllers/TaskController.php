@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Domain\CourierManager;
 use App\Dto\CreateTaskCommand;
 use App\Enums\OrderStatusEnum;
+use App\Http\Requests\CancelTaskRequest;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskCreateFormResource;
 use App\Http\Resources\TaskResource;
@@ -20,6 +21,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
+use Temporal\Exception\Client\WorkflowNotFoundException;
 
 class TaskController extends Controller
 {
@@ -70,5 +72,26 @@ class TaskController extends Controller
         $this->workflowClient->start($workflow, new CreateTaskCommand($taskUuid, $courierUuid, $orderUuids));
 
         return response()->json(['data' => ['uuid' => $taskUuid]]);
+    }
+
+    public function cancelTask(CancelTaskRequest $request): JsonResponse
+    {
+        $taskUuid = $request->get('taskUuid');
+
+        $workflow = $this->workflowClient->newRunningWorkflowStub(
+            TaskWorkflowInterface::class,
+            'task:'.$taskUuid,
+        );
+
+        try {
+            $workflow->cancel();
+        } catch (WorkflowNotFoundException) {
+            return response()->json([
+                'message' => 'Task workflow is not running. Recreate the task or reset its Temporal workflow.',
+                'taskUuid' => $taskUuid,
+            ], 409);
+        }
+
+        return response()->json(['data' => true]);
     }
 }

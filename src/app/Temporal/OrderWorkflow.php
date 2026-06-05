@@ -139,15 +139,19 @@ class OrderWorkflow implements OrderWorkflowInterface
     private function flushPendingChanges(): \Generator
     {
         if ($this->pendingAssignTaskUuid !== null) {
-            $this->applyAssign($this->pendingAssignTaskUuid);
+            $changed = $this->applyAssign($this->pendingAssignTaskUuid);
             $this->pendingAssignTaskUuid = null;
-            yield $this->projection->update($this->state);
+            if ($changed) {
+                yield $this->projection->update($this->state);
+            }
         }
 
         if ($this->pendingUnassignTaskUuid !== null) {
-            $this->applyUnassign($this->pendingUnassignTaskUuid);
+            $changed = $this->applyUnassign($this->pendingUnassignTaskUuid);
             $this->pendingUnassignTaskUuid = null;
-            yield $this->projection->update($this->state);
+            if ($changed) {
+                yield $this->projection->update($this->state);
+            }
         }
 
         while ($this->pendingStatuses !== []) {
@@ -169,24 +173,36 @@ class OrderWorkflow implements OrderWorkflowInterface
         }
     }
 
-    private function applyAssign(string $taskUuid): void
+    private function applyAssign(string $taskUuid): bool
     {
+        if ($this->state->taskUuid === $taskUuid && $this->state->status === OrderStatusEnum::ASSIGNED->value) {
+            return false;
+        }
+
         if ($this->state->status !== OrderStatusEnum::ACCEPTED->value || $this->state->taskUuid !== null) {
-            throw new \InvalidArgumentException('Order can only be assigned from accepted status without an active task.');
+            return false;
         }
 
         $this->state->taskUuid = $taskUuid;
         $this->state->status = OrderStatusEnum::ASSIGNED->value;
+
+        return true;
     }
 
-    private function applyUnassign(string $taskUuid): void
+    private function applyUnassign(string $taskUuid): bool
     {
+        if ($this->state->taskUuid === null) {
+            return false;
+        }
+
         if ($this->state->taskUuid !== $taskUuid) {
-            throw new \InvalidArgumentException('Order is not assigned to the given task.');
+            return false;
         }
 
         $this->state->taskUuid = null;
         $this->state->status = OrderStatusEnum::ACCEPTED->value;
+
+        return true;
     }
 
     private function applyStatus(string $status): bool
@@ -195,7 +211,7 @@ class OrderWorkflow implements OrderWorkflowInterface
         $current = OrderStatusEnum::tryFrom($this->state->status);
 
         if ($next === null || $current === null) {
-            throw new \InvalidArgumentException('Unknown order status.');
+            return false;
         }
 
         if ($next === $current) {
@@ -203,7 +219,7 @@ class OrderWorkflow implements OrderWorkflowInterface
         }
 
         if (! in_array($next, OrderStatusEnum::canBeChangedTo($current), true)) {
-            throw new \InvalidArgumentException("Order status {$this->state->status} can not be changed to {$status}.");
+            return false;
         }
 
         $this->state->status = $next->value;
