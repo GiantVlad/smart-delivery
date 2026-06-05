@@ -27,6 +27,8 @@ class CreateOrderEndpointTest extends TestCase
 
     public function test_authenticated_user_can_submit_order_and_dispatch_workflow(): void
     {
+        $deliveryDate = now()->addDay()->toDateString();
+
         $user = User::create([
             'name' => 'Order User',
             'email' => 'order-user@example.com',
@@ -45,14 +47,14 @@ class CreateOrderEndpointTest extends TestCase
             'to' => '09:00',
             'capacity' => 10,
             'available' => 10,
-            'date' => '2026-06-04',
+            'date' => $deliveryDate,
         ]);
         $slotB = Slot::create([
             'from' => '09:00',
             'to' => '10:00',
             'capacity' => 10,
             'available' => 9,
-            'date' => '2026-06-04',
+            'date' => $deliveryDate,
         ]);
 
         $workflowStub = new \stdClass;
@@ -100,7 +102,7 @@ class CreateOrderEndpointTest extends TestCase
                 'lng' => 21.03,
             ],
             'slotIds' => [$slotA->id, $slotB->id],
-            'date' => '2026-06-04',
+            'date' => $deliveryDate,
         ];
 
         $response = $this
