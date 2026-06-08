@@ -237,7 +237,7 @@ class TaskWorkflow implements TaskWorkflowInterface
         }
     }
 
-    private function orderWorkflow(string $orderUuid): OrderWorkflowInterface
+    private function orderWorkflow(string $orderUuid): object
     {
         return Workflow::newExternalWorkflowStub(
             OrderWorkflowInterface::class,
