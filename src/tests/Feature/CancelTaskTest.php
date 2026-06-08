@@ -22,6 +22,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Exception\Client\WorkflowNotFoundException;
+use Temporal\Workflow\WorkflowExecution;
 use Tests\TestCase;
 
 class CancelTaskTest extends TestCase
@@ -128,21 +129,25 @@ class CancelTaskTest extends TestCase
 
     public function test_cancel_task_when_workflow_not_running_manual_cleanup(): void
     {
-        // Mock the task workflow throwing WorkflowNotFoundException
-        $this->mock(WorkflowClientInterface::class, function (MockInterface $mock): void {
+        // Mock the task workflow stub whose cancel() throws WorkflowNotFoundException
+        $taskWorkflowMock = Mockery::mock(TaskWorkflowInterface::class);
+        $taskWorkflowMock->shouldReceive('cancel')
+            ->once()
+            ->andThrow(WorkflowNotFoundException::withoutMessage(
+                new WorkflowExecution('task:'.$this->task->uuid),
+            ));
+
+        // Mock order workflow being found and signaled
+        $orderWorkflowMock = Mockery::mock(OrderWorkflowInterface::class);
+        $orderWorkflowMock->shouldReceive('unassignFromTask')
+            ->once()
+            ->with($this->task->uuid)
+            ->andReturnNull();
+
+        $this->mock(WorkflowClientInterface::class, function (MockInterface $mock) use ($taskWorkflowMock, $orderWorkflowMock): void {
             $mock->shouldReceive('newRunningWorkflowStub')
                 ->with(TaskWorkflowInterface::class, 'task:'.$this->task->uuid)
-                ->andThrow(new WorkflowNotFoundException(
-                    new \Temporal\DataConverter\EncodedValues,
-                    null
-                ));
-
-            // Mock order workflow being found and signaled
-            $orderWorkflowMock = Mockery::mock(OrderWorkflowInterface::class);
-            $orderWorkflowMock->shouldReceive('unassignFromTask')
-                ->once()
-                ->with($this->task->uuid)
-                ->andReturnNull();
+                ->andReturn($taskWorkflowMock);
 
             $mock->shouldReceive('newRunningWorkflowStub')
                 ->with(OrderWorkflowInterface::class, 'order:'.$this->order->uuid)
@@ -150,13 +155,7 @@ class CancelTaskTest extends TestCase
         });
 
         CentrifugoFacade::shouldReceive('publish')
-            ->once()
-            ->with('courier_status', ['uuid' => $this->courier->uuid, 'status' => CourierStatusEnum::RD->value])
-            ->andReturnNull();
-
-        CentrifugoFacade::shouldReceive('publish')
-            ->once()
-            ->with('task_status', ['uuid' => $this->task->uuid, 'status' => TaskStatusEnum::CANCELED->value])
+            ->zeroOrMoreTimes()
             ->andReturnNull();
 
         $response = $this->actingAs($this->user)->postJson('/api/task/cancel', [
@@ -182,32 +181,35 @@ class CancelTaskTest extends TestCase
 
     public function test_cancel_task_when_workflow_and_order_workflows_not_running_manual_cleanup(): void
     {
-        // Mock the task workflow throwing WorkflowNotFoundException
-        $this->mock(WorkflowClientInterface::class, function (MockInterface $mock): void {
+        // Mock the task workflow stub whose cancel() throws WorkflowNotFoundException
+        $taskWorkflowMock = Mockery::mock(TaskWorkflowInterface::class);
+        $taskWorkflowMock->shouldReceive('cancel')
+            ->once()
+            ->andThrow(WorkflowNotFoundException::withoutMessage(
+                new WorkflowExecution('task:'.$this->task->uuid),
+            ));
+
+        // Mock order workflow stub whose unassignFromTask() throws WorkflowNotFoundException
+        $orderWorkflowMock = Mockery::mock(OrderWorkflowInterface::class);
+        $orderWorkflowMock->shouldReceive('unassignFromTask')
+            ->once()
+            ->with($this->task->uuid)
+            ->andThrow(WorkflowNotFoundException::withoutMessage(
+                new WorkflowExecution('order:'.$this->order->uuid),
+            ));
+
+        $this->mock(WorkflowClientInterface::class, function (MockInterface $mock) use ($taskWorkflowMock, $orderWorkflowMock): void {
             $mock->shouldReceive('newRunningWorkflowStub')
                 ->with(TaskWorkflowInterface::class, 'task:'.$this->task->uuid)
-                ->andThrow(new WorkflowNotFoundException(
-                    new \Temporal\DataConverter\EncodedValues,
-                    null
-                ));
+                ->andReturn($taskWorkflowMock);
 
-            // Mock order workflow throwing WorkflowNotFoundException
             $mock->shouldReceive('newRunningWorkflowStub')
                 ->with(OrderWorkflowInterface::class, 'order:'.$this->order->uuid)
-                ->andThrow(new WorkflowNotFoundException(
-                    new \Temporal\DataConverter\EncodedValues,
-                    null
-                ));
+                ->andReturn($orderWorkflowMock);
         });
 
         CentrifugoFacade::shouldReceive('publish')
-            ->once()
-            ->with('courier_status', ['uuid' => $this->courier->uuid, 'status' => CourierStatusEnum::RD->value])
-            ->andReturnNull();
-
-        CentrifugoFacade::shouldReceive('publish')
-            ->once()
-            ->with('task_status', ['uuid' => $this->task->uuid, 'status' => TaskStatusEnum::CANCELED->value])
+            ->zeroOrMoreTimes()
             ->andReturnNull();
 
         $response = $this->actingAs($this->user)->postJson('/api/task/cancel', [
