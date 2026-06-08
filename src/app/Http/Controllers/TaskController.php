@@ -79,7 +79,7 @@ class TaskController extends Controller
         $taskUuid = $request->get('taskUuid');
         $task = Task::where('uuid', $taskUuid)->first();
 
-        if (!$task) {
+        if (! $task) {
             return response()->json([
                 'message' => 'Task not found.',
             ], 404);

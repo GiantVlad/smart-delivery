@@ -65,10 +65,11 @@
               </td>
               <td class="p-2 whitespace-nowrap">
                 <BaseButton
+                  v-if="canCancelTask(task)"
                   type="button"
                   color="error"
                   label="Cancel"
-                  @click="cancelTask(task.uuid)"
+                  @click="openCancelModal(task.uuid)"
                 />
               </td>
             </tr>
@@ -79,6 +80,17 @@
       <CardBox v-if="tasks.length < 1">
         <CardBoxComponentEmpty />
       </CardBox>
+
+      <CardBoxModal
+        v-model="isCancelModalActive"
+        title="Cancel Task"
+        button="danger"
+        button-label="Confirm"
+        has-cancel
+        @confirm="cancelTask"
+      >
+        <p>Are you sure you want to cancel this task?</p>
+      </CardBoxModal>
     </SectionMain>
   </LayoutAuthenticated>
 </template>
@@ -91,6 +103,7 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
+import CardBoxModal from '@/components/CardBoxModal.vue'
 import http from "@/lib/axios.js"
 import { ref, onMounted, computed } from "vue"
 import router from "@/router/index.js"
@@ -141,12 +154,25 @@ onMounted(() => {
 })
 
 
-const cancelTask = async (uuid) => {
-  if (!window.confirm('Are you sure you want to cancel this task?')) return;
+const canCancelTask = (task) => {
+  const status = statuses.value.find(el => el.uuid === task.uuid)?.status ?? task.status
+  return status !== 'finished' && status !== 'canceled'
+}
+
+const isCancelModalActive = ref(false)
+const taskToCancel = ref(null)
+
+const openCancelModal = (uuid) => {
+  taskToCancel.value = uuid
+  isCancelModalActive.value = true
+}
+
+const cancelTask = async () => {
+  if (!taskToCancel.value) return
+  const uuid = taskToCancel.value
+  isCancelModalActive.value = false
   try {
     await http.post('/api/task/cancel', { taskUuid: uuid });
-    // Optionally refresh tasks or update status
-    // refetch tasks
     await http.get('/api/tasks').then((response) => {
       tasks.value = response.data.data;
       for (const task of response.data.data) {
@@ -160,5 +186,6 @@ const cancelTask = async (uuid) => {
     console.error('Failed to cancel task:', error);
     alert('Failed to cancel task');
   }
+  taskToCancel.value = null
 };
 </script>

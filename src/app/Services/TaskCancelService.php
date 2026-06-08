@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Task;
-use App\Models\Order;
-use App\Models\Route;
-use App\Models\Courier;
+use App\Enums\CourierStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Enums\TaskStatusEnum;
-use App\Enums\CourierStatusEnum;
-use App\Temporal\TaskWorkflowInterface;
-use App\Temporal\OrderWorkflowInterface;
 use App\Facades\CentrifugoFacade;
+use App\Models\Courier;
+use App\Models\Order;
+use App\Models\Route;
+use App\Models\Task;
+use App\Temporal\OrderWorkflowInterface;
+use App\Temporal\TaskWorkflowInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Temporal\Client\WorkflowClientInterface;
@@ -28,9 +28,6 @@ class TaskCancelService
     /**
      * Cancel a task. Tries to cancel the running Temporal workflow,
      * and falls back to manual database/order workflow cleanup if the workflow is not running.
-     *
-     * @param Task $task
-     * @return void
      */
     public function cancel(Task $task): void
     {
@@ -59,7 +56,7 @@ class TaskCancelService
 
             DB::transaction(function () use ($task, $ordersToCleanupManually) {
                 foreach ($ordersToCleanupManually as $order) {
-                    if (!in_array($order->status, [OrderStatusEnum::DELIVERED->value, OrderStatusEnum::CANCELED->value], true)) {
+                    if (! in_array($order->status, [OrderStatusEnum::DELIVERED->value, OrderStatusEnum::CANCELED->value], true)) {
                         $order->status = OrderStatusEnum::ACCEPTED->value;
                     }
                     $order->task_id = null;

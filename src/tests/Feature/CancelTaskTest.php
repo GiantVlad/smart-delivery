@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Enums\CourierStatusEnum;
+use App\Enums\OrderStatusEnum;
+use App\Enums\TaskStatusEnum;
+use App\Facades\CentrifugoFacade;
 use App\Models\Courier;
 use App\Models\Customer;
 use App\Models\Order;
@@ -11,12 +15,8 @@ use App\Models\Point;
 use App\Models\Route;
 use App\Models\Task;
 use App\Models\User;
-use App\Enums\OrderStatusEnum;
-use App\Enums\TaskStatusEnum;
-use App\Enums\CourierStatusEnum;
-use App\Temporal\TaskWorkflowInterface;
 use App\Temporal\OrderWorkflowInterface;
-use App\Facades\CentrifugoFacade;
+use App\Temporal\TaskWorkflowInterface;
 use Illuminate\Support\Str;
 use Mockery;
 use Mockery\MockInterface;
@@ -27,8 +27,11 @@ use Tests\TestCase;
 class CancelTaskTest extends TestCase
 {
     private User $user;
+
     private Task $task;
+
     private Courier $courier;
+
     private Order $order;
 
     protected function setUp(): void
@@ -47,7 +50,7 @@ class CancelTaskTest extends TestCase
             'status' => CourierStatusEnum::OT->value,
         ]);
 
-        $this->task = new Task();
+        $this->task = new Task;
         $this->task->uuid = (string) Str::uuid();
         $this->task->status = TaskStatusEnum::CREATED->value;
         $this->task->courier_id = $this->courier->id;
@@ -63,7 +66,7 @@ class CancelTaskTest extends TestCase
         $pointA = Point::create(['address' => 'Point A', 'lat' => 52.22, 'long' => 21.01]);
         $pointB = Point::create(['address' => 'Point B', 'lat' => 52.23, 'long' => 21.02]);
 
-        $this->order = new Order();
+        $this->order = new Order;
         $this->order->customer_id = $customer->id;
         $this->order->unit_type = 'Medium';
         $this->order->uuid = (string) Str::uuid();
@@ -74,7 +77,7 @@ class CancelTaskTest extends TestCase
         $this->order->date = '2026-05-31';
         $this->order->save();
 
-        $route = new Route();
+        $route = new Route;
         $route->task_id = $this->task->id;
         $route->point_id = $pointA->id;
         $route->sequence = 1;
@@ -130,7 +133,7 @@ class CancelTaskTest extends TestCase
             $mock->shouldReceive('newRunningWorkflowStub')
                 ->with(TaskWorkflowInterface::class, 'task:'.$this->task->uuid)
                 ->andThrow(new WorkflowNotFoundException(
-                    new \Temporal\DataConverter\EncodedValues(),
+                    new \Temporal\DataConverter\EncodedValues,
                     null
                 ));
 
@@ -184,7 +187,7 @@ class CancelTaskTest extends TestCase
             $mock->shouldReceive('newRunningWorkflowStub')
                 ->with(TaskWorkflowInterface::class, 'task:'.$this->task->uuid)
                 ->andThrow(new WorkflowNotFoundException(
-                    new \Temporal\DataConverter\EncodedValues(),
+                    new \Temporal\DataConverter\EncodedValues,
                     null
                 ));
 
@@ -192,7 +195,7 @@ class CancelTaskTest extends TestCase
             $mock->shouldReceive('newRunningWorkflowStub')
                 ->with(OrderWorkflowInterface::class, 'order:'.$this->order->uuid)
                 ->andThrow(new WorkflowNotFoundException(
-                    new \Temporal\DataConverter\EncodedValues(),
+                    new \Temporal\DataConverter\EncodedValues,
                     null
                 ));
         });
