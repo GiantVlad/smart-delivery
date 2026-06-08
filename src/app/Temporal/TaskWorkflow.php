@@ -9,8 +9,10 @@ use App\Dto\TaskDto;
 use App\Dto\TaskWorkflowState;
 use App\Enums\TaskStatusEnum;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Facades\Log;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
+use Temporal\Exception\TemporalException;
 use Temporal\Workflow;
 use Temporal\Workflow\WorkflowExecution;
 
@@ -128,7 +130,15 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         foreach ($this->state->orderUuids as $orderUuid) {
             yield $this->taskOrderProjectionActivity->attach($taskUuid, $orderUuid);
-            yield $this->orderWorkflow($orderUuid)->assignToTask($taskUuid);
+            try {
+                yield $this->orderWorkflow($orderUuid)->assignToTask($taskUuid);
+            } catch (TemporalException $e) {
+                Log::warning('Failed to signal order workflow', [
+                    'orderUuid' => $orderUuid,
+                    'taskUuid' => $taskUuid,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         yield $this->createRouteActivity->createRoute($taskUuid, $this->state->orderUuids);
@@ -182,7 +192,15 @@ class TaskWorkflow implements TaskWorkflowInterface
                     continue;
                 }
 
-                yield $this->orderWorkflow($orderUuid)->unassignFromTask($this->state->taskUuid);
+                try {
+                    yield $this->orderWorkflow($orderUuid)->unassignFromTask($this->state->taskUuid);
+                } catch (TemporalException $e) {
+                    Log::warning('Failed to signal order workflow on cancel', [
+                        'orderUuid' => $orderUuid,
+                        'taskUuid' => $this->state->taskUuid,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
                 $order = yield $this->taskOrderProjectionActivity->detach($this->state->taskUuid, $orderUuid);
                 yield $this->removeFromRouteActivity->removeFromRoute($this->state->taskUuid, $order->startPointId, $order->endPointId);
             }
@@ -206,7 +224,15 @@ class TaskWorkflow implements TaskWorkflowInterface
                 }
                 $this->state->orderUuids[] = $orderUuid;
                 $order = yield $this->taskOrderProjectionActivity->attach($this->state->taskUuid, $orderUuid);
-                yield $this->orderWorkflow($orderUuid)->assignToTask($this->state->taskUuid);
+                try {
+                    yield $this->orderWorkflow($orderUuid)->assignToTask($this->state->taskUuid);
+                } catch (TemporalException $e) {
+                    Log::warning('Failed to signal order workflow on add', [
+                        'orderUuid' => $orderUuid,
+                        'taskUuid' => $this->state->taskUuid,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
                 yield $this->addToRouteActivity->addToRoute($this->state->taskUuid, $order->startPointId, $order->endPointId);
             }
         }
@@ -218,7 +244,15 @@ class TaskWorkflow implements TaskWorkflowInterface
             if (in_array($orderUuid, $this->state->orderUuids, true)) {
                 $this->state->orderUuids = array_values(array_diff($this->state->orderUuids, [$orderUuid]));
                 unset($this->state->terminalOrders[$orderUuid]);
-                yield $this->orderWorkflow($orderUuid)->unassignFromTask($this->state->taskUuid);
+                try {
+                    yield $this->orderWorkflow($orderUuid)->unassignFromTask($this->state->taskUuid);
+                } catch (TemporalException $e) {
+                    Log::warning('Failed to signal order workflow on remove', [
+                        'orderUuid' => $orderUuid,
+                        'taskUuid' => $this->state->taskUuid,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
                 $order = yield $this->taskOrderProjectionActivity->detach($this->state->taskUuid, $orderUuid);
                 yield $this->removeFromRouteActivity->removeFromRoute($this->state->taskUuid, $order->startPointId, $order->endPointId);
             }
