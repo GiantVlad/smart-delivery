@@ -13,6 +13,7 @@ use App\Http\Resources\TaskCreateFormResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Order;
 use App\Models\Task;
+use App\Services\TaskCancelService;
 use App\Temporal\TaskWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +22,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
-use Temporal\Exception\Client\WorkflowNotFoundException;
 
 class TaskController extends Controller
 {
@@ -74,23 +74,18 @@ class TaskController extends Controller
         return response()->json(['data' => ['uuid' => $taskUuid]]);
     }
 
-    public function cancelTask(CancelTaskRequest $request): JsonResponse
+    public function cancelTask(CancelTaskRequest $request, TaskCancelService $cancelService): JsonResponse
     {
         $taskUuid = $request->get('taskUuid');
+        $task = Task::where('uuid', $taskUuid)->first();
 
-        $workflow = $this->workflowClient->newRunningWorkflowStub(
-            TaskWorkflowInterface::class,
-            'task:'.$taskUuid,
-        );
-
-        try {
-            $workflow->cancel();
-        } catch (WorkflowNotFoundException) {
+        if (!$task) {
             return response()->json([
-                'message' => 'Task workflow is not running. Recreate the task or reset its Temporal workflow.',
-                'taskUuid' => $taskUuid,
-            ], 409);
+                'message' => 'Task not found.',
+            ], 404);
         }
+
+        $cancelService->cancel($task);
 
         return response()->json(['data' => true]);
     }
