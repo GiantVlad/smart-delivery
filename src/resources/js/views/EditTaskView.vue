@@ -1,7 +1,7 @@
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiTableBorder" title="Edit route" main>
+      <SectionTitleLineWithButton :icon="mdiTableBorder" title="Edit Task" main>
       </SectionTitleLineWithButton>
       <CardBox class="mb-6" has-table>
         <FormField label="Task">
@@ -13,7 +13,7 @@
           <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
           <tr>
             <th class="p-2 whitespace-nowrap">
-              <div class="font-semibold text-left">UUID</div>
+              <div class="font-semibold text-left">Order ID</div>
             </th>
             <th class="p-2 whitespace-nowrap">
               <div class="font-semibold text-left">Type</div>
@@ -34,7 +34,7 @@
           <tr v-for="order in orders" :key="order.id">
             <td class="p-2 whitespace-nowrap">
               <div class="flex items-center">
-                <div class="font-medium text-gray-800 dark:text-gray-100">{{order.uuid}}</div>
+                <div class="font-medium text-gray-800 dark:text-gray-100">{{order.id}}</div>
               </div>
             </td>
             <td class="p-2 whitespace-nowrap">
@@ -87,7 +87,7 @@
           >
           <tr v-for="(point, idx) in points" :key="idx">
             <td class="p-2 whitespace-nowrap">
-              <div class="text-left">{{idx}}</div>
+              <div class="text-left">{{ idx + 1 }}</div>
             </td>
             <td class="p-2 whitespace-nowrap">
               <div :class="[

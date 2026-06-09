@@ -43,8 +43,8 @@ export default [
     icon: mdiPalette
   },
   {
-    to: '/edit-route',
-    label: 'Edit Route',
+    to: '/edit-task',
+    label: 'Edit Task',
     icon: mdiRoutes
   },
   {

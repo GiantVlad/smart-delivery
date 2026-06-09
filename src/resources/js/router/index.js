@@ -90,12 +90,12 @@ const routes = [
   },
   {
     meta: {
-      title: 'Edit route',
+      title: 'Edit task',
       requiresAuth: true,
     },
-    path: '/edit-route',
-    name: 'edit-route',
-    component: () => import('@/views/EditRouteView.vue')
+    path: '/edit-task',
+    name: 'edit-task',
+    component: () => import('@/views/EditTaskView.vue')
   },
   {
     meta: {
