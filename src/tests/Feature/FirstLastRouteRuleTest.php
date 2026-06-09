@@ -17,9 +17,13 @@ use Tests\TestCase;
 class FirstLastRouteRuleTest extends TestCase
 {
     private Point $pickupA;
+
     private Point $deliveryA;
+
     private Point $pickupB;
+
     private Point $deliveryB;
+
     private Task $task;
 
     protected function setUp(): void
@@ -74,11 +78,11 @@ class FirstLastRouteRuleTest extends TestCase
         $order2->save();
     }
 
-    public function test_invalid_route_delivery_B_before_pickup_B(): void
+    public function test_invalid_route_delivery_b_before_pickup_b(): void
     {
         // Route: pickup_A, delivery_B, pickup_B, delivery_A
         // delivery_B (pos 1) comes before pickup_B (pos 2) — INVALID
-        $rule = new FirstLastRouteRule();
+        $rule = new FirstLastRouteRule;
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -94,15 +98,15 @@ class FirstLastRouteRuleTest extends TestCase
         $this->assertNotEmpty($errors, 'Expected validation to fail');
         $this->assertTrue(
             collect($errors)->contains(fn ($e) => str_contains($e, 'Pickup point must come before delivery point')),
-            'Expected pickup-before-delivery error. Errors: ' . implode(', ', $errors)
+            'Expected pickup-before-delivery error. Errors: '.implode(', ', $errors)
         );
     }
 
-    public function test_invalid_route_delivery_A_before_pickup_A(): void
+    public function test_invalid_route_delivery_a_before_pickup_a(): void
     {
         // Route: pickup_B, delivery_A, pickup_A, delivery_B
         // delivery_A (pos 1) comes before pickup_A (pos 2) — INVALID
-        $rule = new FirstLastRouteRule();
+        $rule = new FirstLastRouteRule;
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -118,14 +122,14 @@ class FirstLastRouteRuleTest extends TestCase
         $this->assertNotEmpty($errors, 'Expected validation to fail');
         $this->assertTrue(
             collect($errors)->contains(fn ($e) => str_contains($e, 'Pickup point must come before delivery point')),
-            'Expected pickup-before-delivery error. Errors: ' . implode(', ', $errors)
+            'Expected pickup-before-delivery error. Errors: '.implode(', ', $errors)
         );
     }
 
     public function test_valid_route_all_pickups_before_deliveries(): void
     {
         // Route: pickup_A, pickup_B, delivery_B, delivery_A — VALID
-        $rule = new FirstLastRouteRule();
+        $rule = new FirstLastRouteRule;
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -138,13 +142,13 @@ class FirstLastRouteRuleTest extends TestCase
             $errors[] = $message;
         });
 
-        $this->assertEmpty($errors, 'Expected validation to pass. Errors: ' . implode(', ', $errors));
+        $this->assertEmpty($errors, 'Expected validation to pass. Errors: '.implode(', ', $errors));
     }
 
     public function test_valid_route_interleaved_valid_ordering(): void
     {
         // Route: pickup_A, pickup_B, delivery_A, delivery_B — VALID
-        $rule = new FirstLastRouteRule();
+        $rule = new FirstLastRouteRule;
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -157,12 +161,12 @@ class FirstLastRouteRuleTest extends TestCase
             $errors[] = $message;
         });
 
-        $this->assertEmpty($errors, 'Expected validation to pass. Errors: ' . implode(', ', $errors));
+        $this->assertEmpty($errors, 'Expected validation to pass. Errors: '.implode(', ', $errors));
     }
 
     public function test_invalid_first_point(): void
     {
-        $rule = new FirstLastRouteRule();
+        $rule = new FirstLastRouteRule;
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -180,7 +184,7 @@ class FirstLastRouteRuleTest extends TestCase
 
     public function test_invalid_last_point(): void
     {
-        $rule = new FirstLastRouteRule();
+        $rule = new FirstLastRouteRule;
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];

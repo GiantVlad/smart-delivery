@@ -241,7 +241,7 @@ const getOrders = () => {
       orderStartPoints = orders.value.map(el => el.startPointId)
       orderEndPoints = orders.value.map(el => el.endPointId)
     })
-})
+}
 
 const getRoute = () => {
   http.get('/api/route/' + selectedTask.value)
