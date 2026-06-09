@@ -57,6 +57,9 @@
         <NotificationBar color="danger" v-if="error && selectedTask">
           {{error}}
         </NotificationBar>
+        <NotificationBar color="warning" v-if="selectedTask && !isTaskEditable">
+          This task has status "{{taskStatus}}" and cannot be edited.
+        </NotificationBar>
         <CardBox class="mb-6" has-table form @submit.prevent="submit" :is-form="true" v-if="selectedTask !== null">
           <table class="table-auto w-full">
           <!-- Table header -->
@@ -158,6 +161,7 @@ import FormField from "@/components/FormField.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import { useTaskStatusStore } from "@/stores/taskStatus.js"
 
 
 const selectedTask = ref(null)
@@ -166,6 +170,7 @@ const orders = ref([])
 const points = ref([])
 const error = ref(null)
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+const taskStatusStore = useTaskStatusStore()
 
 const mapPoints = computed(() => points.value
   .map((point) => {
@@ -181,7 +186,7 @@ const mapPoints = computed(() => points.value
 
 const mapCenter = computed(() => mapPoints.value[0]?.position || { lat: 0, lng: 0 })
 const routePath = computed(() => mapPoints.value.map((point) => point.position))
-const routeLineOptions = computed(() => ({
+const taskLineOptions = computed(() => ({
   path: routePath.value,
   geodesic: true,
   strokeColor: '#2563EB',
@@ -189,10 +194,26 @@ const routeLineOptions = computed(() => ({
   strokeWeight: 4,
 }))
 
+const taskStatus = computed(() => {
+  if (!selectedTask.value) return null
+  return taskStatusStore.tasks[selectedTask.value] ?? null
+})
+
+const isTaskEditable = computed(() => {
+  if (!taskStatus.value) return true
+  return taskStatus.value !== 'finished' && taskStatus.value !== 'canceled'
+})
+
 onMounted(() => {
-  http.get('/api/tasks')
+  http.get('/api/active-tasks')
     .then((response) => {
       tasks.value = response.data.data.map(el => ({id: el.uuid, label: el.uuid + ': ' + el.courierName}))
+      for (const task of response.data.data) {
+        taskStatusStore.updateStatus({
+          uuid: task.uuid,
+          status: task.status,
+        })
+      }
     })
 })
 

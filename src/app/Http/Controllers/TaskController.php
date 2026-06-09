@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Domain\CourierManager;
 use App\Dto\CreateTaskCommand;
 use App\Enums\OrderStatusEnum;
+use App\Enums\TaskStatusEnum;
 use App\Http\Requests\CancelTaskRequest;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Resources\TaskCreateFormResource;
@@ -49,6 +50,17 @@ class TaskController extends Controller
     public function getTasks(): JsonResource
     {
         $tasks = Task::with('courier')
+            ->limit(30)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return TaskResource::collection($tasks);
+    }
+
+    public function getActiveTasks(): JsonResource
+    {
+        $tasks = Task::with('courier')
+            ->whereNotIn('status', [TaskStatusEnum::FINISHED->value, TaskStatusEnum::CANCELED->value])
             ->limit(30)
             ->orderBy('updated_at', 'desc')
             ->get();

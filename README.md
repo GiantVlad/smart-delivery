@@ -108,8 +108,6 @@ docker compose exec roadrunner php artisan migrate
 
 docker compose exec roadrunner php artisan db:seed
 
-docker compose exec roadrunner php artisan wf-status-handler:start
-
 docker compose exec roadrunner rr -c /etc/rr/.rr.yaml reset
 
 sudo apt install npm
@@ -124,12 +122,6 @@ id|from |to   |capacity|available
 3 |16:00|20:00|8       |8
 4 |20:00|23:59|4       |4
 
-
-
-to stop status handler:
-```
-docker compose exec roadrunner php artisan wf-status-handler:stop workflow-status-handler-v1
-```
 
 Services:
 - :80 the main app
