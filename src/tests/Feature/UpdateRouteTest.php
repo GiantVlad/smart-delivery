@@ -17,11 +17,8 @@ use Tests\TestCase;
 class UpdateRouteTest extends TestCase
 {
     private Point $startPoint;
-
     private Point $endPoint;
-
     private Customer $customer;
-
     private User $user;
 
     protected function setUp(): void
