@@ -81,15 +81,6 @@ const routes = [
   },
   {
     meta: {
-      title: 'Update order',
-      requiresAuth: true,
-    },
-    path: '/update-order-in-task',
-    name: 'update-order-in-task',
-    component: () => import('@/views/UpdateOrderInTaskView.vue')
-  },
-  {
-    meta: {
       title: 'Edit task',
       requiresAuth: true,
     },
