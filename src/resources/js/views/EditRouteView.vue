@@ -60,6 +60,9 @@
         <NotificationBar color="warning" v-if="selectedTask && !isTaskEditable">
           This task has status "{{taskStatus}}" and cannot be edited.
         </NotificationBar>
+        <NotificationBar color="danger" v-if="invalidOrderSequence">
+          Invalid route: pickup point must come before delivery point for each order.
+        </NotificationBar>
         <CardBox class="mb-6" has-table form @submit.prevent="submit" :is-form="true" v-if="selectedTask !== null">
           <table class="table-auto w-full">
           <!-- Table header -->
@@ -228,15 +231,17 @@ watch(selectedTask, async (newTask, oldTask) => {
 
 let orderStartPoints = []
 let orderEndPoints = []
+let ordersData = []
 
 const getOrders = () => {
   http.get('/api/orders-by-task/' + selectedTask.value)
     .then((response) => {
-      orderStartPoints = orderEndPoints = orders.value = response.data.data
-      orderStartPoints = orderStartPoints.map(el => el.startPointId)
-      orderEndPoints = orderEndPoints.map(el => el.endPointId)
+      orders.value = response.data.data
+      ordersData = response.data.data
+      orderStartPoints = orders.value.map(el => el.startPointId)
+      orderEndPoints = orders.value.map(el => el.endPointId)
     })
-}
+})
 
 const getRoute = () => {
   http.get('/api/route/' + selectedTask.value)
@@ -246,17 +251,31 @@ const getRoute = () => {
 }
 
 const invalidFirstRoute = ref(false)
-const invalidLastRoute =  ref(false)
+const invalidLastRoute = ref(false)
+const invalidOrderSequence = ref(false)
 
 const orderPoints = () => {
   invalidFirstRoute.value = false
   invalidLastRoute.value = false
+  invalidOrderSequence.value = false
+
   if (! orderStartPoints.includes(points.value[0].pointId)) {
     invalidFirstRoute.value = true
   }
-  if (! orderEndPoints.includes(points.value[points.value.length-1].pointId)) {
+  if (! orderEndPoints.includes(points.value[points.value.length - 1].pointId)) {
     invalidLastRoute.value = true
   }
+
+  // Validate that for each order, pickup comes before delivery
+  for (const order of ordersData) {
+    const pickupIdx = points.value.findIndex(p => p.pointId === order.startPointId)
+    const deliveryIdx = points.value.findIndex(p => p.pointId === order.endPointId)
+    if (pickupIdx !== -1 && deliveryIdx !== -1 && pickupIdx > deliveryIdx) {
+      invalidOrderSequence.value = true
+      break
+    }
+  }
+
   points.value.map((point, idx) => point.sequence = idx)
 }
 
