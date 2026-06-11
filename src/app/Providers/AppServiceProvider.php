@@ -15,9 +15,15 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(
             WorkflowClientInterface::class,
-            fn () => WorkflowClient::create(
-                ServiceClient::create('temporal:7233')
-            )
+            function () {
+                if (! extension_loaded('grpc')) {
+                    throw new \RuntimeException('The gRPC extension is required to use the Temporal Client.');
+                }
+
+                return WorkflowClient::create(
+                    ServiceClient::create('temporal:7233')
+                );
+            }
         );
     }
 
