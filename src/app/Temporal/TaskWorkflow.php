@@ -30,6 +30,8 @@ class TaskWorkflow implements TaskWorkflowInterface
 
     private $removeFromRouteActivity;
 
+    private $taskStatusActivity;
+
     private ?TaskWorkflowState $state = null;
 
     private array $pendingAddOrderUuids = [];
@@ -108,6 +110,18 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         $this->removeFromRouteActivity = Workflow::newActivityStub(
             RemoveFromRouteActivityInterface::class,
+            ActivityOptions::new()
+                ->withStartToCloseTimeout(CarbonInterval::seconds(20))
+                ->withRetryOptions(
+                    RetryOptions::new()
+                        ->withInitialInterval(CarbonInterval::seconds(1))
+                        ->withMaximumAttempts(3)
+                        ->withNonRetryableExceptions([\InvalidArgumentException::class])
+                )
+        );
+
+        $this->taskStatusActivity = Workflow::newActivityStub(
+            TaskStatusActivityInterface::class,
             ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(20))
                 ->withRetryOptions(
@@ -234,6 +248,7 @@ class TaskWorkflow implements TaskWorkflowInterface
             $this->pendingStart = false;
             if ($this->state->status === TaskStatusEnum::CREATED->value) {
                 $this->state->status = TaskStatusEnum::STARTED->value;
+                yield $this->taskStatusActivity->updateStatus($this->state->taskUuid, TaskStatusEnum::STARTED->value);
             }
         }
 
@@ -291,6 +306,7 @@ class TaskWorkflow implements TaskWorkflowInterface
         foreach ($this->pendingCollectedOrders as $orderUuid => $val) {
             if (in_array($orderUuid, $this->state->orderUuids, true) && $this->state->status === TaskStatusEnum::CREATED->value) {
                 $this->state->status = TaskStatusEnum::STARTED->value;
+                yield $this->taskStatusActivity->updateStatus($this->state->taskUuid, TaskStatusEnum::STARTED->value);
             }
             unset($this->pendingCollectedOrders[$orderUuid]);
         }
