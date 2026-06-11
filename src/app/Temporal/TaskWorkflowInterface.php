@@ -26,6 +26,12 @@ interface TaskWorkflowInterface
     #[SignalMethod(name: 'Task.OrderReachedTerminal')]
     public function orderReachedTerminal(string $orderUuid, string $status): void;
 
+    #[SignalMethod(name: 'Task.OrderCollected')]
+    public function orderCollected(string $orderUuid): void;
+
+    #[SignalMethod(name: 'Task.Start')]
+    public function start(): void;
+
     #[SignalMethod(name: 'Task.Cancel')]
     public function cancel(): void;
 

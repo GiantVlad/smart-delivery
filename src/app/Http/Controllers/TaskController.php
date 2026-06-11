@@ -10,6 +10,7 @@ use App\Enums\OrderStatusEnum;
 use App\Enums\TaskStatusEnum;
 use App\Http\Requests\CancelTaskRequest;
 use App\Http\Requests\CreateTaskRequest;
+use App\Http\Requests\StartTaskRequest;
 use App\Http\Resources\TaskCreateFormResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Order;
@@ -98,6 +99,27 @@ class TaskController extends Controller
         }
 
         $cancelService->cancel($task);
+
+        return response()->json(['data' => true]);
+    }
+
+    public function startTask(StartTaskRequest $request): JsonResponse
+    {
+        $taskUuid = $request->get('taskUuid');
+        $task = Task::where('uuid', $taskUuid)->first();
+
+        if (! $task) {
+            return response()->json([
+                'message' => 'Task not found.',
+            ], 404);
+        }
+
+        $workflow = $this->workflowClient->newRunningWorkflowStub(
+            TaskWorkflowInterface::class,
+            'task:'.$taskUuid,
+        );
+
+        $workflow->start();
 
         return response()->json(['data' => true]);
     }

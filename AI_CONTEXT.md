@@ -31,9 +31,11 @@ It combines a Laravel backend, Vue SPA frontend, Temporal workflows, and realtim
 - Testing: PHPUnit 11
 
 Key backend areas:
-- `src/app/Temporal/`: workflows/activities (order assignment, unassignment, status updates, task finishing, ERP observer)
+- `src/app/Temporal/`: workflows/activities (order assignment, unassignment, status updates, task finishing, task start/cancel, order collected signal, ERP observer)
 - `src/app/Http/Controllers/`: API and dashboard controllers
 - `src/app/Models/`: Eloquent models (Order, Task, Courier, Route, Slot, etc.)
+- `src/app/Services/`: domain services (TaskCancelService)
+- `src/app/Rules/`: validation rules (FirstLastRouteRule)
 - `src/database/migrations/`: schema for orders/tasks/routes/slots/working_hours/holidays/users/permissions
 - `src/routes/api.php`: main business API
 
@@ -102,7 +104,7 @@ Main flow (high-level):
   - Dashboard: `src/resources/js/views/HomeView.vue`, route name `dashboard` in `src/resources/js/router/index.js`
   - Orders: `src/resources/js/views/Orders.vue`, route name `orders`
   - Tasks: `src/resources/js/views/Tasks.vue`, route name `tasks`
-  - Edit Route: `src/resources/js/views/EditRouteView.vue`, route name `edit-route`
+  - Edit Task: `src/resources/js/views/EditTaskView.vue`, route name `edit-task`
 
 - Customer creates delivery order from point A to point B:
   - UI: `src/resources/js/views/OrderCreateFormView.vue`
@@ -114,15 +116,17 @@ Main flow (high-level):
 - Agent/driver delivers multiple orders (task assignment):
   - Task creation UI with selectable orders/courier: `src/resources/js/views/TaskCreateFormView.vue`
   - Task create API: `POST /api/task` -> `TaskController::createTask`
+  - Task start API: `POST /api/task/start` -> `TaskController::startTask` (signals Temporal `Task.Start`)
+  - Task cancel API: `POST /api/task/cancel` -> `TaskController::cancelTask` (uses `TaskCancelService`)
   - Order assignment/unassignment inside task:
-    - UI: `src/resources/js/views/UpdateOrderInTaskView.vue`
+    - UI: `src/resources/js/views/EditTaskView.vue` (merged from former `UpdateOrderInTaskView.vue`)
     - APIs: `POST /api/add-orders-to-task`, `POST /api/unassign-order`
     - Controller: `OrderController`
     - Workflows: `AssignOrderWorkflowInterface`, `UnassignOrderWorkflowInterface`
   - Guardrail: `OrdersCanBeAddedRule` prevents adding orders already assigned to a task.
 
 - Route editing and pickup/delivery sequence:
-  - UI: `src/resources/js/views/EditRouteView.vue`
+  - UI: `src/resources/js/views/EditTaskView.vue`
   - Data load:
     - Task list: `GET /api/tasks`
     - Orders by task: `GET /api/orders-by-task/{taskUuid}`
@@ -135,7 +139,14 @@ Main flow (high-level):
     - Request class: `EditRouteRequest`
     - Rule: `FirstLastRouteRule`
     - Enforces first point must be one of assigned orders' pickup points and last point must be one of assigned orders' delivery points.
-  - Frontend also provides immediate visual checks for invalid first/last route points in `EditRouteView.vue`.
+    - Also enforces pickup point must come before delivery point for each order.
+  - Frontend also provides immediate visual checks for invalid first/last route points and pickup-before-delivery ordering in `EditTaskView.vue`.
+
+- Task status lifecycle:
+  - `created` -> `started`: via manual "Start" button (UI) or automatically when first order reaches `collected` status (OrderWorkflow signals `Task.OrderCollected`)
+  - `started` -> `finished`: automatically when all orders reach terminal status (delivered/canceled)
+  - `created`/`started` -> `canceled`: via "Cancel" button (UI), uses `TaskCancelService` which signals Temporal `Task.Cancel` or falls back to manual cleanup
+  - Task signals: `Task.Start`, `Task.Cancel`, `Task.AddOrders`, `Task.RemoveOrder`, `Task.OrderReachedTerminal`, `Task.OrderCollected`
 
 - Route point semantics:
   - Enum: `src/app/Enums/RoutePointTypeEnum.php`
@@ -179,3 +190,5 @@ Typical local flow:
 - Repository currently includes built frontend artifacts under `src/public/build/`.
 - Repository currently includes installed dependencies folders (`src/vendor/`, `src/node_modules/`) in workspace.
 - `.agents/` and `.codex/` directories exist but are read-only in current filesystem state.
+- `UpdateOrderInTaskView.vue` and `EditRouteView.vue` have been removed/merged into `EditTaskView.vue`.
+- Local tests require gRPC extension for full execution; without it, 4 pre-existing Dashboard-related tests fail. Run `php artisan test` to verify no new failures.

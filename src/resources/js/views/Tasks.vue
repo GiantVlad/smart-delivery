@@ -64,13 +64,22 @@
                 <div class="text-left">{{ formatDateTime(task.updated_at) }}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <BaseButton
-                  v-if="canCancelTask(task)"
-                  type="button"
-                  color="error"
-                  label="Cancel"
-                  @click="openCancelModal(task.uuid)"
-                />
+                <div class="flex items-center gap-2">
+                  <BaseButton
+                    v-if="canStartTask(task)"
+                    type="button"
+                    color="success"
+                    label="Start"
+                    @click="openStartModal(task.uuid)"
+                  />
+                  <BaseButton
+                    v-if="canCancelTask(task)"
+                    type="button"
+                    color="danger"
+                    label="Cancel"
+                    @click="openCancelModal(task.uuid)"
+                  />
+                </div>
               </td>
             </tr>
             </tbody>
@@ -80,6 +89,17 @@
       <CardBox v-if="tasks.length < 1">
         <CardBoxComponentEmpty />
       </CardBox>
+
+      <CardBoxModal
+        v-model="isStartModalActive"
+        title="Start Task"
+        button="success"
+        button-label="Confirm"
+        has-cancel
+        @confirm="startTask"
+      >
+        <p>Are you sure you want to start this task?</p>
+      </CardBoxModal>
 
       <CardBoxModal
         v-model="isCancelModalActive"
@@ -153,11 +173,45 @@ onMounted(() => {
     })
 })
 
+const canStartTask = (task) => {
+  const status = statuses.value.find(el => el.uuid === task.uuid)?.status ?? task.status
+  return status === 'created'
+}
 
 const canCancelTask = (task) => {
   const status = statuses.value.find(el => el.uuid === task.uuid)?.status ?? task.status
   return status !== 'finished' && status !== 'canceled'
 }
+
+const isStartModalActive = ref(false)
+const taskToStart = ref(null)
+
+const openStartModal = (uuid) => {
+  taskToStart.value = uuid
+  isStartModalActive.value = true
+}
+
+const startTask = async () => {
+  if (!taskToStart.value) return
+  const uuid = taskToStart.value
+  isStartModalActive.value = false
+  try {
+    await http.post('/api/task/start', { taskUuid: uuid });
+    await http.get('/api/tasks').then((response) => {
+      tasks.value = response.data.data;
+      for (const task of response.data.data) {
+        taskStatusStore.updateStatus({
+          uuid: task.uuid,
+          status: task.status,
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Failed to start task:', error);
+    alert('Failed to start task');
+  }
+  taskToStart.value = null
+};
 
 const isCancelModalActive = ref(false)
 const taskToCancel = ref(null)

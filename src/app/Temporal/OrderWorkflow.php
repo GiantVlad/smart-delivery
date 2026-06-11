@@ -170,6 +170,22 @@ class OrderWorkflow implements OrderWorkflowInterface
                 );
                 yield $task->orderReachedTerminal($this->state->orderUuid, $this->state->status);
             }
+
+            if ($this->state->status === OrderStatusEnum::COLLECTED->value && $previousTaskUuid !== null) {
+                try {
+                    $task = Workflow::newExternalWorkflowStub(
+                        TaskWorkflowInterface::class,
+                        new WorkflowExecution('task:'.$previousTaskUuid)
+                    );
+                    yield $task->orderCollected($this->state->orderUuid);
+                } catch (\Throwable $e) {
+                    Log::warning('Failed to signal task order collected', [
+                        'orderUuid' => $this->state->orderUuid,
+                        'taskUuid' => $previousTaskUuid,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
         }
     }
 

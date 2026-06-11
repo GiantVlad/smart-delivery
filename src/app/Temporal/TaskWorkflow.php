@@ -38,6 +38,10 @@ class TaskWorkflow implements TaskWorkflowInterface
 
     private array $pendingTerminalOrders = [];
 
+    private array $pendingCollectedOrders = [];
+
+    private bool $pendingStart = false;
+
     private bool $pendingCancel = false;
 
     public function __construct()
@@ -164,6 +168,16 @@ class TaskWorkflow implements TaskWorkflowInterface
         $this->pendingTerminalOrders[$orderUuid] = $status;
     }
 
+    public function orderCollected(string $orderUuid): void
+    {
+        $this->pendingCollectedOrders[$orderUuid] = true;
+    }
+
+    public function start(): void
+    {
+        $this->pendingStart = true;
+    }
+
     public function cancel(): void
     {
         $this->pendingCancel = true;
@@ -179,6 +193,8 @@ class TaskWorkflow implements TaskWorkflowInterface
         return $this->pendingAddOrderUuids !== []
             || $this->pendingRemoveOrderUuid !== null
             || $this->pendingTerminalOrders !== []
+            || $this->pendingCollectedOrders !== []
+            || $this->pendingStart
             || $this->pendingCancel;
     }
 
@@ -212,6 +228,13 @@ class TaskWorkflow implements TaskWorkflowInterface
             );
 
             return;
+        }
+
+        if ($this->pendingStart) {
+            $this->pendingStart = false;
+            if ($this->state->status === TaskStatusEnum::CREATED->value) {
+                $this->state->status = TaskStatusEnum::STARTED->value;
+            }
         }
 
         if ($this->pendingAddOrderUuids !== []) {
@@ -263,6 +286,13 @@ class TaskWorkflow implements TaskWorkflowInterface
                 $this->state->terminalOrders[$orderUuid] = $status;
             }
             unset($this->pendingTerminalOrders[$orderUuid]);
+        }
+
+        foreach ($this->pendingCollectedOrders as $orderUuid => $val) {
+            if (in_array($orderUuid, $this->state->orderUuids, true) && $this->state->status === TaskStatusEnum::CREATED->value) {
+                $this->state->status = TaskStatusEnum::STARTED->value;
+            }
+            unset($this->pendingCollectedOrders[$orderUuid]);
         }
 
         if ($this->state->orderUuids !== [] && count($this->state->terminalOrders) === count($this->state->orderUuids)) {
