@@ -189,6 +189,7 @@ class TaskWorkflow implements TaskWorkflowInterface
 
     public function start(): void
     {
+        Log::info('TaskWorkflow: start() signal received', ['taskUuid' => $this->state->taskUuid ?? 'unknown']);
         $this->pendingStart = true;
     }
 
@@ -246,9 +247,12 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         if ($this->pendingStart) {
             $this->pendingStart = false;
+            Log::info('TaskWorkflow: processing pendingStart', ['taskUuid' => $this->state->taskUuid, 'status' => $this->state->status]);
             if ($this->state->status === TaskStatusEnum::CREATED->value) {
                 $this->state->status = TaskStatusEnum::STARTED->value;
+                Log::info('TaskWorkflow: updating status to STARTED', ['taskUuid' => $this->state->taskUuid]);
                 yield $this->taskStatusActivity->updateStatus($this->state->taskUuid, TaskStatusEnum::STARTED->value);
+                Log::info('TaskWorkflow: TaskStatusActivity dispatched', ['taskUuid' => $this->state->taskUuid]);
             }
         }
 
