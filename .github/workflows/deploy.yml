@@ -39,6 +39,7 @@ jobs:
               docker compose --env-file .env -f compose.yml up -d
               docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear || true
               docker compose --env-file .env -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset || true
+              docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan temporal:reset-workflows --all --reason "Rollback reset" || true
             }
 
             trap 'rollback' ERR
@@ -71,6 +72,9 @@ jobs:
             docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan migrate --force
             docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear
             docker compose --env-file .env -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset
+
+            echo "Resetting running workflows to apply new code..."
+            docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan temporal:reset-workflows --all --reason "Deployment reset $(date +%Y%m%d_%H%M%S)"
 
             if [ -n "${{ secrets.DEPLOY_HEALTHCHECK_URL }}" ]; then
               echo "Running health check..."
