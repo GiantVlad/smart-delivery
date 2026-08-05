@@ -29,7 +29,7 @@
         "@vue/compiler-sfc": "^3.5.26",
         "@vue/eslint-config-prettier": "^10.2.0",
         "autoprefixer": "^10.4.23",
-        "axios": "^1.13.2",
+        "axios": "^1.18.0",
         "concurrently": "^9.2.1",
         "eslint": "^9.39.2",
         "eslint-plugin-vue": "^10.6.2",
