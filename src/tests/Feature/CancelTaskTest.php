@@ -101,6 +101,9 @@ class CancelTaskTest extends TestCase
         $taskWorkflowMock->shouldReceive('cancel')
             ->once()
             ->andReturnNull();
+        $taskWorkflowMock->shouldReceive('getState')
+            ->once()
+            ->andReturnNull();
 
         $this->mock(WorkflowClientInterface::class, function (MockInterface $mock) use ($taskWorkflowMock): void {
             $mock->shouldReceive('newRunningWorkflowStub')
@@ -135,6 +138,11 @@ class CancelTaskTest extends TestCase
             ->once()
             ->andThrow(WorkflowNotFoundException::withoutMessage(
                 new WorkflowExecution('task:'.$this->task->uuid),
+            ));
+        $taskWorkflowMock->shouldReceive('getState')
+            ->once()
+            ->andThrow(WorkflowNotFoundException::withoutMessage(
+                new WorkflowExecution('task:'.$this->task->uuid)
             ));
 
         // Mock order workflow being found and signaled
@@ -188,6 +196,11 @@ class CancelTaskTest extends TestCase
             ->andThrow(WorkflowNotFoundException::withoutMessage(
                 new WorkflowExecution('task:'.$this->task->uuid),
             ));
+        $taskWorkflowMock->shouldReceive('getState')
+            ->once()
+            ->andThrow(WorkflowNotFoundException::withoutMessage(
+                new WorkflowExecution('task:'.$this->task->uuid)
+            ));
 
         // Mock order workflow stub whose unassignFromTask() throws WorkflowNotFoundException
         $orderWorkflowMock = Mockery::mock(OrderWorkflowInterface::class);
@@ -195,7 +208,7 @@ class CancelTaskTest extends TestCase
             ->once()
             ->with($this->task->uuid)
             ->andThrow(WorkflowNotFoundException::withoutMessage(
-                new WorkflowExecution('order:'.$this->order->uuid),
+                new WorkflowExecution('order:'.$this->order->uuid)
             ));
 
         $this->mock(WorkflowClientInterface::class, function (MockInterface $mock) use ($taskWorkflowMock, $orderWorkflowMock): void {
