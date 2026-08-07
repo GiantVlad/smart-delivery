@@ -51,13 +51,13 @@ class UpdateRouteTest extends TestCase
             'uuid' => (string) Str::uuid(),
         ]);
 
-        $task = new Task;
+        $task = new Task();
         $task->uuid = (string) Str::uuid();
         $task->status = $status;
         $task->courier_id = $courier->id;
         $task->save();
 
-        $order = new Order;
+        $order = new Order();
         $order->customer_id = $this->customer->id;
         $order->unit_type = 'Medium';
         $order->uuid = (string) Str::uuid();
