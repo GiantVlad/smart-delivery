@@ -162,8 +162,13 @@ class TaskWorkflow implements TaskWorkflowInterface
         yield $this->createRouteActivity->createRoute($taskUuid, $this->state->orderUuids);
 
         while ($this->state->status !== TaskStatusEnum::FINISHED->value && $this->state->status !== TaskStatusEnum::CANCELED->value) {
-            yield Workflow::await(fn () => $this->hasPendingChange());
+            // Process any pending changes first (in case a signal arrived while we were waiting)
             yield from $this->flushPendingChanges();
+            // Wait for a change, with a short poll interval as fallback
+            yield Workflow::awaitWithTimeout(
+                CarbonInterval::seconds(30),
+                fn () => $this->hasPendingChange()
+            );
         }
     }
 
@@ -189,7 +194,6 @@ class TaskWorkflow implements TaskWorkflowInterface
 
     public function start(): void
     {
-        Log::info('TaskWorkflow: start() signal received', ['taskUuid' => $this->state->taskUuid ?? 'unknown']);
         $this->pendingStart = true;
     }
 
@@ -233,7 +237,13 @@ class TaskWorkflow implements TaskWorkflowInterface
                     ]);
                 }
                 $order = yield $this->taskOrderProjectionActivity->detach($this->state->taskUuid, $orderUuid);
-                yield $this->removeFromRouteActivity->removeFromRoute($this->state->taskUuid, $order->startPointId, $order->endPointId);
+                $remainingOrderUuids = array_values(array_diff($this->state->orderUuids, [$orderUuid]));
+                yield $this->removeFromRouteActivity->removeFromRoute(
+                    $this->state->taskUuid,
+                    $remainingOrderUuids,
+                    $order->startPointId,
+                    $order->endPointId
+                );
             }
 
             $this->state->status = TaskStatusEnum::CANCELED->value;
@@ -296,7 +306,13 @@ class TaskWorkflow implements TaskWorkflowInterface
                     ]);
                 }
                 $order = yield $this->taskOrderProjectionActivity->detach($this->state->taskUuid, $orderUuid);
-                yield $this->removeFromRouteActivity->removeFromRoute($this->state->taskUuid, $order->startPointId, $order->endPointId);
+                $remainingOrderUuids = array_values(array_diff($this->state->orderUuids, [$orderUuid]));
+                yield $this->removeFromRouteActivity->removeFromRoute(
+                    $this->state->taskUuid,
+                    $remainingOrderUuids,
+                    $order->startPointId,
+                    $order->endPointId
+                );
             }
         }
 

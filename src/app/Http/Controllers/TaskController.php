@@ -24,6 +24,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
+use Temporal\Exception\Client\WorkflowNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -90,15 +92,26 @@ class TaskController extends Controller
     public function cancelTask(CancelTaskRequest $request, TaskCancelService $cancelService): JsonResponse
     {
         $taskUuid = $request->get('taskUuid');
-        $task = Task::where('uuid', $taskUuid)->first();
 
-        if (! $task) {
-            return response()->json([
-                'message' => 'Task not found.',
-            ], 404);
+        $workflowId = 'task:' . $taskUuid;
+        try {
+            $workflow = $this->workflowClient->newRunningWorkflowStub(
+                TaskWorkflowInterface::class,
+                $workflowId
+            );
+            // Attempt to get the state to confirm workflow exists before signaling
+            $workflow->getState(); 
+            $workflow->cancel();
+        } catch (WorkflowNotFoundException) {
+            // If workflow not found, fallback to the service's database cleanup
+            $task = Task::where('uuid', $taskUuid)->first();
+            if (! $task) {
+                return response()->json([
+                    'message' => 'Task not found in Temporal or database.',
+                ], 404);
+            }
+            $cancelService->cancel($task);
         }
-
-        $cancelService->cancel($task);
 
         return response()->json(['data' => true]);
     }
@@ -106,20 +119,24 @@ class TaskController extends Controller
     public function startTask(StartTaskRequest $request): JsonResponse
     {
         $taskUuid = $request->get('taskUuid');
-        $task = Task::where('uuid', $taskUuid)->first();
+        $workflowId = 'task:' . $taskUuid;
 
-        if (! $task) {
+        try {
+            $workflow = $this->workflowClient->newRunningWorkflowStub(
+                TaskWorkflowInterface::class,
+                $workflowId
+            );
+            $workflow->start();
+        } catch (WorkflowNotFoundException $e) {
+            Log::warning('Task workflow not found for start signal', [
+                'taskUuid' => $taskUuid,
+                'workflowId' => $workflowId,
+                'exception' => $e->getMessage(),
+            ]);
             return response()->json([
-                'message' => 'Task not found.',
+                'message' => 'Task workflow is not running or has finished.',
             ], 404);
         }
-
-        $workflow = $this->workflowClient->newRunningWorkflowStub(
-            TaskWorkflowInterface::class,
-            'task:'.$taskUuid,
-        );
-
-        $workflow->start();
 
         return response()->json(['data' => true]);
     }

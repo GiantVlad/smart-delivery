@@ -13,7 +13,8 @@ interface RemoveFromRouteActivityInterface
     #[ActivityMethod(name: 'RemoveFromRoute')]
     public function removeFromRoute(
         string $taskUuid,
-        int $startPointId,
-        int $endPointId,
+        array $orderUuidsInTask,
+        int $startPointIdToRemove,
+        int $endPointIdToRemove,
     ): array;
 }

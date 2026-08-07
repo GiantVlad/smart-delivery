@@ -11,6 +11,8 @@ use App\Models\Order;
 use App\Models\Point;
 use App\Models\Task;
 use App\Rules\FirstLastRouteRule;
+use stdClass;
+use Temporal\Client\WorkflowClientInterface;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -25,6 +27,8 @@ class FirstLastRouteRuleTest extends TestCase
     private Point $deliveryB;
 
     private Task $task;
+    private ?WorkflowClientInterface $workflowClient;
+    private \stdClass $workflowStub;
 
     protected function setUp(): void
     {
@@ -76,13 +80,23 @@ class FirstLastRouteRuleTest extends TestCase
         $order2->end_point_id = $this->deliveryB->id;
         $order2->date = '2026-06-10';
         $order2->save();
+            $this->workflowStub = $this->createMock(stdClass::class);
+            $this->workflowStub->method('getState')->willReturn((object)[
+                'orderUuids' => [$order1->uuid, $order2->uuid],
+                'status' => TaskStatusEnum::STARTED->value,
+                'taskUuid' => $this->task->uuid,
+                'courierUuid' => 'courier-uuid'
+            ]);
+            $this->workflowClient = $this->createMock(WorkflowClientInterface::class);
+            $this->workflowClient->method('newRunningWorkflowStub')
+                ->willReturn($this->workflowStub);
     }
 
     public function test_invalid_route_delivery_b_before_pickup_b(): void
     {
         // Route: pickup_A, delivery_B, pickup_B, delivery_A
         // delivery_B (pos 1) comes before pickup_B (pos 2) — INVALID
-        $rule = new FirstLastRouteRule;
+        $rule = new FirstLastRouteRule($this->workflowClient);
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -106,7 +120,7 @@ class FirstLastRouteRuleTest extends TestCase
     {
         // Route: pickup_B, delivery_A, pickup_A, delivery_B
         // delivery_A (pos 1) comes before pickup_A (pos 2) — INVALID
-        $rule = new FirstLastRouteRule;
+        $rule = new FirstLastRouteRule($this->workflowClient);
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -129,7 +143,7 @@ class FirstLastRouteRuleTest extends TestCase
     public function test_valid_route_all_pickups_before_deliveries(): void
     {
         // Route: pickup_A, pickup_B, delivery_B, delivery_A — VALID
-        $rule = new FirstLastRouteRule;
+        $rule = new FirstLastRouteRule($this->workflowClient);
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -148,7 +162,7 @@ class FirstLastRouteRuleTest extends TestCase
     public function test_valid_route_interleaved_valid_ordering(): void
     {
         // Route: pickup_A, pickup_B, delivery_A, delivery_B — VALID
-        $rule = new FirstLastRouteRule;
+        $rule = new FirstLastRouteRule($this->workflowClient);
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -166,7 +180,7 @@ class FirstLastRouteRuleTest extends TestCase
 
     public function test_invalid_first_point(): void
     {
-        $rule = new FirstLastRouteRule;
+        $rule = new FirstLastRouteRule($this->workflowClient);
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
@@ -184,7 +198,7 @@ class FirstLastRouteRuleTest extends TestCase
 
     public function test_invalid_last_point(): void
     {
-        $rule = new FirstLastRouteRule;
+        $rule = new FirstLastRouteRule($this->workflowClient);
         $rule->setData(['taskUuid' => $this->task->uuid]);
 
         $errors = [];
