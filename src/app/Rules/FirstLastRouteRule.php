@@ -26,7 +26,8 @@ class FirstLastRouteRule implements DataAwareRule, ValidationRule
 
     public function __construct(
         private WorkflowClientInterface $workflowClient
-    ) {}
+    ) {
+    }
 
     /**
      * Set the data under validation.

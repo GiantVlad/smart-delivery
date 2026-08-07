@@ -32,8 +32,7 @@ class TaskController extends Controller
     public function createTaskForm(string $date, CourierManager $courierManager)
     {
         $date = Carbon::parse($date);
-        $dto = new class
-        {
+        $dto = new class () {
             public Collection $orders;
 
             public Collection $couriers;
@@ -100,7 +99,7 @@ class TaskController extends Controller
                 $workflowId
             );
             // Attempt to get the state to confirm workflow exists before signaling
-            $workflow->getState(); 
+            $workflow->getState();
             $workflow->cancel();
         } catch (WorkflowNotFoundException) {
             // If workflow not found, fallback to the service's database cleanup

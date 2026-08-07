@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use App\Enums\OrderStatusEnum;
 use App\Enums\TaskStatusEnum;
 use App\Models\Courier;
 use App\Models\Customer;
@@ -11,24 +12,24 @@ use App\Models\Order;
 use App\Models\Point;
 use App\Models\Task;
 use App\Rules\FirstLastRouteRule;
-use stdClass;
+use App\Dto\TaskWorkflowState;
+use App\Dto\OrderWorkflowState;
 use Temporal\Client\WorkflowClientInterface;
+use Temporal\Exception\Client\WorkflowNotFoundException;
+use App\Temporal\TaskWorkflowInterface;
+use App\Temporal\OrderWorkflowInterface;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class FirstLastRouteRuleTest extends TestCase
 {
     private Point $pickupA;
-
     private Point $deliveryA;
-
     private Point $pickupB;
-
     private Point $deliveryB;
 
     private Task $task;
-    private ?WorkflowClientInterface $workflowClient;
-    private \stdClass $workflowStub;
+    private WorkflowClientInterface $workflowClient;
 
     protected function setUp(): void
     {
@@ -51,14 +52,14 @@ class FirstLastRouteRuleTest extends TestCase
             'uuid' => (string) Str::uuid(),
         ]);
 
-        $this->task = new Task;
+        $this->task = new Task();
         $this->task->uuid = (string) Str::uuid();
         $this->task->status = TaskStatusEnum::CREATED->value;
         $this->task->courier_id = $courier->id;
         $this->task->save();
 
         // Order A: pickup_A -> delivery_A
-        $order1 = new Order;
+        $order1 = new Order();
         $order1->customer_id = $customer->id;
         $order1->unit_type = 'Medium';
         $order1->uuid = (string) Str::uuid();
@@ -70,7 +71,7 @@ class FirstLastRouteRuleTest extends TestCase
         $order1->save();
 
         // Order B: pickup_B -> delivery_B
-        $order2 = new Order;
+        $order2 = new Order();
         $order2->customer_id = $customer->id;
         $order2->unit_type = 'Medium';
         $order2->uuid = (string) Str::uuid();
@@ -80,16 +81,77 @@ class FirstLastRouteRuleTest extends TestCase
         $order2->end_point_id = $this->deliveryB->id;
         $order2->date = '2026-06-10';
         $order2->save();
-            $this->workflowStub = $this->createMock(stdClass::class);
-            $this->workflowStub->method('getState')->willReturn((object)[
-                'orderUuids' => [$order1->uuid, $order2->uuid],
-                'status' => TaskStatusEnum::STARTED->value,
-                'taskUuid' => $this->task->uuid,
-                'courierUuid' => 'courier-uuid'
-            ]);
-            $this->workflowClient = $this->createMock(WorkflowClientInterface::class);
-            $this->workflowClient->method('newRunningWorkflowStub')
-                ->willReturn($this->workflowStub);
+
+        // Set up mock workflow client
+        $this->workflowClient = $this->createMock(WorkflowClientInterface::class);
+
+        // Task workflow stub
+        $taskWorkflowState = new TaskWorkflowState(
+            $this->task->uuid,
+            $courier->uuid,
+            TaskStatusEnum::STARTED->value,
+            [$order1->uuid, $order2->uuid],
+            []
+        );
+
+        $taskWorkflowStub = $this->createMock(TaskWorkflowInterface::class);
+        $taskWorkflowStub->method('getState')
+            ->willReturn($taskWorkflowState);
+
+        // Order workflow stubs
+        $order1WorkflowState = new OrderWorkflowState(
+            $order1->uuid,
+            $customer->uuid,
+            OrderStatusEnum::ACCEPTED->value,
+            null,
+            $order1->unit_type,
+            $order1->start_point_id,
+            $order1->end_point_id,
+            []
+        );
+
+        $order2WorkflowState = new OrderWorkflowState(
+            $order2->uuid,
+            $customer->uuid,
+            OrderStatusEnum::ACCEPTED->value,
+            null,
+            $order2->unit_type,
+            $order2->start_point_id,
+            $order2->end_point_id,
+            []
+        );
+
+        $order1WorkflowStub = $this->createMock(OrderWorkflowInterface::class);
+        $order1WorkflowStub->method('getState')
+            ->willReturn($order1WorkflowState);
+
+        $order2WorkflowStub = $this->createMock(OrderWorkflowInterface::class);
+        $order2WorkflowStub->method('getState')
+            ->willReturn($order2WorkflowState);
+
+        // Configure workflowClient to return appropriate stubs
+        $this->workflowClient->method('newRunningWorkflowStub')
+            ->willReturnCallback(function ($interface, $workflowId) use ($taskWorkflowStub, $order1WorkflowStub, $order2WorkflowStub, $order1, $order2) {
+                if ($interface === TaskWorkflowInterface::class && $workflowId === 'task:' . $this->task->uuid) {
+                    return $taskWorkflowStub;
+                }
+                if ($interface === OrderWorkflowInterface::class) {
+                    if (str_contains($workflowId, 'order:')) {
+                        $orderUuid = explode(':', $workflowId)[1];
+                        if ($orderUuid === $order1->uuid) {
+                            return $order1WorkflowStub;
+                        }
+                        if ($orderUuid === $order2->uuid) {
+                            return $order2WorkflowStub;
+                        }
+                    }
+                }
+                // Default: return a stub that throws WorkflowNotFoundException
+                $mock = $this->createMock(stdClass::class);
+                $mock->method('getState')
+                    ->willThrowException(new WorkflowNotFoundException('Workflow not found'));
+                return $mock;
+            });
     }
 
     public function test_invalid_route_delivery_b_before_pickup_b(): void

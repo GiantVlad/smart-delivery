@@ -11,11 +11,12 @@ use Illuminate\Support\Collection;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Exception\Client\WorkflowNotFoundException;
 use Illuminate\Support\Facades\Log;
-use App\Temporal\OrderWorkflowInterface;
 
 class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
 {
-    public function __construct(private WorkflowClientInterface $workflowClient) {}
+    public function __construct(private WorkflowClientInterface $workflowClient)
+    {
+    }
 
     public function removeFromRoute(
         string $taskUuid,

@@ -15,12 +15,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Exception\Client\WorkflowNotFoundException;
+use Opekunov\Centrifugo\Contracts\CentrifugoInterface;
 
 class RouteController extends Controller
 {
     public function __construct(
-        private WorkflowClientInterface $workflowClient
-    ) {}
+        WorkflowClientInterface $workflowClient,
+        CentrifugoInterface $centrifugo
+    ) {
+        parent::__construct($workflowClient, $centrifugo);
+    }
+
     public function getRoute(string $taskUuid): JsonResponse|JsonResource
     {
         try {
