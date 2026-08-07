@@ -7,28 +7,21 @@ namespace App\Temporal;
 use App\Dto\TaskDto;
 use App\Enums\TaskStatusEnum;
 use App\Models\Courier;
-use App\Models\Order;
 use App\Models\Task;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class CreateTaskActivity implements CreateTaskActivityInterface
 {
     public function createTask(TaskDto $taskDto): string
     {
         $courier = Courier::where('uuid', $taskDto->courierUuid)->firstOrFail();
-        $orders = Order::whereIn('uuid', $taskDto->orderUuids)->get();
-        $task = new Task;
+        $task = new Task();
 
-        DB::transaction(static function () use ($orders, $courier, $task) {
+        DB::transaction(static function () use ($courier, $task, $taskDto) {
             $task->courier()->associate($courier);
-            $task->uuid = Str::uuid()->toString();
+            $task->uuid = $taskDto->taskUuid;
             $task->status = TaskStatusEnum::CREATED->value;
             $task->save();
-            foreach ($orders as $order) {
-                $order->task_id = $task->id;
-                $order->save();
-            }
         });
 
         return $task->uuid ?? '';

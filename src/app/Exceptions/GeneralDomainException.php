@@ -2,4 +2,6 @@
 
 namespace App\Exceptions;
 
-class GeneralDomainException extends \Exception {}
+class GeneralDomainException extends \Exception
+{
+}

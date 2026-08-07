@@ -27,7 +27,7 @@ class CreateTaskRequest extends FormRequest
 
         return [
             'courierUuid' => "bail|required|string|exists:couriers,uuid,status,$ready",
-            'orderUuids' => ['required', 'array', 'min:1', new OrdersCanBeAddedRule],
+            'orderUuids' => ['required', 'array', 'min:1', OrdersCanBeAddedRule::class],
         ];
     }
 }

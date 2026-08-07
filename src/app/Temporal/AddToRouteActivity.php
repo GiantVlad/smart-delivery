@@ -46,7 +46,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
         }
 
         if ($startPointId !== null) {
-            $route = new Route;
+            $route = new Route();
             $route->point_type = RoutePointTypeEnum::START->value;
             $route->point_id = $startPointId;
             $route->sequence = $lastStart;
@@ -55,7 +55,7 @@ class AddToRouteActivity implements AddToRouteActivityInterface
         }
 
         if ($endPointId !== null) {
-            $route = new Route;
+            $route = new Route();
             $route->point_type = RoutePointTypeEnum::FINISH->value;
             $route->point_id = $endPointId;
             $route->sequence = $lastFinish;

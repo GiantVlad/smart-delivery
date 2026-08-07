@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\OrderStatusEnum;
-use App\Rules\OrderStatusCanBeChangedRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -31,7 +30,6 @@ class UpdateStatusByCourierRequest extends FormRequest
                 'required',
                 'string',
                 'exists:orders,uuid',
-                new OrderStatusCanBeChangedRule($this->status),
             ],
         ];
     }

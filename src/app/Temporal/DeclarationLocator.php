@@ -16,7 +16,7 @@ class DeclarationLocator
     public function __construct(string $directory)
     {
         $this->classLocator = new ClassLocator(
-            (new Finder)->in($directory)->name('*.php')
+            (new Finder())->in($directory)->name('*.php')
         );
     }
 

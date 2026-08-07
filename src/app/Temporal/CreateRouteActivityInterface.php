@@ -13,5 +13,6 @@ interface CreateRouteActivityInterface
     #[ActivityMethod(name: 'CreateRoute')]
     public function createRoute(
         string $taskUuid,
+        array $orderUuids = [],
     ): true;
 }

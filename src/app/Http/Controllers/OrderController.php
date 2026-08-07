@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Dto\AssignOrderDto;
 use App\Enums\OrderStatusEnum;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\UnassignOrderRequest;
@@ -12,12 +11,9 @@ use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrderToAssignResource;
 use App\Models\Order;
 use App\Models\Task;
-use App\Temporal\AssignOrderWorkflowInterface;
-use App\Temporal\UnassignOrderWorkflowInterface;
-use Carbon\CarbonInterval;
+use App\Temporal\TaskWorkflowInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Temporal\Client\WorkflowOptions;
 
 class OrderController extends Controller
 {
@@ -27,18 +23,12 @@ class OrderController extends Controller
             ->with('task', 'task.courier', 'customer')
             ->first();
 
-        $dto = new AssignOrderDto(
-            [$order->uuid => $order->customer->uuid],
-            $order->task->uuid,
-            $order->task->courier->uuid
+        $workflow = $this->workflowClient->newRunningWorkflowStub(
+            TaskWorkflowInterface::class,
+            'task:'.$order->task->uuid,
         );
 
-        $workflow = $this->workflowClient->newWorkflowStub(
-            UnassignOrderWorkflowInterface::class,
-            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(3))
-        );
-
-        $this->workflowClient->start($workflow, $dto);
+        $workflow->removeOrder($order->uuid);
 
         return response()->json(['data' => true]);
     }
@@ -47,23 +37,12 @@ class OrderController extends Controller
     {
         $task = Task::where('uuid', $request->get('taskUuid'))->first();
 
-        $dto = new AssignOrderDto(
-            [],
-            $task->uuid,
-            $task->courier->uuid
+        $workflow = $this->workflowClient->newRunningWorkflowStub(
+            TaskWorkflowInterface::class,
+            'task:'.$task->uuid,
         );
 
-        $orders = Order::whereIn('uuid', $request->get('orderUuids'))->with('customer')->get();
-        foreach ($orders as $order) {
-            $dto->orderCustomerUuids[$order->uuid] = $order->customer->uuid;
-        }
-
-        $workflow = $this->workflowClient->newWorkflowStub(
-            AssignOrderWorkflowInterface::class,
-            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minutes(3))
-        );
-
-        $this->workflowClient->start($workflow, $dto);
+        $workflow->addOrders($request->get('orderUuids'));
 
         return response()->json(['data' => true]);
     }

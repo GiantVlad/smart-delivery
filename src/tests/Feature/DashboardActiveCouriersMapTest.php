@@ -33,7 +33,7 @@ class DashboardActiveCouriersMapTest extends TestCase
             'status' => CourierStatusEnum::RD->value,
         ]);
 
-        $task = new Task;
+        $task = new Task();
         $task->courier_id = $courier->id;
         $task->uuid = Str::uuid()->toString();
         $task->status = TaskStatusEnum::STARTED->value;
@@ -50,14 +50,14 @@ class DashboardActiveCouriersMapTest extends TestCase
             'long' => 27.6,
         ]);
 
-        $pickupRoute = new DeliveryRoute;
+        $pickupRoute = new DeliveryRoute();
         $pickupRoute->task_id = $task->id;
         $pickupRoute->point_id = $pickupPoint->id;
         $pickupRoute->sequence = 1;
         $pickupRoute->point_type = 'start';
         $pickupRoute->save();
 
-        $latestRoute = new DeliveryRoute;
+        $latestRoute = new DeliveryRoute();
         $latestRoute->task_id = $task->id;
         $latestRoute->point_id = $latestPoint->id;
         $latestRoute->sequence = 2;

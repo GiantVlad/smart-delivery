@@ -17,6 +17,8 @@ class OrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $timeRanges = $this->time_ranges ?? [];
+
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
@@ -29,9 +31,7 @@ class OrderResource extends JsonResource
             'startPointId' => $this->startPoint?->id,
             'endPointId' => $this->endPoint?->id,
             'date' => $this->date,
-            'from' => $this->from,
-            'to' => $this->to,
-            'timeRanges' => $this->time_ranges ?? [],
+            'timeRanges' => $timeRanges,
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }

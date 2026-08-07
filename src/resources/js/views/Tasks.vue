@@ -12,26 +12,29 @@
           <table class="table-auto w-full">
             <!-- Table header -->
             <thead class="text-xs font-semibold uppercase dark:text-gray-500 bg-gray-50 dark:bg-gray-700 dark:bg-opacity-50">
-            <tr>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-left">#</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-left">UUID</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-center">Status</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-left">Courier</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-center">Count of orders</div>
-              </th>
-              <th class="p-2 whitespace-nowrap">
-                <div class="font-semibold text-center">Date</div>
-              </th>
-            </tr>
+              <tr>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-left">#</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-left">UUID</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-center">Status</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-left">Courier</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-center">Count of orders</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-center">Date</div>
+                </th>
+                <th class="p-2 whitespace-nowrap">
+                  <div class="font-semibold text-center">Actions</div>
+                </th>
+              </tr>
             </thead>
             <!-- Table body -->
             <tbody class="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
@@ -60,6 +63,24 @@
               <td class="p-2 whitespace-nowrap">
                 <div class="text-left">{{ formatDateTime(task.updated_at) }}</div>
               </td>
+              <td class="p-2 whitespace-nowrap">
+                <div class="flex items-center gap-2">
+                  <BaseButton
+                    v-if="canStartTask(task)"
+                    type="button"
+                    color="success"
+                    label="Start"
+                    @click="openStartModal(task.uuid)"
+                  />
+                  <BaseButton
+                    v-if="canCancelTask(task)"
+                    type="button"
+                    color="danger"
+                    label="Cancel"
+                    @click="openCancelModal(task.uuid)"
+                  />
+                </div>
+              </td>
             </tr>
             </tbody>
           </table>
@@ -68,6 +89,28 @@
       <CardBox v-if="tasks.length < 1">
         <CardBoxComponentEmpty />
       </CardBox>
+
+      <CardBoxModal
+        v-model="isStartModalActive"
+        title="Start Task"
+        button="success"
+        button-label="Confirm"
+        has-cancel
+        @confirm="startTask"
+      >
+        <p>Are you sure you want to start this task?</p>
+      </CardBoxModal>
+
+      <CardBoxModal
+        v-model="isCancelModalActive"
+        title="Cancel Task"
+        button="danger"
+        button-label="Confirm"
+        has-cancel
+        @confirm="cancelTask"
+      >
+        <p>Are you sure you want to cancel this task?</p>
+      </CardBoxModal>
     </SectionMain>
   </LayoutAuthenticated>
 </template>
@@ -80,6 +123,7 @@ import CardBox from '@/components/CardBox.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import CardBoxComponentEmpty from '@/components/CardBoxComponentEmpty.vue'
+import CardBoxModal from '@/components/CardBoxModal.vue'
 import http from "@/lib/axios.js"
 import { ref, onMounted, computed } from "vue"
 import router from "@/router/index.js"
@@ -129,4 +173,73 @@ onMounted(() => {
     })
 })
 
+const canStartTask = (task) => {
+  const status = statuses.value.find(el => el.uuid === task.uuid)?.status ?? task.status
+  return status === 'created'
+}
+
+const canCancelTask = (task) => {
+  const status = statuses.value.find(el => el.uuid === task.uuid)?.status ?? task.status
+  return status !== 'finished' && status !== 'canceled'
+}
+
+const isStartModalActive = ref(false)
+const taskToStart = ref(null)
+
+const openStartModal = (uuid) => {
+  taskToStart.value = uuid
+  isStartModalActive.value = true
+}
+
+const startTask = async () => {
+  if (!taskToStart.value) return
+  const uuid = taskToStart.value
+  isStartModalActive.value = false
+  try {
+    await http.post('/api/task/start', { taskUuid: uuid });
+    await http.get('/api/tasks').then((response) => {
+      tasks.value = response.data.data;
+      for (const task of response.data.data) {
+        taskStatusStore.updateStatus({
+          uuid: task.uuid,
+          status: task.status,
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Failed to start task:', error);
+    alert('Failed to start task');
+  }
+  taskToStart.value = null
+};
+
+const isCancelModalActive = ref(false)
+const taskToCancel = ref(null)
+
+const openCancelModal = (uuid) => {
+  taskToCancel.value = uuid
+  isCancelModalActive.value = true
+}
+
+const cancelTask = async () => {
+  if (!taskToCancel.value) return
+  const uuid = taskToCancel.value
+  isCancelModalActive.value = false
+  try {
+    await http.post('/api/task/cancel', { taskUuid: uuid });
+    await http.get('/api/tasks').then((response) => {
+      tasks.value = response.data.data;
+      for (const task of response.data.data) {
+        taskStatusStore.updateStatus({
+          uuid: task.uuid,
+          status: task.status,
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Failed to cancel task:', error);
+    alert('Failed to cancel task');
+  }
+  taskToCancel.value = null
+};
 </script>

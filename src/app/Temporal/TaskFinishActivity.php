@@ -15,15 +15,15 @@ use Illuminate\Support\Facades\Log;
 
 class TaskFinishActivity implements TaskFinishedActivityInterface
 {
-    public function finishTask(TaskDto $taskDto): string
+    public function finishTask(TaskDto $taskDto, string $status = TaskStatusEnum::FINISHED->value): string
     {
         $courier = Courier::where('uuid', $taskDto->courierUuid)->firstOrFail();
         $task = Task::where('uuid', $taskDto->taskUuid)->firstOrFail();
 
-        DB::transaction(static function () use ($courier, $task) {
+        DB::transaction(static function () use ($courier, $task, $status) {
             $courier->status = CourierStatusEnum::RD->value;
             $courier->save();
-            $task->status = TaskStatusEnum::FINISHED->value;
+            $task->status = $status;
             $task->save();
         });
         try {

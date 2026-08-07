@@ -34,7 +34,7 @@ class TaskCreatedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line("The task $this->uuid has been created.")
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our Smart Delivery service!');

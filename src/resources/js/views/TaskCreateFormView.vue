@@ -66,11 +66,20 @@ const getTask = () => {
   http.get(`/api/task-form/${form.date}`)
     .then((response) => {
       couriers.value = response.data.data.couriers.map(el => ({id: el.uuid, label: el.name}))
+      const formatTimeRanges = (order) => {
+        if (Array.isArray(order.time_ranges) && order.time_ranges.length > 0) {
+          return order.time_ranges
+            .map((range) => `${range.from} - ${range.to}`)
+            .join(', ')
+        }
+
+        return '-'
+      }
       // Map the orders to include all necessary fields for the table
       orders.value = response.data.data.orders.map(el => ({
         id: el.id,
         label: el.uuid,
-        time: `${el.from} - ${el.to}`,
+        time: formatTimeRanges(el),
         pickup: el.start_point.address || '-',
         delivery: el.end_point.address || '-',
         unitType: el.unit_type || '-'

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="/home/mac_mac/projects/smart-delivery/src/phpunit.xml" tests="26" assertions="71" errors="0" failures="4" skipped="0" time="0.459009">
+    <testsuite name="Feature" tests="26" assertions="71" errors="0" failures="4" skipped="0" time="0.459009">
+      <testsuite name="Tests\Feature\ActiveTasksTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/ActiveTasksTest.php" tests="3" assertions="8" errors="0" failures="0" skipped="0" time="0.211301">
+        <testcase name="test_get_active_tasks_returns_only_active_tasks" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/ActiveTasksTest.php" line="47" class="Tests\Feature\ActiveTasksTest" classname="Tests.Feature.ActiveTasksTest" assertions="5" time="0.192697"/>
+        <testcase name="test_get_active_tasks_excludes_finished_and_canceled" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/ActiveTasksTest.php" line="66" class="Tests\Feature\ActiveTasksTest" classname="Tests.Feature.ActiveTasksTest" assertions="2" time="0.009551"/>
+        <testcase name="test_guest_cannot_get_active_tasks" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/ActiveTasksTest.php" line="77" class="Tests\Feature\ActiveTasksTest" classname="Tests.Feature.ActiveTasksTest" assertions="1" time="0.009053"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\AuthFlowTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php" tests="5" assertions="5" errors="0" failures="3" skipped="0" time="0.045925">
+        <testcase name="test_login_succeeds_with_valid_credentials" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php" line="13" class="Tests\Feature\AuthFlowTest" classname="Tests.Feature.AuthFlowTest" assertions="1" time="0.014990">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\Feature\AuthFlowTest::test_login_succeeds_with_valid_credentials
+Expected response status code [200] but received 500.
+Failed asserting that 500 is identical to 200.
+
+The following exception occurred during the last request:
+
+TypeError: App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given in /home/mac_mac/projects/smart-delivery/src/app/Http/Controllers/Controller.php:13
+Stack trace:
+#0 [internal function]: App\Http\Controllers\Controller-&gt;__construct()
+#1 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(1205): ReflectionClass-&gt;newInstanceArgs()
+#2 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(971): Illuminate\Container\Container-&gt;build()
+#3 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1077): Illuminate\Container\Container-&gt;resolve()
+#4 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(902): Illuminate\Foundation\Application-&gt;resolve()
+#5 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1057): Illuminate\Container\Container-&gt;make()
+#6 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(286): Illuminate\Foundation\Application-&gt;make()
+#7 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\Route-&gt;getController()
+#8 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(211): Illuminate\Routing\Route-&gt;runController()
+#9 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(822): Illuminate\Routing\Route-&gt;run()
+#10 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Routing\Router-&gt;{closure:Illuminate\Routing\Router::runRouteWithinStack():821}()
+#11 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#12 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings-&gt;handle()
+#13 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#14 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;{closure:Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::handle():25}()
+#15 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#16 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(25): Illuminate\Pipeline\Pipeline-&gt;then()
+#17 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;handle()
+#18 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#19 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(821): Illuminate\Pipeline\Pipeline-&gt;then()
+#20 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(800): Illuminate\Routing\Router-&gt;runRouteWithinStack()
+#21 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(764): Illuminate\Routing\Router-&gt;runRoute()
+#22 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(753): Illuminate\Routing\Router-&gt;dispatchToRoute()
+#23 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\Routing\Router-&gt;dispatch()
+#24 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Foundation\Http\Kernel-&gt;{closure:Illuminate\Foundation\Http\Kernel::dispatchToRouter():197}()
+#25 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#26 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#27 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull-&gt;handle()
+#28 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#29 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#30 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings-&gt;handle()
+#31 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#32 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize-&gt;handle()
+#33 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#34 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance-&gt;handle()
+#35 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(61): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#36 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\HandleCors-&gt;handle()
+#37 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#38 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies-&gt;handle()
+#39 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#40 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks-&gt;handle()
+#41 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#42 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding-&gt;handle()
+#43 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#44 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\Pipeline\Pipeline-&gt;then()
+#45 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\Foundation\Http\Kernel-&gt;sendRequestThroughRouter()
+#46 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel-&gt;handle()
+#47 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase-&gt;call()
+#48 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(411): Illuminate\Foundation\Testing\TestCase-&gt;json()
+#49 /home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php(21): Illuminate\Foundation\Testing\TestCase-&gt;postJson()
+#50 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(1656): Tests\Feature\AuthFlowTest-&gt;test_login_succeeds_with_valid_credentials()
+#51 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(514): PHPUnit\Framework\TestCase-&gt;runTest()
+#52 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase-&gt;runBare()
+#53 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(361): PHPUnit\Framework\TestRunner-&gt;run()
+#54 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase-&gt;run()
+#55 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#56 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#57 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite-&gt;run()
+#58 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner-&gt;run()
+#59 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application-&gt;run()
+#60 {main}
+
+----------------------------------------------------------------------------------
+
+App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given
+
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponseAssert.php:45
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponse.php:174
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/Concerns/AssertsStatusCodes.php:16
+/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php:27</failure>
+        </testcase>
+        <testcase name="test_login_fails_with_invalid_credentials" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php" line="34" class="Tests\Feature\AuthFlowTest" classname="Tests.Feature.AuthFlowTest" assertions="1" time="0.008488">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\Feature\AuthFlowTest::test_login_fails_with_invalid_credentials
+Expected response status code [422] but received 500.
+Failed asserting that 500 is identical to 422.
+
+The following exception occurred during the last request:
+
+TypeError: App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given in /home/mac_mac/projects/smart-delivery/src/app/Http/Controllers/Controller.php:13
+Stack trace:
+#0 [internal function]: App\Http\Controllers\Controller-&gt;__construct()
+#1 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(1205): ReflectionClass-&gt;newInstanceArgs()
+#2 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(971): Illuminate\Container\Container-&gt;build()
+#3 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1077): Illuminate\Container\Container-&gt;resolve()
+#4 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(902): Illuminate\Foundation\Application-&gt;resolve()
+#5 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1057): Illuminate\Container\Container-&gt;make()
+#6 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(286): Illuminate\Foundation\Application-&gt;make()
+#7 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\Route-&gt;getController()
+#8 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(211): Illuminate\Routing\Route-&gt;runController()
+#9 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(822): Illuminate\Routing\Route-&gt;run()
+#10 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Routing\Router-&gt;{closure:Illuminate\Routing\Router::runRouteWithinStack():821}()
+#11 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#12 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings-&gt;handle()
+#13 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#14 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;{closure:Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::handle():25}()
+#15 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#16 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(25): Illuminate\Pipeline\Pipeline-&gt;then()
+#17 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;handle()
+#18 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#19 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(821): Illuminate\Pipeline\Pipeline-&gt;then()
+#20 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(800): Illuminate\Routing\Router-&gt;runRouteWithinStack()
+#21 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(764): Illuminate\Routing\Router-&gt;runRoute()
+#22 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(753): Illuminate\Routing\Router-&gt;dispatchToRoute()
+#23 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\Routing\Router-&gt;dispatch()
+#24 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Foundation\Http\Kernel-&gt;{closure:Illuminate\Foundation\Http\Kernel::dispatchToRouter():197}()
+#25 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#26 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#27 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull-&gt;handle()
+#28 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#29 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#30 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings-&gt;handle()
+#31 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#32 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize-&gt;handle()
+#33 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#34 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance-&gt;handle()
+#35 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(61): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#36 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\HandleCors-&gt;handle()
+#37 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#38 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies-&gt;handle()
+#39 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#40 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks-&gt;handle()
+#41 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#42 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding-&gt;handle()
+#43 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#44 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\Pipeline\Pipeline-&gt;then()
+#45 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\Foundation\Http\Kernel-&gt;sendRequestThroughRouter()
+#46 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel-&gt;handle()
+#47 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase-&gt;call()
+#48 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(411): Illuminate\Foundation\Testing\TestCase-&gt;json()
+#49 /home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php(42): Illuminate\Foundation\Testing\TestCase-&gt;postJson()
+#50 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(1656): Tests\Feature\AuthFlowTest-&gt;test_login_fails_with_invalid_credentials()
+#51 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(514): PHPUnit\Framework\TestCase-&gt;runTest()
+#52 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase-&gt;runBare()
+#53 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(361): PHPUnit\Framework\TestRunner-&gt;run()
+#54 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase-&gt;run()
+#55 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#56 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#57 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite-&gt;run()
+#58 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner-&gt;run()
+#59 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application-&gt;run()
+#60 {main}
+
+----------------------------------------------------------------------------------
+
+App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given
+
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponseAssert.php:45
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponse.php:174
+/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php:48</failure>
+        </testcase>
+        <testcase name="test_public_register_endpoint_is_not_available" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php" line="54" class="Tests\Feature\AuthFlowTest" classname="Tests.Feature.AuthFlowTest" assertions="1" time="0.007027"/>
+        <testcase name="test_authenticated_user_can_create_user_via_protected_endpoint" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php" line="66" class="Tests\Feature\AuthFlowTest" classname="Tests.Feature.AuthFlowTest" assertions="1" time="0.008504">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\Feature\AuthFlowTest::test_authenticated_user_can_create_user_via_protected_endpoint
+Expected response status code [201] but received 500.
+Failed asserting that 500 is identical to 201.
+
+The following exception occurred during the last request:
+
+TypeError: App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given in /home/mac_mac/projects/smart-delivery/src/app/Http/Controllers/Controller.php:13
+Stack trace:
+#0 [internal function]: App\Http\Controllers\Controller-&gt;__construct()
+#1 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(1205): ReflectionClass-&gt;newInstanceArgs()
+#2 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(971): Illuminate\Container\Container-&gt;build()
+#3 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1077): Illuminate\Container\Container-&gt;resolve()
+#4 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(902): Illuminate\Foundation\Application-&gt;resolve()
+#5 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1057): Illuminate\Container\Container-&gt;make()
+#6 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(286): Illuminate\Foundation\Application-&gt;make()
+#7 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\Route-&gt;getController()
+#8 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(211): Illuminate\Routing\Route-&gt;runController()
+#9 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(822): Illuminate\Routing\Route-&gt;run()
+#10 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Routing\Router-&gt;{closure:Illuminate\Routing\Router::runRouteWithinStack():821}()
+#11 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#12 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings-&gt;handle()
+#13 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(63): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#14 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Auth\Middleware\Authenticate-&gt;handle()
+#15 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#16 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;{closure:Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::handle():25}()
+#17 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#18 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(25): Illuminate\Pipeline\Pipeline-&gt;then()
+#19 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;handle()
+#20 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#21 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(821): Illuminate\Pipeline\Pipeline-&gt;then()
+#22 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(800): Illuminate\Routing\Router-&gt;runRouteWithinStack()
+#23 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(764): Illuminate\Routing\Router-&gt;runRoute()
+#24 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(753): Illuminate\Routing\Router-&gt;dispatchToRoute()
+#25 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\Routing\Router-&gt;dispatch()
+#26 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Foundation\Http\Kernel-&gt;{closure:Illuminate\Foundation\Http\Kernel::dispatchToRouter():197}()
+#27 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#28 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#29 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull-&gt;handle()
+#30 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#31 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#32 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings-&gt;handle()
+#33 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#34 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize-&gt;handle()
+#35 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#36 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance-&gt;handle()
+#37 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(61): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#38 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\HandleCors-&gt;handle()
+#39 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#40 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies-&gt;handle()
+#41 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#42 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks-&gt;handle()
+#43 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#44 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding-&gt;handle()
+#45 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#46 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\Pipeline\Pipeline-&gt;then()
+#47 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\Foundation\Http\Kernel-&gt;sendRequestThroughRouter()
+#48 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel-&gt;handle()
+#49 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase-&gt;call()
+#50 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(411): Illuminate\Foundation\Testing\TestCase-&gt;json()
+#51 /home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php(76): Illuminate\Foundation\Testing\TestCase-&gt;postJson()
+#52 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(1656): Tests\Feature\AuthFlowTest-&gt;test_authenticated_user_can_create_user_via_protected_endpoint()
+#53 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(514): PHPUnit\Framework\TestCase-&gt;runTest()
+#54 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase-&gt;runBare()
+#55 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(361): PHPUnit\Framework\TestRunner-&gt;run()
+#56 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase-&gt;run()
+#57 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#58 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#59 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite-&gt;run()
+#60 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner-&gt;run()
+#61 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application-&gt;run()
+#62 {main}
+
+----------------------------------------------------------------------------------
+
+App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given
+
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponseAssert.php:45
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponse.php:174
+/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php:84</failure>
+        </testcase>
+        <testcase name="test_guest_cannot_create_user_via_protected_endpoint" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/AuthFlowTest.php" line="90" class="Tests\Feature\AuthFlowTest" classname="Tests.Feature.AuthFlowTest" assertions="1" time="0.006917"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\CancelTaskTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CancelTaskTest.php" tests="4" assertions="29" errors="0" failures="0" skipped="0" time="0.056169">
+        <testcase name="test_guest_cannot_cancel_task" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CancelTaskTest.php" line="89" class="Tests\Feature\CancelTaskTest" classname="Tests.Feature.CancelTaskTest" assertions="1" time="0.012134"/>
+        <testcase name="test_cancel_task_when_workflow_running" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CancelTaskTest.php" line="98" class="Tests\Feature\CancelTaskTest" classname="Tests.Feature.CancelTaskTest" assertions="8" time="0.016398"/>
+        <testcase name="test_cancel_task_when_workflow_not_running_manual_cleanup" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CancelTaskTest.php" line="130" class="Tests\Feature\CancelTaskTest" classname="Tests.Feature.CancelTaskTest" assertions="9" time="0.016395"/>
+        <testcase name="test_cancel_task_when_workflow_and_order_workflows_not_running_manual_cleanup" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CancelTaskTest.php" line="182" class="Tests\Feature\CancelTaskTest" classname="Tests.Feature.CancelTaskTest" assertions="11" time="0.011241"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\CreateOrderEndpointTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CreateOrderEndpointTest.php" tests="2" assertions="8" errors="0" failures="0" skipped="0" time="0.024976">
+        <testcase name="test_guest_cannot_create_order" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CreateOrderEndpointTest.php" line="21" class="Tests\Feature\CreateOrderEndpointTest" classname="Tests.Feature.CreateOrderEndpointTest" assertions="1" time="0.009280"/>
+        <testcase name="test_authenticated_user_can_submit_order_and_dispatch_workflow" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/CreateOrderEndpointTest.php" line="28" class="Tests\Feature\CreateOrderEndpointTest" classname="Tests.Feature.CreateOrderEndpointTest" assertions="7" time="0.015696"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\DashboardActiveCouriersMapTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/DashboardActiveCouriersMapTest.php" tests="1" assertions="1" errors="0" failures="1" skipped="0" time="0.011606">
+        <testcase name="test_it_returns_on_task_couriers_at_latest_active_route_point" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/DashboardActiveCouriersMapTest.php" line="20" class="Tests\Feature\DashboardActiveCouriersMapTest" classname="Tests.Feature.DashboardActiveCouriersMapTest" assertions="1" time="0.011606">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">Tests\Feature\DashboardActiveCouriersMapTest::test_it_returns_on_task_couriers_at_latest_active_route_point
+Expected response status code [200] but received 500.
+Failed asserting that 500 is identical to 200.
+
+The following exception occurred during the last request:
+
+TypeError: App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given in /home/mac_mac/projects/smart-delivery/src/app/Http/Controllers/Controller.php:13
+Stack trace:
+#0 [internal function]: App\Http\Controllers\Controller-&gt;__construct()
+#1 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(1205): ReflectionClass-&gt;newInstanceArgs()
+#2 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(971): Illuminate\Container\Container-&gt;build()
+#3 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1077): Illuminate\Container\Container-&gt;resolve()
+#4 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Container/Container.php(902): Illuminate\Foundation\Application-&gt;resolve()
+#5 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1057): Illuminate\Container\Container-&gt;make()
+#6 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(286): Illuminate\Foundation\Application-&gt;make()
+#7 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(266): Illuminate\Routing\Route-&gt;getController()
+#8 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Route.php(211): Illuminate\Routing\Route-&gt;runController()
+#9 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(822): Illuminate\Routing\Route-&gt;run()
+#10 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Routing\Router-&gt;{closure:Illuminate\Routing\Router::runRouteWithinStack():821}()
+#11 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#12 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Routing\Middleware\SubstituteBindings-&gt;handle()
+#13 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(63): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#14 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Auth\Middleware\Authenticate-&gt;handle()
+#15 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#16 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;{closure:Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::handle():25}()
+#17 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#18 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/sanctum/src/Http/Middleware/EnsureFrontendRequestsAreStateful.php(25): Illuminate\Pipeline\Pipeline-&gt;then()
+#19 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful-&gt;handle()
+#20 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#21 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(821): Illuminate\Pipeline\Pipeline-&gt;then()
+#22 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(800): Illuminate\Routing\Router-&gt;runRouteWithinStack()
+#23 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(764): Illuminate\Routing\Router-&gt;runRoute()
+#24 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Routing/Router.php(753): Illuminate\Routing\Router-&gt;dispatchToRoute()
+#25 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\Routing\Router-&gt;dispatch()
+#26 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate\Foundation\Http\Kernel-&gt;{closure:Illuminate\Foundation\Http\Kernel::dispatchToRouter():197}()
+#27 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:Illuminate\Pipeline\Pipeline::prepareDestination():178}()
+#28 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#29 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull-&gt;handle()
+#30 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#31 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\Foundation\Http\Middleware\TransformsRequest-&gt;handle()
+#32 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\TrimStrings-&gt;handle()
+#33 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#34 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePostSize-&gt;handle()
+#35 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(109): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#36 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance-&gt;handle()
+#37 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(61): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#38 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\HandleCors-&gt;handle()
+#39 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#40 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\TrustProxies-&gt;handle()
+#41 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#42 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks-&gt;handle()
+#43 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php(26): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#44 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate\Http\Middleware\ValidatePathEncoding-&gt;handle()
+#45 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate\Pipeline\Pipeline-&gt;{closure:{closure:Illuminate\Pipeline\Pipeline::carry():194}:195}()
+#46 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\Pipeline\Pipeline-&gt;then()
+#47 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\Foundation\Http\Kernel-&gt;sendRequestThroughRouter()
+#48 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(607): Illuminate\Foundation\Http\Kernel-&gt;handle()
+#49 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(573): Illuminate\Foundation\Testing\TestCase-&gt;call()
+#50 /home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Foundation/Testing/Concerns/MakesHttpRequests.php(381): Illuminate\Foundation\Testing\TestCase-&gt;json()
+#51 /home/mac_mac/projects/smart-delivery/src/tests/Feature/DashboardActiveCouriersMapTest.php(69): Illuminate\Foundation\Testing\TestCase-&gt;getJson()
+#52 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(1656): Tests\Feature\DashboardActiveCouriersMapTest-&gt;test_it_returns_on_task_couriers_at_latest_active_route_point()
+#53 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(514): PHPUnit\Framework\TestCase-&gt;runTest()
+#54 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(87): PHPUnit\Framework\TestCase-&gt;runBare()
+#55 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestCase.php(361): PHPUnit\Framework\TestRunner-&gt;run()
+#56 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestCase-&gt;run()
+#57 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#58 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(369): PHPUnit\Framework\TestSuite-&gt;run()
+#59 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite-&gt;run()
+#60 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/src/TextUI/Application.php(211): PHPUnit\TextUI\TestRunner-&gt;run()
+#61 /home/mac_mac/projects/smart-delivery/src/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application-&gt;run()
+#62 {main}
+
+----------------------------------------------------------------------------------
+
+App\Http\Controllers\Controller::__construct(): Argument #1 ($workflowClient) must be of type Temporal\Client\WorkflowClientInterface, null given
+
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponseAssert.php:45
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/TestResponse.php:174
+/home/mac_mac/projects/smart-delivery/src/vendor/laravel/framework/src/Illuminate/Testing/Concerns/AssertsStatusCodes.php:16
+/home/mac_mac/projects/smart-delivery/src/tests/Feature/DashboardActiveCouriersMapTest.php:72</failure>
+        </testcase>
+      </testsuite>
+      <testsuite name="Tests\Unit\FirstLastRouteRuleTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/FirstLastRouteRuleTest.php" tests="6" assertions="8" errors="0" failures="0" skipped="0" time="0.048070">
+        <testcase name="test_invalid_route_delivery_b_before_pickup_b" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/FirstLastRouteRuleTest.php" line="81" class="Tests\Unit\FirstLastRouteRuleTest" classname="Tests.Unit.FirstLastRouteRuleTest" assertions="2" time="0.008545"/>
+        <testcase name="test_invalid_route_delivery_a_before_pickup_a" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/FirstLastRouteRuleTest.php" line="105" class="Tests\Unit\FirstLastRouteRuleTest" classname="Tests.Unit.FirstLastRouteRuleTest" assertions="2" time="0.008132"/>
+        <testcase name="test_valid_route_all_pickups_before_deliveries" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/FirstLastRouteRuleTest.php" line="129" class="Tests\Unit\FirstLastRouteRuleTest" classname="Tests.Unit.FirstLastRouteRuleTest" assertions="1" time="0.007564"/>
+        <testcase name="test_valid_route_interleaved_valid_ordering" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/FirstLastRouteRuleTest.php" line="148" class="Tests\Unit\FirstLastRouteRuleTest" classname="Tests.Unit.FirstLastRouteRuleTest" assertions="1" time="0.007850"/>
+        <testcase name="test_invalid_first_point" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/FirstLastRouteRuleTest.php" line="167" class="Tests\Unit\FirstLastRouteRuleTest" classname="Tests.Unit.FirstLastRouteRuleTest" assertions="1" time="0.007971"/>
+        <testcase name="test_invalid_last_point" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/FirstLastRouteRuleTest.php" line="185" class="Tests\Unit\FirstLastRouteRuleTest" classname="Tests.Unit.FirstLastRouteRuleTest" assertions="1" time="0.008008"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\MainPageTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/MainPageTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.011007">
+        <testcase name="test_guest_is_redirected_to_login_from_main_page" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/MainPageTest.php" line="9" class="Tests\Feature\MainPageTest" classname="Tests.Feature.MainPageTest" assertions="2" time="0.011007"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\OrdersEndpointTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/OrdersEndpointTest.php" tests="2" assertions="8" errors="0" failures="0" skipped="0" time="0.026534">
+        <testcase name="test_guest_cannot_access_orders_endpoint" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/OrdersEndpointTest.php" line="28" class="Tests\Feature\OrdersEndpointTest" classname="Tests.Feature.OrdersEndpointTest" assertions="1" time="0.008400"/>
+        <testcase name="test_orders_endpoint_returns_latest_30_orders_sorted_and_with_time_ranges" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/OrdersEndpointTest.php" line="33" class="Tests\Feature\OrdersEndpointTest" classname="Tests.Feature.OrdersEndpointTest" assertions="7" time="0.018135"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\UpdateRouteTest" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/UpdateRouteTest.php" tests="2" assertions="2" errors="0" failures="0" skipped="0" time="0.023420">
+        <testcase name="test_cannot_update_route_for_finished_task" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/UpdateRouteTest.php" line="74" class="Tests\Feature\UpdateRouteTest" classname="Tests.Feature.UpdateRouteTest" assertions="1" time="0.013542"/>
+        <testcase name="test_cannot_update_route_for_canceled_task" file="/home/mac_mac/projects/smart-delivery/src/tests/Feature/UpdateRouteTest.php" line="86" class="Tests\Feature\UpdateRouteTest" classname="Tests.Feature.UpdateRouteTest" assertions="1" time="0.009878"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

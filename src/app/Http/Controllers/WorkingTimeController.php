@@ -51,7 +51,7 @@ class WorkingTimeController extends Controller
 
     public function create(CreateWorkingHoursRequest $request): JsonResource
     {
-        $wh = new WorkingHour;
+        $wh = new WorkingHour();
 
         $wh->courier_id = $request->courier_id;
         $wh->day = $request->day;

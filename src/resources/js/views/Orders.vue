@@ -98,7 +98,7 @@
                 <div class="text-center">{{ order.date || 'N/A' }}</div>
               </td>
               <td class="p-2 whitespace-nowrap">
-                <div class="text-center">{{ `${order.from} : ${order.to}`}}</div>
+                <div class="text-center">{{ formatPickupTimeRanges(order) }}</div>
               </td>
               <td class="p-2">
                 <div class="text-left break-words">{{order.endPointAddress}}</div>
@@ -156,6 +156,16 @@ const formatDateTime = (value) => {
     hour: '2-digit',
     minute: '2-digit',
   })
+}
+
+const formatPickupTimeRanges = (order) => {
+  if (Array.isArray(order?.timeRanges) && order.timeRanges.length > 0) {
+    return order.timeRanges
+      .map((range) => `${range.from} - ${range.to}`)
+      .join(', ')
+  }
+
+  return 'N/A'
 }
 
 const statuses = computed(() => {

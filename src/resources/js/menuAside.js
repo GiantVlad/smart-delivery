@@ -38,13 +38,8 @@ export default [
     icon: mdiResponsive
   },
   {
-    to: '/update-order-in-task',
-    label: 'Update order',
-    icon: mdiPalette
-  },
-  {
-    to: '/edit-route',
-    label: 'Edit Route',
+    to: '/edit-task',
+    label: 'Edit Task',
     icon: mdiRoutes
   },
   {

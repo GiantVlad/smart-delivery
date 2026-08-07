@@ -12,5 +12,6 @@ abstract class Controller
     public function __construct(
         protected readonly WorkflowClientInterface $workflowClient,
         protected readonly CentrifugoInterface $centrifugo
-    ) {}
+    ) {
+    }
 }

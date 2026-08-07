@@ -36,9 +36,11 @@ jobs:
               echo "Deployment failed. Rolling back to commit $PREV_COMMIT"
               git reset --hard "$PREV_COMMIT"
               docker run --rm -v "$PWD/src:/app" -w /app node:22 sh -lc "npm ci && npm run build"
+              docker compose --env-file .env -f compose.yml stop go-server || true
               docker compose --env-file .env -f compose.yml up -d
               docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear || true
               docker compose --env-file .env -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset || true
+              docker compose --env-file .env -f compose.yml up -d go-server || true
             }
 
             trap 'rollback' ERR
@@ -70,7 +72,15 @@ jobs:
             docker compose --env-file .env -f compose.yml exec -T roadrunner composer dump-autoload --optimize
             docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan migrate --force
             docker compose --env-file .env -f compose.yml exec -T roadrunner php artisan optimize:clear
+
+            echo "Stopping Go server to release workflow task queue..."
+            docker compose --env-file .env -f compose.yml stop go-server || true
+
+            echo "Restarting PHP worker..."
             docker compose --env-file .env -f compose.yml exec -T roadrunner rr -c /etc/rr/.rr.yaml reset
+
+            echo "Bringing Go server back up..."
+            docker compose --env-file .env -f compose.yml up -d go-server || true
 
             if [ -n "${{ secrets.DEPLOY_HEALTHCHECK_URL }}" ]; then
               echo "Running health check..."

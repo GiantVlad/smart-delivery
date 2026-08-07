@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Temporal;
 
+use App\Enums\TaskStatusEnum;
+use App\Models\Task;
 use Carbon\CarbonInterval;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
@@ -44,6 +46,12 @@ class UpdateRouteWorkflow implements UpdateRouteWorkflowInterface
 
     public function update(string $taskUuid, array $points): \Generator
     {
+        $task = Task::where('uuid', $taskUuid)->first();
+
+        if ($task && in_array($task->status, [TaskStatusEnum::FINISHED->value, TaskStatusEnum::CANCELED->value], true)) {
+            throw new \InvalidArgumentException('Cannot edit route for a task with status: '.$task->status);
+        }
+
         yield $this->updateRouteActivity->updateRoute($taskUuid, $points);
         // yield $this->notifyActivity->notifyTaskCreated($taskUuid);
     }

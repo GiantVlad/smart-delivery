@@ -13,11 +13,33 @@ use Carbon\CarbonInterval;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Temporal\Client\WorkflowOptions;
+use Temporal\Client\WorkflowClientInterface;
+use Temporal\Exception\Client\WorkflowNotFoundException;
+use Opekunov\Centrifugo\Contracts\CentrifugoInterface;
 
 class RouteController extends Controller
 {
-    public function getRoute(string $taskUuid): JsonResource
+    public function __construct(
+        WorkflowClientInterface $workflowClient,
+        CentrifugoInterface $centrifugo
+    ) {
+        parent::__construct($workflowClient, $centrifugo);
+    }
+
+    public function getRoute(string $taskUuid): JsonResponse|JsonResource
     {
+        try {
+            // Verify task workflow exists in Temporal
+            $this->workflowClient->newRunningWorkflowStub(
+                \App\Temporal\TaskWorkflowInterface::class,
+                'task:' . $taskUuid
+            )->getState();
+        } catch (WorkflowNotFoundException) {
+            return response()->json([
+                'message' => 'Task workflow not found.',
+            ], 404);
+        }
+
         $task = Task::where('uuid', $taskUuid)->firstOrFail();
 
         $routes = Route::where('task_id', $task->id)->with('point')->orderBy('sequence')->get();

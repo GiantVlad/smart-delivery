@@ -44,13 +44,6 @@ try {
     // Register workflows
     $registeredWorkflows = [];
     foreach ($workflowTypes as $workflowType) {
-        // Skip TaskWorkflow as it's a duplicate of CreateTaskWorkflow
-        if (str_contains($workflowType, 'TaskWorkflow') && $workflowType !== 'App\\Temporal\\CreateTaskWorkflow') {
-            error_log("[SKIP] Skipping duplicate workflow: $workflowType");
-
-            continue;
-        }
-
         if (in_array($workflowType, $registeredWorkflows)) {
             error_log("[WARN] Duplicate workflow found: $workflowType");
 

@@ -8,48 +8,73 @@ use App\Enums\RoutePointTypeEnum;
 use App\Models\Route;
 use App\Models\Task;
 use Illuminate\Support\Collection;
+use Temporal\Client\WorkflowClientInterface;
+use Temporal\Exception\Client\WorkflowNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 class RemoveFromRouteActivity implements RemoveFromRouteActivityInterface
 {
+    public function __construct(private WorkflowClientInterface $workflowClient)
+    {
+    }
+
     public function removeFromRoute(
         string $taskUuid,
-        int $startPointId,
-        int $endPointId,
+        array $orderUuidsInTask,
+        int $startPointIdToRemove,
+        int $endPointIdToRemove,
     ): array {
-        $task = Task::where('uuid', $taskUuid)->with(['orders', 'routes'])->first();
+        // Build a collection of start and end points from the remaining orders
+        $remainingOrderPoints = new Collection();
+        foreach ($orderUuidsInTask as $orderUuid) {
+            try {
+                $orderWorkflow = $this->workflowClient->newRunningWorkflowStub(
+                    OrderWorkflowInterface::class,
+                    'order:' . $orderUuid
+                );
+                $orderState = $orderWorkflow->getState();
+                $remainingOrderPoints->push($orderState->startPointId);
+                $remainingOrderPoints->push($orderState->endPointId);
+            } catch (WorkflowNotFoundException $e) {
+                // Log warning, but continue if an order workflow is not found
+                Log::warning('Order workflow not found when removing from route', [
+                    'orderUuid' => $orderUuid,
+                    'taskUuid' => $taskUuid,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
-        /** @var Collection $routes */
-        $routes = $task->routes;
+        $routes = Route::where('task_id', Task::where('uuid', $taskUuid)->value('id'))->get();
 
-        /** @var Collection $orders */
-        $orders = $task->orders;
+        foreach ([$startPointIdToRemove, $endPointIdToRemove] as $idx => $pointId) {
+            $isStartPointInOtherOrders = $remainingOrderPoints->contains($pointId);
+            $isEndPointInOtherOrders = $remainingOrderPoints->contains($pointId);
 
-        foreach ([$startPointId, $endPointId] as $idx => $pointId) {
-            $foundStart = $orders->firstWhere('start_point_id', $pointId);
-            $foundEnd = $orders->firstWhere('end_point_id', $pointId);
-
-            if (! $foundStart && ! $foundEnd) {
+            if (! $isStartPointInOtherOrders && ! $isEndPointInOtherOrders) {
                 /** @var Route|null $route */
                 $route = $routes->firstWhere('point_id', $pointId);
-                $route->delete();
+                $route?->delete();
             } else {
                 $route = $routes->firstWhere('point_id', $pointId);
-                if ($route->point_type === RoutePointTypeEnum::INTERMEDIATE->value
-                    && ($foundStart?->count() === 0 || $foundEnd?->count() === 0)
+                if ($route !== null
+                    && $route->point_type === RoutePointTypeEnum::INTERMEDIATE->value
+                    && (! $isStartPointInOtherOrders || ! $isEndPointInOtherOrders)
                 ) {
                     $route->point_type = $idx === 0
                         ? RoutePointTypeEnum::FINISH->value
                         : RoutePointTypeEnum::START->value;
+                    $route->save();
                 }
             }
 
-            if ($foundStart?->count() === 1 && $foundEnd?->count() === 1) {
+            if ($isStartPointInOtherOrders && $isEndPointInOtherOrders) {
                 $route = $routes->firstWhere('point_id', $pointId);
 
-                $route->delete();
+                $route?->delete();
             }
         }
 
-        return [$startPointId, $endPointId];
+        return [$startPointIdToRemove, $endPointIdToRemove];
     }
 }

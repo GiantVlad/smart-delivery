@@ -1,5 +1,4 @@
 # Smart Delivery Service
-
 [Demo](https://delivery.cloud-workflow.com)
 
 [TemporalUi](https://docs.temporal.io/references/web-ui-configuration)
@@ -29,19 +28,18 @@ php-8.4, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
 ### Tasks and Assignment
 - `Tasks` (`/tasks`)
   - List of tasks, courier, order count, and task status.
+  - Start a task (green button, available for tasks in `created` status).
+  - Cancel a task (red button, available for tasks not in `finished` or `canceled` status).
 - `Create Task` (`/task`)
   - Select date, available courier, and accepted orders.
   - Create delivery task through workflow.
-- `Update Order in Task` (`/update-order-in-task`)
+- `Edit Task` (`/edit-task`)
+  - Load route points and orders for selected task.
   - Change order status inside a task.
   - Unassign order from task.
   - Add accepted orders to existing task.
-
-### Route Planning
-- `Edit Route` (`/edit-route`)
-  - Load route points for selected task.
   - Drag-and-drop route sequence.
-  - Validate first and last points (pickup first, delivery last).
+  - Validate first and last points (pickup first, delivery last) and pickup-before-delivery ordering.
   - Save updated route sequence.
 
 ### Couriers
@@ -64,8 +62,9 @@ php-8.4, Laravel-11, Octane, Roadrunner-2025, Temporal PHP SDK, VueJs-3
 - Realtime status updates via Centrifugo.
 - Temporal workflows for:
   - order creation and ERP status handling,
-  - task creation/finishing,
-  - order assignment/unassignment,
+  - task creation/finishing/cancellation/start,
+  - task status auto-transition to `started` when first order is collected (or manual start),
+  - order assignment/unassignment and collected signal,
   - route updates and related activities.
 
 ### API and Health
@@ -109,8 +108,6 @@ docker compose exec roadrunner php artisan migrate
 
 docker compose exec roadrunner php artisan db:seed
 
-docker compose exec roadrunner php artisan wf-status-handler:start
-
 docker compose exec roadrunner rr -c /etc/rr/.rr.yaml reset
 
 sudo apt install npm
@@ -125,12 +122,6 @@ id|from |to   |capacity|available
 3 |16:00|20:00|8       |8
 4 |20:00|23:59|4       |4
 
-
-
-to stop status handler:
-```
-docker compose exec roadrunner php artisan wf-status-handler:stop workflow-status-handler-v1
-```
 
 Services:
 - :80 the main app

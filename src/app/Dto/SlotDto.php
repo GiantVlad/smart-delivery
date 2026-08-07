@@ -11,5 +11,6 @@ class SlotDto extends Data
     public function __construct(
         public string $from,
         public string $to,
-    ) {}
+    ) {
+    }
 }

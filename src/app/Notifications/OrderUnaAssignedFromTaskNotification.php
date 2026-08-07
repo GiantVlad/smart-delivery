@@ -37,7 +37,7 @@ class OrderUnaAssignedFromTaskNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line('Orders '.implode(',', ($this->data['orderUuids'] ?? []))
                 ." has been unassigned from the task $this->uuid.")
             ->action('Notification Action', url('/'))

@@ -59,9 +59,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/tasks', [TaskController::class, 'getTasks']);
 
+    Route::get('/active-tasks', [TaskController::class, 'getActiveTasks']);
+
     Route::get('/task-form/{date}', [TaskController::class, 'createTaskForm']);
 
     Route::post('/task', [TaskController::class, 'createTask']);
+
+    Route::post('/task/cancel', [TaskController::class, 'cancelTask']);
+    Route::post('/task/start', [TaskController::class, 'startTask']);
 
     Route::post('/unassign-order', [OrderController::class, 'unassignOrder']);
 

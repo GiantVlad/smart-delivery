@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Temporal;
 
 use App\Enums\RoutePointTypeEnum;
+use App\Models\Order;
 use App\Models\Route;
 use App\Models\Task;
 use Illuminate\Support\Collection;
@@ -12,17 +13,20 @@ use Illuminate\Support\Facades\DB;
 
 class CreateRoteActivity implements CreateRouteActivityInterface
 {
-    public function createRoute(string $taskUuid): true
+    public function createRoute(string $taskUuid, array $orderUuids = []): true
     {
         $task = Task::where('uuid', $taskUuid)->firstOrFail();
-        $orders = $task->orders()->get();
+        $orders = $orderUuids === []
+            ? $task->orders()->get()
+            : Order::whereIn('uuid', $orderUuids)
+                ->get()
+                ->sortBy(static fn (Order $order): int|false => array_search($order->uuid, $orderUuids, true));
 
-        $from = new Collection;
-        $destinations = new Collection;
+        $from = new Collection();
+        $destinations = new Collection();
 
         $tmpObjectFn = static function (int $pointId, string $type) {
-            $obj = new class
-            {
+            $obj = new class () {
                 public $id;
 
                 public $type;
@@ -77,7 +81,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         DB::transaction(static function () use ($task, $points) {
             $idx = 0;
             foreach ($points as $point) {
-                $route = new Route;
+                $route = new Route();
                 $route->sequence = $idx;
                 $route->task_id = $task->id;
                 $route->point_id = $point->id;

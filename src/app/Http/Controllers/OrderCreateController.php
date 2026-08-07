@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Dto\OrderDto;
+use App\Dto\CreateOrderCommand;
 use App\Http\Requests\CreateOrderRequest;
 use App\Http\Resources\OrderCreateFormResource;
 use App\Http\Resources\OrderResource;
@@ -13,19 +13,18 @@ use App\Models\Order;
 use App\Models\Point;
 use App\Models\Slot;
 use App\Models\Task;
-use App\Temporal\CreateOrderWorkflowInterface;
-use Carbon\Carbon;
+use App\Temporal\OrderWorkflowInterface;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Temporal\Client\WorkflowOptions;
 
 class OrderCreateController extends Controller
 {
     public function getOrderForm()
     {
-        $dto = new class
-        {
+        $dto = new class () {
             public array $emails;
 
             public Collection $points;
@@ -67,34 +66,36 @@ class OrderCreateController extends Controller
             ->whereIn('id', $slotIds->all())
             ->orderBy('from')
             ->get();
-        $slot = $slots->firstOrFail();
-
-        $workflow = $this->workflowClient->newWorkflowStub(
-            CreateOrderWorkflowInterface::class,
-            WorkflowOptions::new()->withWorkflowExecutionTimeout(CarbonInterval::minute())
-        );
 
         $customer = Customer::where('email', $email)->firstOrFail();
+        $orderUuid = Str::uuid()->toString();
 
-        $orderDTO = new OrderDto(
+        $timeRanges = $slots->map(static fn (Slot $selectedSlot): array => [
+            'slot_id' => $selectedSlot->id,
+            'date' => $selectedSlot->date ?? $request->get('date'),
+            'from' => $selectedSlot->from,
+            'to' => $selectedSlot->to,
+        ])->all();
+
+        $command = new CreateOrderCommand(
+            orderUuid: $orderUuid,
             customerUuid: $customer->uuid,
             unitType: $unitType,
             startPointId: $startPointId,
             endPointId: $endPointId,
-            from: $slot->from,
-            to: $slot->to,
-            date: Carbon::parse($slot->date ?? $request->get('date')),
-            timeRanges: $slots->map(static fn (Slot $selectedSlot): array => [
-                'slot_id' => $selectedSlot->id,
-                'date' => $selectedSlot->date ?? $request->get('date'),
-                'from' => $selectedSlot->from,
-                'to' => $selectedSlot->to,
-            ])->all(),
+            timeRanges: $timeRanges,
         );
 
-        $this->workflowClient->start($workflow, $orderDTO);
+        $workflow = $this->workflowClient->newWorkflowStub(
+            OrderWorkflowInterface::class,
+            WorkflowOptions::new()
+                ->withWorkflowId('order:'.$orderUuid)
+                ->withWorkflowExecutionTimeout(CarbonInterval::days(30))
+        );
 
-        return response()->json(['data' => true]);
+        $this->workflowClient->start($workflow, $command);
+
+        return response()->json(['data' => ['uuid' => $orderUuid]]);
     }
 
     private function resolvePoint(array $pointData): Point

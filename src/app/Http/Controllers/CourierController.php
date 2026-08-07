@@ -64,7 +64,7 @@ class CourierController extends Controller
     public function createCourier(CreateCourierRequest $request): JsonResource
     {
         return DB::transaction(function () use ($request) {
-            $courier = new Courier;
+            $courier = new Courier();
             $courier->uuid = Str::uuid();
             $courier->name = $request->get('name');
             $courier->phone = $request->get('phone');

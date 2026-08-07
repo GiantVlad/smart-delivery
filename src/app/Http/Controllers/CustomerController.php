@@ -14,7 +14,7 @@ class CustomerController extends Controller
 {
     public function createCustomer(CreateCustomerRequest $request): JsonResource
     {
-        $customer = new Customer;
+        $customer = new Customer();
         $customer->uuid = Str::uuid();
         $customer->name = $request->get('first_name');
         $customer->last_name = $request->get('last_name');
