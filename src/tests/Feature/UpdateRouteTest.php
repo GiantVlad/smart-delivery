@@ -51,13 +51,13 @@ class UpdateRouteTest extends TestCase
             'uuid' => (string) Str::uuid(),
         ]);
 
-        $task = new Task();
+        $task = new Task;
         $task->uuid = (string) Str::uuid();
         $task->status = $status;
         $task->courier_id = $courier->id;
         $task->save();
 
-        $order = new Order();
+        $order = new Order;
         $order->customer_id = $this->customer->id;
         $order->unit_type = 'Medium';
         $order->uuid = (string) Str::uuid();
@@ -80,7 +80,7 @@ class UpdateRouteTest extends TestCase
             'points' => [$this->startPoint->id, $this->endPoint->id],
         ]);
 
-        $response->assertStatus(500);
+        $response->assertUnprocessable();
     }
 
     public function test_cannot_update_route_for_canceled_task(): void
@@ -92,6 +92,6 @@ class UpdateRouteTest extends TestCase
             'points' => [$this->startPoint->id, $this->endPoint->id],
         ]);
 
-        $response->assertStatus(500);
+        $response->assertUnprocessable();
     }
 }
