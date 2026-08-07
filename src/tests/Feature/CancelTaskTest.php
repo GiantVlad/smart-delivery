@@ -101,9 +101,6 @@ class CancelTaskTest extends TestCase
         $taskWorkflowMock->shouldReceive('cancel')
             ->once()
             ->andReturnNull();
-        $taskWorkflowMock->shouldReceive('getState')
-            ->once()
-            ->andReturnNull();
 
         $this->mock(WorkflowClientInterface::class, function (MockInterface $mock) use ($taskWorkflowMock): void {
             $mock->shouldReceive('newRunningWorkflowStub')
@@ -139,9 +136,6 @@ class CancelTaskTest extends TestCase
             ->andThrow(WorkflowNotFoundException::withoutMessage(
                 new WorkflowExecution('task:'.$this->task->uuid),
             ));
-        $taskWorkflowMock->shouldReceive('getState')
-            ->once()
-            ->andReturnNull();
 
         // Mock order workflow being found and signaled
         $orderWorkflowMock = Mockery::mock(OrderWorkflowInterface::class);
@@ -194,9 +188,6 @@ class CancelTaskTest extends TestCase
             ->andThrow(WorkflowNotFoundException::withoutMessage(
                 new WorkflowExecution('task:'.$this->task->uuid),
             ));
-        $taskWorkflowMock->shouldReceive('getState')
-            ->once()
-            ->andReturnNull();
 
         // Mock order workflow stub whose unassignFromTask() throws WorkflowNotFoundException
         $orderWorkflowMock = Mockery::mock(OrderWorkflowInterface::class);
