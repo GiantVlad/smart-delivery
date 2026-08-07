@@ -57,7 +57,7 @@ class CreateOrderEndpointTest extends TestCase
             'date' => $deliveryDate,
         ]);
 
-        $workflowStub = new \stdClass;
+        $workflowStub = new \stdClass();
         $workflowRun = Mockery::mock(WorkflowRunInterface::class);
 
         $this->mock(WorkflowClientInterface::class, function (MockInterface $mock) use ($workflowStub, $workflowRun, $customer, $slotA, $slotB): void {

@@ -13,5 +13,6 @@ class CreateOrderCommand
         public int $startPointId,
         public int $endPointId,
         public array $timeRanges,
-    ) {}
+    ) {
+    }
 }

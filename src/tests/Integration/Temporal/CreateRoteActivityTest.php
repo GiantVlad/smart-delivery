@@ -20,7 +20,7 @@ class CreateRoteActivityTest extends TestCase
     public function test_create_route_one_order(): void
     {
         $task = $this->createTask([[1 => 2]]);
-        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity = new CreateRoteActivity();
         $createRoteActivity->createRoute($task->uuid);
         $routes = Route::where('task_id', $task->id)->get();
 
@@ -41,7 +41,7 @@ class CreateRoteActivityTest extends TestCase
         $orderA = $this->createOrder($customer, 1, 2);
         $orderB = $this->createOrder($customer, 2, 3);
 
-        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity = new CreateRoteActivity();
         $createRoteActivity->createRoute($task->uuid, [$orderA->uuid, $orderB->uuid]);
 
         $routes = Route::where('task_id', $task->id)->get();
@@ -58,7 +58,7 @@ class CreateRoteActivityTest extends TestCase
     public function test_create_route2_orders_from_same_address(): void
     {
         $task = $this->createTask([[1 => 2], [1 => 3]]);
-        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity = new CreateRoteActivity();
         $createRoteActivity->createRoute($task->uuid);
         $routes = Route::where('task_id', $task->id)->get();
 
@@ -79,7 +79,7 @@ class CreateRoteActivityTest extends TestCase
     public function test_create_route2_orders_to_same_address(): void
     {
         $task = $this->createTask([[1 => 3], [2 => 3]]);
-        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity = new CreateRoteActivity();
         $createRoteActivity->createRoute($task->uuid);
         $routes = Route::where('task_id', $task->id)->get();
 
@@ -100,7 +100,7 @@ class CreateRoteActivityTest extends TestCase
     public function test_create_route2_orders_diff_addresses(): void
     {
         $task = $this->createTask([[1 => 2], [3 => 4]]);
-        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity = new CreateRoteActivity();
         $createRoteActivity->createRoute($task->uuid);
         $routes = Route::where('task_id', $task->id)->get();
 
@@ -125,7 +125,7 @@ class CreateRoteActivityTest extends TestCase
     public function test_create_route2_orders_with_intermediate(): void
     {
         $task = $this->createTask([[1 => 2], [2 => 3]]);
-        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity = new CreateRoteActivity();
         $createRoteActivity->createRoute($task->uuid);
         $routes = Route::where('task_id', $task->id)->get();
 
@@ -146,7 +146,7 @@ class CreateRoteActivityTest extends TestCase
     public function test_create_route5_orders(): void
     {
         $task = $this->createTask([[1 => 2], [4 => 5], [3 => 4], [1 => 5], [2 => 4]]);
-        $createRoteActivity = new CreateRoteActivity;
+        $createRoteActivity = new CreateRoteActivity();
         $createRoteActivity->createRoute($task->uuid);
         $routes = Route::where('task_id', $task->id)->get();
 
@@ -188,7 +188,7 @@ class CreateRoteActivityTest extends TestCase
     private function createTaskWithoutOrders(): Task
     {
         $courier = Courier::first();
-        $task = new Task;
+        $task = new Task();
         $task->courier_id = $courier->id;
         $task->uuid = Str::uuid();
         $task->save();
@@ -198,7 +198,7 @@ class CreateRoteActivityTest extends TestCase
 
     private function createOrder(Customer $customer, $start, $end): Order
     {
-        $order = new Order;
+        $order = new Order();
         $order->uuid = Str::uuid();
         $order->unit_type = 'Medium';
         $order->start_point_id = $start;

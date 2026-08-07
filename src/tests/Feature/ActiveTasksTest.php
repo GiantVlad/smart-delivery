@@ -35,7 +35,7 @@ class ActiveTasksTest extends TestCase
             'uuid' => (string) \Illuminate\Support\Str::uuid(),
         ]);
 
-        $task = new Task;
+        $task = new Task();
         $task->uuid = (string) \Illuminate\Support\Str::uuid();
         $task->status = $status;
         $task->courier_id = $courier->id;

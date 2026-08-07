@@ -10,7 +10,8 @@ use Illuminate\Notifications\Notifiable;
 
 class Courier extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'uuid',

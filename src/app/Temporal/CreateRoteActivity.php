@@ -22,12 +22,11 @@ class CreateRoteActivity implements CreateRouteActivityInterface
                 ->get()
                 ->sortBy(static fn (Order $order): int|false => array_search($order->uuid, $orderUuids, true));
 
-        $from = new Collection;
-        $destinations = new Collection;
+        $from = new Collection();
+        $destinations = new Collection();
 
         $tmpObjectFn = static function (int $pointId, string $type) {
-            $obj = new class
-            {
+            $obj = new class () {
                 public $id;
 
                 public $type;
@@ -82,7 +81,7 @@ class CreateRoteActivity implements CreateRouteActivityInterface
         DB::transaction(static function () use ($task, $points) {
             $idx = 0;
             foreach ($points as $point) {
-                $route = new Route;
+                $route = new Route();
                 $route->sequence = $idx;
                 $route->task_id = $task->id;
                 $route->point_id = $point->id;

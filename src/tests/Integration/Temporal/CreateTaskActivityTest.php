@@ -30,7 +30,7 @@ class CreateTaskActivityTest extends TestCase
             'email' => 'task-customer@example.com',
             'uuid' => (string) Str::uuid(),
         ]);
-        $order = new Order;
+        $order = new Order();
         $order->customer_id = $customer->id;
         $order->unit_type = 'Medium';
         $order->uuid = (string) Str::uuid();
@@ -40,7 +40,7 @@ class CreateTaskActivityTest extends TestCase
 
         $taskUuid = (string) Str::uuid();
 
-        $activity = new CreateTaskActivity;
+        $activity = new CreateTaskActivity();
         $activity->createTask(new TaskDto($courier->uuid, [$order->uuid], $taskUuid));
 
         $this->assertDatabaseHas('tasks', [

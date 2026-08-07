@@ -15,5 +15,6 @@ class OrderWorkflowState
         public int $startPointId,
         public int $endPointId,
         public array $timeRanges,
-    ) {}
+    ) {
+    }
 }

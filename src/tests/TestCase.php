@@ -17,29 +17,25 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->mock(WorkflowClientInterface::class, function ($mock) {
-            $mock->shouldReceive('start')->andReturn(new class
-            {
+            $mock->shouldReceive('start')->andReturn(new class () {
                 public function getExecution()
                 {
                     return null;
                 }
             });
-            $mock->shouldReceive('signalWithStart')->andReturn(new class
-            {
+            $mock->shouldReceive('signalWithStart')->andReturn(new class () {
                 public function getExecution()
                 {
                     return null;
                 }
             });
-            $mock->shouldReceive('newRunningWorkflowStub')->andReturn(new class
-            {
+            $mock->shouldReceive('newRunningWorkflowStub')->andReturn(new class () {
                 public function __call($method, $args)
                 {
                     return null;
                 }
             });
-            $mock->shouldReceive('newUntypedRunningWorkflowStub')->andReturn(new class
-            {
+            $mock->shouldReceive('newUntypedRunningWorkflowStub')->andReturn(new class () {
                 public function __call($method, $args)
                 {
                     return null;

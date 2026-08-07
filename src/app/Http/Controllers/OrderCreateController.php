@@ -24,8 +24,7 @@ class OrderCreateController extends Controller
 {
     public function getOrderForm()
     {
-        $dto = new class
-        {
+        $dto = new class () {
             public array $emails;
 
             public Collection $points;

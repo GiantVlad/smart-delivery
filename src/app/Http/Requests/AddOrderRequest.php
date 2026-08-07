@@ -24,7 +24,7 @@ class AddOrderRequest extends FormRequest
     {
         return [
             'taskUuid' => 'bail|required|string|exists:tasks,uuid',
-            'orderUuids' => ['required', 'array', 'min:1', new OrdersCanBeAddedRule],
+            'orderUuids' => ['required', 'array', 'min:1', new OrdersCanBeAddedRule()],
         ];
     }
 }

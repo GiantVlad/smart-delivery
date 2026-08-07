@@ -61,7 +61,7 @@ class OrdersEndpointTest extends TestCase
             'uuid' => (string) Str::uuid(),
             'status' => 'new',
         ]);
-        $task = new Task;
+        $task = new Task();
         $task->courier_id = (string) $courier->id;
         $task->uuid = (string) Str::uuid();
         $task->status = 'new';
@@ -71,7 +71,7 @@ class OrdersEndpointTest extends TestCase
         $legacyOrderUuid = null;
 
         for ($i = 1; $i <= 35; $i++) {
-            $order = new Order;
+            $order = new Order();
             $order->customer_id = $customer->id;
             $order->unit_type = 'Medium';
             $order->uuid = (string) Str::uuid();

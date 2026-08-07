@@ -14,5 +14,6 @@ class OrderDto
         public array $timeRanges,
         public string $uuid = '',
         public string $status = '',
-    ) {}
+    ) {
+    }
 }

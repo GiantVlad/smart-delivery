@@ -29,12 +29,12 @@ class TaskOrderProjectionActivityTest extends TestCase
             'email' => 'projection-customer@example.com',
             'uuid' => (string) Str::uuid(),
         ]);
-        $task = new Task;
+        $task = new Task();
         $task->courier_id = $courier->id;
         $task->uuid = (string) Str::uuid();
         $task->save();
 
-        $order = new Order;
+        $order = new Order();
         $order->customer_id = $customer->id;
         $order->unit_type = 'Medium';
         $order->uuid = (string) Str::uuid();
@@ -42,7 +42,7 @@ class TaskOrderProjectionActivityTest extends TestCase
         $order->task_id = null;
         $order->save();
 
-        $activity = new TaskOrderProjectionActivity;
+        $activity = new TaskOrderProjectionActivity();
         $activity->attach($task->uuid, $order->uuid);
 
         $this->assertDatabaseHas('orders', [

@@ -34,7 +34,7 @@ class OrderAssignedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line("The order $this->uuid has been assigned to a driver.")
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our Smart Delivery service!');

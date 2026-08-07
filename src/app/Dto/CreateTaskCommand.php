@@ -10,5 +10,6 @@ class CreateTaskCommand
         public string $taskUuid,
         public string $courierUuid,
         public array $orderUuids,
-    ) {}
+    ) {
+    }
 }

@@ -51,7 +51,7 @@ class CancelTaskTest extends TestCase
             'status' => CourierStatusEnum::OT->value,
         ]);
 
-        $this->task = new Task;
+        $this->task = new Task();
         $this->task->uuid = (string) Str::uuid();
         $this->task->status = TaskStatusEnum::CREATED->value;
         $this->task->courier_id = $this->courier->id;
@@ -67,7 +67,7 @@ class CancelTaskTest extends TestCase
         $pointA = Point::create(['address' => 'Point A', 'lat' => 52.22, 'long' => 21.01]);
         $pointB = Point::create(['address' => 'Point B', 'lat' => 52.23, 'long' => 21.02]);
 
-        $this->order = new Order;
+        $this->order = new Order();
         $this->order->customer_id = $customer->id;
         $this->order->unit_type = 'Medium';
         $this->order->uuid = (string) Str::uuid();
@@ -78,7 +78,7 @@ class CancelTaskTest extends TestCase
         $this->order->date = '2026-05-31';
         $this->order->save();
 
-        $route = new Route;
+        $route = new Route();
         $route->task_id = $this->task->id;
         $route->point_id = $pointA->id;
         $route->sequence = 1;

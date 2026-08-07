@@ -23,7 +23,8 @@ class TaskCancelService
 {
     public function __construct(
         private WorkflowClientInterface $workflowClient
-    ) {}
+    ) {
+    }
 
     /**
      * Cancel a task. Tries to cancel the running Temporal workflow,

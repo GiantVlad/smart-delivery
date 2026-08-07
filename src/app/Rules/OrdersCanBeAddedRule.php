@@ -42,7 +42,7 @@ class OrdersCanBeAddedRule implements ValidationRule
             try {
                 /** @var OrderWorkflowState|null $state */
                 $state = $workflow->getState();
-                
+
                 if (!$state) {
                     $fail("Order $orderUuid workflow not found.");
                     continue;

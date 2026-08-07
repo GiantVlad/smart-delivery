@@ -59,7 +59,7 @@ class CreateOrderActivityTest extends TestCase
             timeRanges: $ranges,
         );
 
-        $activity = new OrderProjectionActivity;
+        $activity = new OrderProjectionActivity();
         $activity->create($command);
 
         $order = Order::query()

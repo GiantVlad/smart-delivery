@@ -12,5 +12,6 @@ class TaskWorkflowState
         public string $status,
         public array $orderUuids,
         public array $terminalOrders,
-    ) {}
+    ) {
+    }
 }
