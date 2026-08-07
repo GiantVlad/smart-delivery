@@ -162,13 +162,8 @@ class TaskWorkflow implements TaskWorkflowInterface
         yield $this->createRouteActivity->createRoute($taskUuid, $this->state->orderUuids);
 
         while ($this->state->status !== TaskStatusEnum::FINISHED->value && $this->state->status !== TaskStatusEnum::CANCELED->value) {
-            // Process any pending changes first (in case a signal arrived while we were waiting)
+            yield Workflow::await(fn () => $this->hasPendingChange());
             yield from $this->flushPendingChanges();
-            // Wait for a change, with a short poll interval as fallback
-            yield Workflow::awaitWithTimeout(
-                CarbonInterval::seconds(30),
-                fn () => $this->hasPendingChange()
-            );
         }
     }
 
