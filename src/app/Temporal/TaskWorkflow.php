@@ -161,9 +161,23 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         yield $this->createRouteActivity->createRoute($taskUuid, $this->state->orderUuids);
 
+        $signalLoopVersion = yield Workflow::getVersion(
+            'task-signal-loop',
+            Workflow::DEFAULT_VERSION,
+            1,
+        );
+
         while ($this->state->status !== TaskStatusEnum::FINISHED->value && $this->state->status !== TaskStatusEnum::CANCELED->value) {
-            yield Workflow::await(fn () => $this->hasPendingChange());
-            yield from $this->flushPendingChanges();
+            if ($signalLoopVersion === Workflow::DEFAULT_VERSION) {
+                yield from $this->flushPendingChanges();
+                yield Workflow::awaitWithTimeout(
+                    CarbonInterval::seconds(30),
+                    fn () => $this->hasPendingChange(),
+                );
+            } else {
+                yield Workflow::await(fn () => $this->hasPendingChange());
+                yield from $this->flushPendingChanges();
+            }
         }
     }
 
