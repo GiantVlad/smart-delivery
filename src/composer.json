@@ -7,8 +7,8 @@
     "require": {
         "php": ">=8.4",
         "ext-sockets": "*",
-        "firebase/php-jwt": "^6.11",
-        "laravel/framework": "^11.47",
+        "firebase/php-jwt": "^7.0",
+        "laravel/framework": "^12.61",
         "laravel/octane": "^2.13",
         "laravel/sanctum": "^4.2",
         "laravel/tinker": "^2.10",
