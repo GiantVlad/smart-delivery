@@ -164,11 +164,25 @@ class OrderWorkflow implements OrderWorkflowInterface
             yield $this->projection->update($this->state);
 
             if ($this->isTerminal($this->state->status) && $previousTaskUuid !== null) {
+                $terminalRouteVersion = yield Workflow::getVersion(
+                    'order-terminal-route-points',
+                    Workflow::DEFAULT_VERSION,
+                    1,
+                );
                 $task = Workflow::newExternalWorkflowStub(
                     TaskWorkflowInterface::class,
                     new WorkflowExecution('task:'.$previousTaskUuid)
                 );
-                yield $task->orderReachedTerminal($this->state->orderUuid, $this->state->status);
+                if ($terminalRouteVersion === Workflow::DEFAULT_VERSION) {
+                    yield $task->orderReachedTerminal($this->state->orderUuid, $this->state->status);
+                } else {
+                    yield $task->orderReachedTerminal(
+                        $this->state->orderUuid,
+                        $this->state->status,
+                        $this->state->startPointId,
+                        $this->state->endPointId,
+                    );
+                }
             }
 
             if ($this->state->status === OrderStatusEnum::COLLECTED->value && $previousTaskUuid !== null) {

@@ -7,6 +7,7 @@ namespace App\Temporal;
 use App\Dto\CreateTaskCommand;
 use App\Dto\TaskDto;
 use App\Dto\TaskWorkflowState;
+use App\Enums\OrderStatusEnum;
 use App\Enums\TaskStatusEnum;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Log;
@@ -39,6 +40,8 @@ class TaskWorkflow implements TaskWorkflowInterface
     private ?string $pendingRemoveOrderUuid = null;
 
     private array $pendingTerminalOrders = [];
+
+    private array $pendingTerminalOrderPoints = [];
 
     private array $pendingCollectedOrders = [];
 
@@ -191,9 +194,17 @@ class TaskWorkflow implements TaskWorkflowInterface
         $this->pendingRemoveOrderUuid = $orderUuid;
     }
 
-    public function orderReachedTerminal(string $orderUuid, string $status): void
-    {
+    public function orderReachedTerminal(
+        string $orderUuid,
+        string $status,
+        ?int $startPointId = null,
+        ?int $endPointId = null,
+    ): void {
         $this->pendingTerminalOrders[$orderUuid] = $status;
+
+        if ($startPointId !== null && $endPointId !== null) {
+            $this->pendingTerminalOrderPoints[$orderUuid] = [$startPointId, $endPointId];
+        }
     }
 
     public function orderCollected(string $orderUuid): void
@@ -327,9 +338,24 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         foreach ($this->pendingTerminalOrders as $orderUuid => $status) {
             if (in_array($orderUuid, $this->state->orderUuids, true)) {
+                if (
+                    $status === OrderStatusEnum::CANCELED->value
+                    && isset($this->pendingTerminalOrderPoints[$orderUuid])
+                ) {
+                    [$startPointId, $endPointId] = $this->pendingTerminalOrderPoints[$orderUuid];
+                    $remainingOrderUuids = array_values(array_diff($this->state->orderUuids, [$orderUuid]));
+                    yield $this->removeFromRouteActivity->removeFromRoute(
+                        $this->state->taskUuid,
+                        $remainingOrderUuids,
+                        $startPointId,
+                        $endPointId,
+                    );
+                }
+
                 $this->state->terminalOrders[$orderUuid] = $status;
             }
             unset($this->pendingTerminalOrders[$orderUuid]);
+            unset($this->pendingTerminalOrderPoints[$orderUuid]);
         }
 
         foreach ($this->pendingCollectedOrders as $orderUuid => $val) {
