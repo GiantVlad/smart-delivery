@@ -21,13 +21,13 @@ class CreateTaskRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(OrdersCanBeAddedRule $ordersCanBeAddedRule): array
     {
         $ready = CourierStatusEnum::RD->value;
 
         return [
             'courierUuid' => "bail|required|string|exists:couriers,uuid,status,$ready",
-            'orderUuids' => ['required', 'array', 'min:1', OrdersCanBeAddedRule::class],
+            'orderUuids' => ['required', 'array', 'min:1', $ordersCanBeAddedRule],
         ];
     }
 }

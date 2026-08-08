@@ -71,7 +71,10 @@ try {
         }
         error_log("[INFO] Registering activity: $activityType");
         $registeredActivities[] = $activityType;
-        $worker->registerActivity($activityType);
+        $worker->registerActivity(
+            $activityType,
+            static fn (\ReflectionClass $activity) => $app->make($activity->getName()),
+        );
     }
 
     error_log('Starting worker...');

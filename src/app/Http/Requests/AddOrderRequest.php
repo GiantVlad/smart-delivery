@@ -20,11 +20,11 @@ class AddOrderRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(OrdersCanBeAddedRule $ordersCanBeAddedRule): array
     {
         return [
             'taskUuid' => 'bail|required|string|exists:tasks,uuid',
-            'orderUuids' => ['required', 'array', 'min:1', OrdersCanBeAddedRule::class],
+            'orderUuids' => ['required', 'array', 'min:1', $ordersCanBeAddedRule],
         ];
     }
 }

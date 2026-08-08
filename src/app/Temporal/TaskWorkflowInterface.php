@@ -24,7 +24,12 @@ interface TaskWorkflowInterface
     public function removeOrder(string $orderUuid): void;
 
     #[SignalMethod(name: 'Task.OrderReachedTerminal')]
-    public function orderReachedTerminal(string $orderUuid, string $status): void;
+    public function orderReachedTerminal(
+        string $orderUuid,
+        string $status,
+        ?int $startPointId = null,
+        ?int $endPointId = null,
+    ): void;
 
     #[SignalMethod(name: 'Task.OrderCollected')]
     public function orderCollected(string $orderUuid): void;

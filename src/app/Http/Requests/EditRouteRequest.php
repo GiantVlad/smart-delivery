@@ -20,7 +20,7 @@ class EditRouteRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(FirstLastRouteRule $firstLastRouteRule): array
     {
         return [
             'taskUuid' => 'bail|required|string|exists:tasks,uuid',
@@ -28,7 +28,7 @@ class EditRouteRequest extends FormRequest
                 'required',
                 'array',
                 'min:1',
-                (new FirstLastRouteRule())->setData(['taskUuid' => $this->taskUuid]),
+                $firstLastRouteRule->setData(['taskUuid' => $this->taskUuid]),
             ],
         ];
     }

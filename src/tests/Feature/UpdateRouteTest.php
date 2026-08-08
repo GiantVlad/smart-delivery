@@ -80,7 +80,7 @@ class UpdateRouteTest extends TestCase
             'points' => [$this->startPoint->id, $this->endPoint->id],
         ]);
 
-        $response->assertStatus(500);
+        $response->assertUnprocessable();
     }
 
     public function test_cannot_update_route_for_canceled_task(): void
@@ -92,6 +92,6 @@ class UpdateRouteTest extends TestCase
             'points' => [$this->startPoint->id, $this->endPoint->id],
         ]);
 
-        $response->assertStatus(500);
+        $response->assertUnprocessable();
     }
 }

@@ -7,6 +7,7 @@ namespace App\Temporal;
 use App\Dto\CreateTaskCommand;
 use App\Dto\TaskDto;
 use App\Dto\TaskWorkflowState;
+use App\Enums\OrderStatusEnum;
 use App\Enums\TaskStatusEnum;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Log;
@@ -39,6 +40,8 @@ class TaskWorkflow implements TaskWorkflowInterface
     private ?string $pendingRemoveOrderUuid = null;
 
     private array $pendingTerminalOrders = [];
+
+    private array $pendingTerminalOrderPoints = [];
 
     private array $pendingCollectedOrders = [];
 
@@ -161,14 +164,23 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         yield $this->createRouteActivity->createRoute($taskUuid, $this->state->orderUuids);
 
+        $signalLoopVersion = yield Workflow::getVersion(
+            'task-signal-loop',
+            Workflow::DEFAULT_VERSION,
+            1,
+        );
+
         while ($this->state->status !== TaskStatusEnum::FINISHED->value && $this->state->status !== TaskStatusEnum::CANCELED->value) {
-            // Process any pending changes first (in case a signal arrived while we were waiting)
-            yield from $this->flushPendingChanges();
-            // Wait for a change, with a short poll interval as fallback
-            yield Workflow::awaitWithTimeout(
-                CarbonInterval::seconds(30),
-                fn () => $this->hasPendingChange()
-            );
+            if ($signalLoopVersion === Workflow::DEFAULT_VERSION) {
+                yield from $this->flushPendingChanges();
+                yield Workflow::awaitWithTimeout(
+                    CarbonInterval::seconds(30),
+                    fn () => $this->hasPendingChange(),
+                );
+            } else {
+                yield Workflow::await(fn () => $this->hasPendingChange());
+                yield from $this->flushPendingChanges();
+            }
         }
     }
 
@@ -182,9 +194,17 @@ class TaskWorkflow implements TaskWorkflowInterface
         $this->pendingRemoveOrderUuid = $orderUuid;
     }
 
-    public function orderReachedTerminal(string $orderUuid, string $status): void
-    {
+    public function orderReachedTerminal(
+        string $orderUuid,
+        string $status,
+        ?int $startPointId = null,
+        ?int $endPointId = null,
+    ): void {
         $this->pendingTerminalOrders[$orderUuid] = $status;
+
+        if ($startPointId !== null && $endPointId !== null) {
+            $this->pendingTerminalOrderPoints[$orderUuid] = [$startPointId, $endPointId];
+        }
     }
 
     public function orderCollected(string $orderUuid): void
@@ -318,9 +338,24 @@ class TaskWorkflow implements TaskWorkflowInterface
 
         foreach ($this->pendingTerminalOrders as $orderUuid => $status) {
             if (in_array($orderUuid, $this->state->orderUuids, true)) {
+                if (
+                    $status === OrderStatusEnum::CANCELED->value
+                    && isset($this->pendingTerminalOrderPoints[$orderUuid])
+                ) {
+                    [$startPointId, $endPointId] = $this->pendingTerminalOrderPoints[$orderUuid];
+                    $remainingOrderUuids = array_values(array_diff($this->state->orderUuids, [$orderUuid]));
+                    yield $this->removeFromRouteActivity->removeFromRoute(
+                        $this->state->taskUuid,
+                        $remainingOrderUuids,
+                        $startPointId,
+                        $endPointId,
+                    );
+                }
+
                 $this->state->terminalOrders[$orderUuid] = $status;
             }
             unset($this->pendingTerminalOrders[$orderUuid]);
+            unset($this->pendingTerminalOrderPoints[$orderUuid]);
         }
 
         foreach ($this->pendingCollectedOrders as $orderUuid => $val) {
