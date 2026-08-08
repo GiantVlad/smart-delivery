@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Temporal;
 
 use App\Dto\CreateOrderCommand;
+use App\Enums\OrderStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Point;
@@ -71,5 +72,42 @@ class CreateOrderActivityTest extends TestCase
         $this->assertSame($endPoint->id, $order->end_point_id);
         $this->assertSame('2026-06-01', $order->date);
         $this->assertSame($ranges, $order->time_ranges);
+        $this->assertSame(OrderStatusEnum::NEW->value, $order->status);
+    }
+
+    public function test_create_order_activity_accepts_order_when_erp_acceptance_is_disabled(): void
+    {
+        $customer = Customer::create([
+            'name' => 'Accepted',
+            'last_name' => 'Customer',
+            'email' => 'accepted-order-activity@example.com',
+            'uuid' => (string) Str::uuid(),
+        ]);
+        $startPoint = Point::create([
+            'address' => 'Accepted Start Address',
+            'lat' => 52.2297,
+            'long' => 21.0122,
+        ]);
+        $endPoint = Point::create([
+            'address' => 'Accepted End Address',
+            'lat' => 52.24,
+            'long' => 21.03,
+        ]);
+        $orderUuid = (string) Str::uuid();
+
+        (new OrderProjectionActivity())->create(new CreateOrderCommand(
+            orderUuid: $orderUuid,
+            customerUuid: $customer->uuid,
+            unitType: 'Medium',
+            startPointId: $startPoint->id,
+            endPointId: $endPoint->id,
+            timeRanges: [],
+            erpAcceptanceEnabled: false,
+        ));
+
+        $this->assertDatabaseHas('orders', [
+            'uuid' => $orderUuid,
+            'status' => OrderStatusEnum::ACCEPTED->value,
+        ]);
     }
 }

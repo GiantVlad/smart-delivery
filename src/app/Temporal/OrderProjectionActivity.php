@@ -28,7 +28,9 @@ class OrderProjectionActivity implements OrderProjectionActivityInterface
         $order->end_point_id = $command->endPointId;
         $order->date = $primaryRange['date'] ?? now()->toDateString();
         $order->time_ranges = $command->timeRanges;
-        $order->status = OrderStatusEnum::NEW->value;
+        $order->status = $command->erpAcceptanceEnabled
+            ? OrderStatusEnum::NEW->value
+            : OrderStatusEnum::ACCEPTED->value;
         $order->task_id = null;
         $order->delivered_at = null;
         $order->save();

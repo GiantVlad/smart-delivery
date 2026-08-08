@@ -22,7 +22,8 @@ class OrdersEndpointTest extends TestCase
     {
         parent::setUp();
 
-        $this->mock(WorkflowClientInterface::class, function (MockInterface $mock): void {});
+        $this->mock(WorkflowClientInterface::class, function (MockInterface $mock): void {
+        });
     }
 
     public function test_guest_cannot_access_orders_endpoint(): void

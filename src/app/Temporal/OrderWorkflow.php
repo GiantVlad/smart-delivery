@@ -74,7 +74,9 @@ class OrderWorkflow implements OrderWorkflowInterface
         $this->state = new OrderWorkflowState(
             orderUuid: $command->orderUuid,
             customerUuid: $command->customerUuid,
-            status: OrderStatusEnum::NEW->value,
+            status: $command->erpAcceptanceEnabled
+                ? OrderStatusEnum::NEW->value
+                : OrderStatusEnum::ACCEPTED->value,
             taskUuid: null,
             unitType: $command->unitType,
             startPointId: $command->startPointId,
@@ -84,9 +86,11 @@ class OrderWorkflow implements OrderWorkflowInterface
 
         yield $this->projection->create($command);
 
-        $createOrderErp = Workflow::async(function () use ($command) {
-            return $this->createOrderErpActivity->createOrderInErp($command->orderUuid);
-        });
+        $createOrderErp = $command->erpAcceptanceEnabled
+            ? Workflow::async(function () use ($command) {
+                return $this->createOrderErpActivity->createOrderInErp($command->orderUuid);
+            })
+            : null;
         $notifyCustomer = Workflow::async(function () use ($command) {
             return $this->notifyCustomerActivity->notifyCustomer(
                 $command->customerUuid,
@@ -95,7 +99,9 @@ class OrderWorkflow implements OrderWorkflowInterface
             );
         });
 
-        yield $createOrderErp;
+        if ($createOrderErp !== null) {
+            yield $createOrderErp;
+        }
         yield $notifyCustomer;
 
         while (! $this->isTerminal($this->state->status)) {

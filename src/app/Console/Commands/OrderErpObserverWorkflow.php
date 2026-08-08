@@ -7,6 +7,7 @@ use Carbon\CarbonInterval;
 use Illuminate\Console\Command;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Client\WorkflowOptions;
+use Temporal\Exception\Client\WorkflowNotFoundException;
 
 class OrderErpObserverWorkflow extends Command
 {
@@ -29,6 +30,12 @@ class OrderErpObserverWorkflow extends Command
      */
     public function handle(WorkflowClientInterface $workflowClient): void
     {
+        if (! config('features.erp_order_acceptance_enabled')) {
+            $this->stopObserverWorkflow($workflowClient);
+
+            return;
+        }
+
         try {
             $this->info('Starting <comment>OrderForErpObserverWorkflow</comment>... ');
             $workflow = $workflowClient->newWorkflowStub(
@@ -50,6 +57,19 @@ class OrderErpObserverWorkflow extends Command
             );
         } catch (\Throwable $exception) {
             $this->fail("Can't start OrderForErpObserverWorkflow. Caught exception: {$exception->getMessage()}");
+        }
+    }
+
+    private function stopObserverWorkflow(WorkflowClientInterface $workflowClient): void
+    {
+        try {
+            $workflow = $workflowClient->newUntypedRunningWorkflowStub(
+                OrderForErpObserverWorkflowInterface::WORKFLOW_ID,
+            );
+            $workflow->terminate('ERP order acceptance is disabled');
+            $this->info('ERP order acceptance is disabled. The observer workflow was terminated.');
+        } catch (WorkflowNotFoundException) {
+            $this->info('ERP order acceptance is disabled. The observer workflow is not running.');
         }
     }
 }

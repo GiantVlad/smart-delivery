@@ -84,6 +84,7 @@ class OrderCreateController extends Controller
             startPointId: $startPointId,
             endPointId: $endPointId,
             timeRanges: $timeRanges,
+            erpAcceptanceEnabled: (bool) config('features.erp_order_acceptance_enabled'),
         );
 
         $workflow = $this->workflowClient->newWorkflowStub(

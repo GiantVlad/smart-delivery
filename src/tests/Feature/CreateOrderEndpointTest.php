@@ -27,6 +27,8 @@ class CreateOrderEndpointTest extends TestCase
 
     public function test_authenticated_user_can_submit_order_and_dispatch_workflow(): void
     {
+        config()->set('features.erp_order_acceptance_enabled', false);
+
         $deliveryDate = now()->addDay()->toDateString();
 
         $user = User::create([
@@ -82,7 +84,8 @@ class CreateOrderEndpointTest extends TestCase
                         $slotIds = array_column($command->timeRanges, 'slot_id');
                         sort($slotIds);
 
-                        return $slotIds === [$slotA->id, $slotB->id];
+                        return $slotIds === [$slotA->id, $slotB->id]
+                            && $command->erpAcceptanceEnabled === false;
                     })
                 )
                 ->andReturn($workflowRun);
